@@ -49,7 +49,7 @@ body {
     font-weight: bold;
 }
 
-/* Desktop (default) Nav Links */
+/* Desktop Nav Links (Default) */
 .nav-links {
     display: flex;
     list-style: none;
@@ -64,7 +64,7 @@ body {
     color: white;
     text-decoration: none;
     font-size: 1rem;
-    padding: 0.5rem 1rem; /* Touch-friendly padding */
+    padding: 0.5rem 1rem;
 }
 
 /* Hover Effect for Links */
@@ -78,23 +78,25 @@ body {
 /* Mobile Navbar (Horizontal) */
 @media (max-width: 768px) {
     .nav-links {
-        display: flex;
-        justify-content: space-around;
-        width: 100%;  /* Ensure links span the full width */
+        display: flex;  /* Flexbox for horizontal layout */
+        flex-direction: row;  /* Ensure links are in a row (horizontal) */
+        justify-content: space-around;  /* Space out the links */
+        width: 100%;
+        padding: 0;  /* Remove any padding that could cause vertical stacking */
     }
 
     .nav-links li {
-        flex: 1;  /* Allow links to stretch evenly */
+        flex: 1;  /* Make each link fill an equal portion of the navbar */
         text-align: center;
     }
 
     .nav-links a {
-        font-size: 0.9rem; /* Slightly smaller font for mobile */
-        padding: 0.75rem 0.5rem; /* Larger padding for touch-friendly links */
+        font-size: 0.9rem;  /* Slightly smaller font for mobile */
+        padding: 0.75rem 1rem;  /* Touch-friendly padding */
     }
 
     .navbar {
-        padding: 0.75rem 1rem; /* Adjust navbar padding for mobile */
+        padding: 0.75rem 1rem;  /* Adjust navbar padding for mobile */
     }
 }
 
