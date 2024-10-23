@@ -44,10 +44,10 @@ sections.forEach(section => {
     observer.observe(section);
 });
 
-// Toggle mobile navigation
+// Toggle mobile navigation with the hamburger menu
 const menuIcon = document.querySelector('.menu-icon');
 const navLinks = document.querySelector('.nav-links');
 
 menuIcon.addEventListener('click', () => {
-    navLinks.classList.toggle('nav-active'); // Toggle the class to slide in the menu
+    navLinks.classList.toggle('nav-active'); // Toggle the class to open/close the sidebar
 });

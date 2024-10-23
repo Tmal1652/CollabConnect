@@ -29,7 +29,7 @@ body {
     color: #333;
 }
 
-/* General Navbar Styles */
+/* General Navbar Styles (for both mobile and desktop) */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -48,14 +48,13 @@ body {
     font-weight: bold;
 }
 
-/* Default Desktop Nav Links (Horizontal) */
+/* Default Desktop Nav Links (Horizontal for Desktop) */
 .nav-links {
     display: flex;
     list-style: none;
     gap: 1.5rem;
 }
 
-/* Nav Link Styles */
 .nav-links li {
     margin: 0;
 }
@@ -73,33 +72,41 @@ body {
     border-radius: 5px;
 }
 
-/* Hamburger Icon for Mobile */
+/* Hamburger Icon and Sidebar - Mobile Styles */
 .menu-icon {
-    display: none; /* Hidden on desktop */
+    display: none; /* Hide the hamburger icon by default (desktop) */
 }
 
-/* Mobile Styles (Sidebar) */
+/* Mobile-specific styles */
 @media (max-width: 768px) {
     .menu-icon {
-        display: block; /* Show the hamburger icon on mobile */
+        display: block; /* Show the hamburger icon only on mobile */
+        font-size: 2rem;
+        cursor: pointer;
+        margin-right: auto; /* Align hamburger on the left */
     }
 
+    .navbar .logo {
+        margin-left: auto; /* Push the logo to the right on mobile */
+    }
+
+    /* Hide desktop nav links and make them a sidebar */
     .nav-links {
         position: fixed;
         top: 0;
-        left: -250px; /* Sidebar off-screen */
+        left: -250px; /* Sidebar hidden off-screen initially */
         flex-direction: column; /* Stack links vertically */
         width: 250px;
         height: 100%;
         background-color: #333;
-        padding-top: 60px; /* Space for logo */
-        transition: left 0.3s ease; /* Slide-in effect */
+        padding-top: 60px;
+        transition: left 0.3s ease; /* Smooth slide-in effect */
         z-index: 20;
     }
 
-    /* Show Sidebar when active */
+    /* Show the sidebar when active */
     .nav-active {
-        left: 0; /* Slide the sidebar into view */
+        left: 0; /* Sidebar slides in */
     }
 
     .nav-links li {
@@ -108,7 +115,7 @@ body {
 
     .nav-links a {
         padding: 10px 20px;
-        font-size: 1.2rem; /* Slightly larger for mobile */
+        font-size: 1.2rem;
     }
 }
 
