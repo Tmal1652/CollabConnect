@@ -60,16 +60,20 @@ body {
     margin: 0;
 }
 
+/* Navbar Links */
 .nav-links a {
     color: white;
     text-decoration: none;
     font-size: 1rem;
-    padding: 0.5rem 1rem; /* Padding to make links touch-friendly */
+    padding: 0.5rem 1rem; /* Touch-friendly padding */
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Hover State for Navbar Links */
 .nav-links a:hover {
-    background-color: #ff9800;
-    border-radius: 5px;
+    background-color: #ff9800; /* Bright orange background for contrast */
+    color: black; /* Change text color to black for better readability */
+    border-radius: 5px; /* Add some rounded corners for a cleaner look */
 }
 
 /* Mobile Navbar (Horizontal) */
