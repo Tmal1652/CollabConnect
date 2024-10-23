@@ -60,20 +60,19 @@ body {
     margin: 0;
 }
 
-/* Navbar Links */
 .nav-links a {
     color: white;
     text-decoration: none;
     font-size: 1rem;
     padding: 0.5rem 1rem; /* Touch-friendly padding */
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Hover State for Navbar Links */
+/* Hover Effect for Links */
 .nav-links a:hover {
-    background-color: #ff9800; /* Bright orange background for contrast */
-    color: black; /* Change text color to black for better readability */
-    border-radius: 5px; /* Add some rounded corners for a cleaner look */
+    background-color: #ff9800;
+    color: black;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Mobile Navbar (Horizontal) */
@@ -81,18 +80,17 @@ body {
     .nav-links {
         display: flex;
         justify-content: space-around;
-        flex: 1; /* Allow the links to spread out evenly */
-        padding: 0 1rem;
+        width: 100%;  /* Ensure links span the full width */
     }
 
     .nav-links li {
-        flex: 1;
+        flex: 1;  /* Allow links to stretch evenly */
         text-align: center;
     }
 
     .nav-links a {
         font-size: 0.9rem; /* Slightly smaller font for mobile */
-        padding: 0.75rem 0.5rem; /* Larger padding for touch targets */
+        padding: 0.75rem 0.5rem; /* Larger padding for touch-friendly links */
     }
 
     .navbar {
