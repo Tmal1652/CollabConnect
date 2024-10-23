@@ -7,7 +7,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         });
     });
 });
-
 // JavaScript to handle the opening and closing of the Edit Profile modal
 function editProfile() {
     document.getElementById("editProfileModal").style.display = "flex";
@@ -25,4 +24,22 @@ window.addEventListener('scroll', function() {
     } else {
         navbar.classList.remove('scrolled');
     }
+});
+// Detect when sections come into view
+const sections = document.querySelectorAll('section');
+const options = {
+    threshold: 0.1
+};
+
+const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target); // Stop observing once it animates in
+        }
+    });
+}, options);
+
+sections.forEach(section => {
+    observer.observe(section);
 });

@@ -560,19 +560,6 @@ a:focus, button:focus {
         margin-bottom: 2rem;
     }
 }
-/* Global Styles for Text */
-h1, h2, h3 {
-    font-family: 'Arial', sans-serif;
-    color: #333;
-}
-
-p {
-    font-family: 'Arial', sans-serif;
-    color: #666;
-    line-height: 1.6;
-}
-
-/* Consistent Button Styles */
 /* Button Styles */
 button {
     background-color: #ff9800;
@@ -581,17 +568,41 @@ button {
     border: none;
     cursor: pointer;
     font-size: 1.2rem;
-    transition: transform 0.3s ease; /* Add this for smooth scaling */
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-button:hover, .feature-item:hover, .project-item:hover {
-    transform: scale(1.05); /* Slightly increase the size */
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+/* Button Hover */
+button:hover {
+    background-color: #e68900;
+    transform: scale(1.05); /* Smooth scaling effect */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+}
+
+/* Links Hover Effect */
+a:hover {
+    color: #ff9800;
+    transition: color 0.3s ease;
+}
+
+/* Feature and Project Item Hover */
+.feature-item:hover, .project-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 button:focus {
-    outline: 2px solid white; /* Clear focus outline for accessibility */
+    outline: 2px solid white;
     outline-offset: 4px;
+}
+
+/* Global Text Colors */
+h1, h2, h3 {
+    color: #333333;
+}
+
+p {
+    color: #666666;
 }
 
 /* Feature Item Styles */
@@ -634,4 +645,77 @@ button:focus {
         padding: 0.75rem 1.5rem;
         font-size: 1rem;
     }
+}
+/* Global Spacing */
+body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+section {
+    padding: 4rem 2rem;
+    margin-bottom: 4rem; /* Adds space between sections */
+}
+
+p {
+    margin-bottom: 1.5rem;
+}
+
+h1, h2, h3 {
+    margin-bottom: 2rem;
+}
+
+/* Feature and Project Containers */
+.features-container, .projects-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.feature-item, .project-item {
+    flex: 1;
+    min-width: 250px;
+    padding: 2rem;
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+/* Focus States for Buttons and Links */
+button:focus, a:focus {
+    outline: 2px solid #ff9800; /* Visible outline for accessibility */
+    outline-offset: 4px;
+}
+
+input:focus, textarea:focus {
+    outline: 2px solid #ff9800;
+    outline-offset: 4px;
+}
+/* Add fade-in animation */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Apply fade-in animation to sections */
+section {
+    opacity: 0;
+    transform: translateY(50px);
+    animation: fadeUp 1s forwards ease-in-out;
+    animation-delay: 0.2s;
+}
+
+section.in-view {
+    opacity: 1;
+    transform: translateY(0);
+    animation: none; /* Stop animation once in view */
 }
