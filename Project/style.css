@@ -1,0 +1,228 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Skip to Main Content Link (for screen readers and keyboard users) */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #000;
+    color: #fff;
+    padding: 8px;
+    z-index: 100;
+    transition: top 0.3s;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Body and Basic Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #333;
+    color: white;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 10;
+    transition: background-color 0.3s ease-in-out; /* For scroll effect */
+}
+
+.navbar.scrolled {
+    background-color: rgba(51, 51, 51, 0.9); /* Slight transparency on scroll */
+}
+
+.navbar .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li {
+    margin-left: 1.5rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.nav-links a:focus, .nav-links a:hover {
+    outline: 2px solid #ff9800;
+    outline-offset: 4px;
+}
+
+/* Hero Section */
+.hero-section {
+    height: 100vh;
+    background: url('your-background-image.jpg') no-repeat center center/cover;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 4rem; /* To account for the fixed navbar */
+    animation: fadeIn 1.5s ease-in-out; /* Fade-in animation */
+}
+
+.hero-section h1 {
+    font-size: 3rem;
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+}
+
+.hero-section button {
+    padding: 0.75rem 2rem;
+    margin-top: 1.5rem;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: transform 0.3s ease; /* Button hover effect */
+}
+
+.hero-section button:hover {
+    transform: scale(1.05);
+}
+
+.hero-section button:focus, .hero-section button:hover {
+    outline: 2px solid #fff;
+    outline-offset: 4px;
+}
+
+/* About and Features Sections */
+#about, #features, #upcoming, #profile, #login {
+    padding: 4rem 2rem;
+    text-align: center;
+    opacity: 0; /* Initially hidden */
+    transform: translateY(50px); /* Start slightly down */
+    animation: fadeUp 1s forwards ease-in-out;
+}
+
+#about {
+    animation-delay: 0.5s; /* Staggered fade-in effect */
+}
+
+#features {
+    animation-delay: 1s;
+}
+
+#upcoming {
+    animation-delay: 1.5s;
+}
+
+#profile, #login {
+    animation-delay: 2s;
+}
+
+.features-container, .projects-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2rem;
+}
+
+.feature-item, .project-item {
+    padding: 2rem;
+    background-color: white;
+    width: 30%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease; /* Hover effect for cards */
+}
+
+.feature-item:hover, .project-item:hover {
+    transform: scale(1.05);
+}
+
+/* Placeholder Styling for Profile and Login */
+.profile-placeholder, .login-placeholder {
+    background-color: #eee;
+    padding: 2rem;
+    border: 1px solid #ccc;
+    margin-top: 1.5rem;
+    font-style: italic;
+}
+
+/* Footer */
+footer {
+    padding: 1rem;
+    background-color: #333;
+    color: white;
+    text-align: center;
+}
+
+/* Focus styles for keyboard users */
+a:focus, button:focus {
+    outline: 2px solid #ff9800;
+    outline-offset: 4px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+
+    .features-container, .projects-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .feature-item, .project-item {
+        width: 80%;
+        margin-bottom: 2rem;
+    }
+
+    .navbar {
+        flex-direction: column;
+    }
+
+    .nav-links {
+        flex-direction: column;
+    }
+
+    .nav-links li {
+        margin: 1rem 0;
+    }
+}
