@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Signup - CollabConnect</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" aria-label="Main Navigation">
+        <div class="logo">CollabConnect</div>
+        <ul class="nav-links" role="menu">
+            <li role="menuitem"><a href="index.html#home">Home</a></li>
+            <li role="menuitem"><a href="login.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- Signup Section -->
+    <section id="signup" class="signup-section" aria-labelledby="signup-heading">
+        <h2 id="signup-heading">Signup</h2>
+        <p>Create an account to start collaborating.</p>
+        <form id="signupForm" class="auth-form">
+            <div class="form-group">
+                <label for="signup-name">Name</label>
+                <input type="text" id="signup-name" name="name" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+                <label for="signup-email">Email</label>
+                <input type="email" id="signup-email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" name="password" placeholder="Create a password" required>
+            </div>
+            <button type="submit" class="auth-btn">Signup</button>
+        </form>
+        <!-- Add the "Have an account?" message here -->
+        <p>Have an account? <a href="login.html">Sign in</a></p>
+    </section>
+
+    <!-- Footer -->
+    <footer aria-label="Website Footer">
+        <p>© 2024 CollabConnect. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

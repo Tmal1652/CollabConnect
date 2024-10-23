@@ -73,89 +73,138 @@ body {
     outline-offset: 4px;
 }
 
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 1rem;
+    }
+
+    .nav-links li {
+        margin: 0.5rem 0;
+    }
+}
+
+/* JavaScript to add scrolled class on scroll */
+
 /* Hero Section */
 .hero-section {
+    position: relative;
     height: 100vh;
-    background: url('your-background-image.jpg') no-repeat center center/cover;
-    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: url('assets/images/homepage-banner.png') no-repeat center center/cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: white;
     text-align: center;
-    margin-top: 4rem; /* To account for the fixed navbar */
-    animation: fadeIn 1.5s ease-in-out; /* Fade-in animation */
 }
 
-.hero-section h1 {
+.hero-content h1 {
     font-size: 3rem;
+    margin-bottom: 1rem;
 }
 
-.hero-section p {
+.hero-content p {
     font-size: 1.2rem;
-    margin-top: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-.hero-section button {
-    padding: 0.75rem 2rem;
-    margin-top: 1.5rem;
+.hero-content button {
     background-color: #ff9800;
     color: white;
+    padding: 1rem 2rem;
     border: none;
     cursor: pointer;
-    font-size: 1rem;
-    transition: transform 0.3s ease; /* Button hover effect */
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
 }
 
-.hero-section button:hover {
+.hero-content button:hover {
     transform: scale(1.05);
 }
 
-.hero-section button:focus, .hero-section button:hover {
-    outline: 2px solid #fff;
-    outline-offset: 4px;
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+    }
+
+    .hero-content button {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
 }
 
-/* About and Features Sections */
-#about, #features, #upcoming, #profile, #login {
+/* Features Section */
+.features-section {
     padding: 4rem 2rem;
     text-align: center;
-    opacity: 0; /* Initially hidden */
-    transform: translateY(50px); /* Start slightly down */
-    animation: fadeUp 1s forwards ease-in-out;
+    background-color: #f9f9f9;
 }
 
-#about {
-    animation-delay: 0.5s; /* Staggered fade-in effect */
-}
-
-#features {
-    animation-delay: 1s;
-}
-
-#upcoming {
-    animation-delay: 1.5s;
-}
-
-#profile, #login {
-    animation-delay: 2s;
-}
-
-.features-container, .projects-container {
+.features-container {
     display: flex;
     justify-content: space-around;
-    margin-top: 2rem;
+    gap: 2rem;
+    flex-wrap: wrap;
 }
 
-.feature-item, .project-item {
+.feature-item {
+    flex: 1;
+    min-width: 250px;
     padding: 2rem;
     background-color: white;
-    width: 30%;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease; /* Hover effect for cards */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    border-radius: 10px;
 }
 
-.feature-item:hover, .project-item:hover {
+.feature-item:hover {
     transform: scale(1.05);
+}
+
+.feature-item h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.feature-item p {
+    font-size: 1rem;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .features-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .feature-item {
+        margin-bottom: 2rem;
+    }
 }
 
 /* Placeholder Styling for Profile and Login */
@@ -168,11 +217,39 @@ body {
 }
 
 /* Footer */
-footer {
-    padding: 1rem;
+.footer {
+    padding: 2rem;
     background-color: #333;
     color: white;
     text-align: center;
+}
+
+.footer p {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.social-links {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.social-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.social-links a:hover {
+    color: #ff9800;
+}
+
+@media (max-width: 768px) {
+    .social-links {
+        flex-direction: column;
+    }
 }
 
 /* Focus styles for keyboard users */
@@ -224,5 +301,332 @@ a:focus, button:focus {
 
     .nav-links li {
         margin: 1rem 0;
+    }
+}
+/* Existing Styles for Home, About, Features, etc. */
+
+/* Authentication Forms */
+.auth-form {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 2rem auto;
+    text-align: left;
+}
+/* Centering the Signup Section */
+.signup-section, .login-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* Center the form */
+    justify-content: center;  /* Center vertically if needed */
+    min-height: 100vh; /* Optional: Ensure the section fills the screen height */
+}
+
+.auth-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.auth-form .auth-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.auth-form .auth-btn:hover {
+    background-color: #e68900;
+}
+
+/* Profile Section */
+.profile-section {
+    padding: 4rem 2rem;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+.profile-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.profile-info, .profile-projects {
+    flex: 1;
+    min-width: 300px;
+    padding: 2rem;
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.profile-info h3, .profile-projects h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.profile-info p, .profile-projects ul li {
+    font-size: 1rem;
+    color: #666;
+}
+
+.edit-btn {
+    margin-top: 1rem;
+    background-color: #ff9800;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    background-color: #e68900;
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .profile-info, .profile-projects {
+        margin-bottom: 2rem;
+    }
+}
+
+/* Modal (for editing profile) */
+.modal {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 5px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+/* Projects Section */
+.upcoming-section {
+    padding: 4rem 2rem;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.projects-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.project-item {
+    flex: 1;
+    min-width: 250px;
+    padding: 2rem;
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.project-item h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.project-item p {
+    font-size: 1rem;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .projects-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .project-item {
+        margin-bottom: 2rem;
+    }
+}
+/* About Section */
+.about-section {
+    padding: 4rem 2rem;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+.about-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.about-section p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 2rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.about-content {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.about-item {
+    flex: 1;
+    min-width: 250px;
+    padding: 2rem;
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.about-item:hover {
+    transform: scale(1.05);
+}
+
+.about-item h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.about-item p {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* Responsive Design for About Section */
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .about-item {
+        margin-bottom: 2rem;
+    }
+}
+/* Global Styles for Text */
+h1, h2, h3 {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+p {
+    font-family: 'Arial', sans-serif;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Consistent Button Styles */
+/* Button Styles */
+button {
+    background-color: #ff9800;
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease; /* Add this for smooth scaling */
+}
+
+button:hover, .feature-item:hover, .project-item:hover {
+    transform: scale(1.05); /* Slightly increase the size */
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+button:focus {
+    outline: 2px solid white; /* Clear focus outline for accessibility */
+    outline-offset: 4px;
+}
+
+/* Feature Item Styles */
+.feature-item {
+    padding: 2rem;
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Project Item Styles */
+.project-item {
+    padding: 2rem;
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+@media (max-width: 768px) {
+    .about-content, .features-container, .projects-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .feature-item, .project-item, .about-item {
+        margin-bottom: 2rem;
+        width: 80%;
+    }
+
+    h1, h2, h3 {
+        font-size: 1.8rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    button {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
     }
 }
