@@ -41,7 +41,6 @@ body {
     width: 100%;
     top: 0;
     z-index: 10;
-    transition: background-color 0.3s ease-in-out;
 }
 
 .navbar .logo {
@@ -49,13 +48,14 @@ body {
     font-weight: bold;
 }
 
-/* Desktop Nav Links (Default) */
+/* Default Desktop Nav Links (Horizontal) */
 .nav-links {
     display: flex;
     list-style: none;
     gap: 1.5rem;
 }
 
+/* Nav Link Styles */
 .nav-links li {
     margin: 0;
 }
@@ -67,36 +67,48 @@ body {
     padding: 0.5rem 1rem;
 }
 
-/* Hover Effect for Links */
 .nav-links a:hover {
     background-color: #ff9800;
     color: black;
     border-radius: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Mobile Navbar (Horizontal) */
+/* Hamburger Icon for Mobile */
+.menu-icon {
+    display: none; /* Hidden on desktop */
+}
+
+/* Mobile Styles (Sidebar) */
 @media (max-width: 768px) {
+    .menu-icon {
+        display: block; /* Show the hamburger icon on mobile */
+    }
+
     .nav-links {
-        display: flex;  /* Flexbox for horizontal layout */
-        flex-direction: row;  /* Ensure links are in a row (horizontal) */
-        justify-content: space-around;  /* Space out the links */
-        width: 100%;
-        padding: 0;  /* Remove any padding that could cause vertical stacking */
+        position: fixed;
+        top: 0;
+        left: -250px; /* Sidebar off-screen */
+        flex-direction: column; /* Stack links vertically */
+        width: 250px;
+        height: 100%;
+        background-color: #333;
+        padding-top: 60px; /* Space for logo */
+        transition: left 0.3s ease; /* Slide-in effect */
+        z-index: 20;
+    }
+
+    /* Show Sidebar when active */
+    .nav-active {
+        left: 0; /* Slide the sidebar into view */
     }
 
     .nav-links li {
-        flex: 1;  /* Make each link fill an equal portion of the navbar */
-        text-align: center;
+        margin: 20px 0;
     }
 
     .nav-links a {
-        font-size: 0.9rem;  /* Slightly smaller font for mobile */
-        padding: 0.75rem 1rem;  /* Touch-friendly padding */
-    }
-
-    .navbar {
-        padding: 0.75rem 1rem;  /* Adjust navbar padding for mobile */
+        padding: 10px 20px;
+        font-size: 1.2rem; /* Slightly larger for mobile */
     }
 }
 
