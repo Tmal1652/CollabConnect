@@ -77,75 +77,79 @@ body {
     display: none; /* Hidden on desktop */
 }
 
-/* Mobile-specific styles */
+/* Mobile-Specific Styles */
 @media (max-width: 768px) {
-    /* Hamburger Menu */
+
+    /* Mobile Navbar with Hamburger */
+    .navbar {
+        flex-direction: row;
+        padding: 1rem;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #333;
+    }
     .menu-icon {
-        display: block; /* Show hamburger icon on mobile */
+        display: block; /* Visible on mobile only */
         font-size: 2rem;
         cursor: pointer;
-        margin-right: auto; /* Align hamburger on the left */
-        z-index: 30; /* Ensure hamburger icon stays on top */
     }
-
     .navbar .logo {
-        margin-left: auto; /* Push the logo to the right on mobile */
-    }
-
-    /* Sidebar (hidden off-screen by default) */
-    .nav-links {
-        position: fixed;
-        top: 0;
-        left: -250px; /* Sidebar hidden off-screen initially */
-        flex-direction: column; /* Stack links vertically */
-        width: 250px;
-        height: 100%;
-        background-color: #444; /* Slightly lighter background for a modern look */
-        box-shadow: 2px 0px 8px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
-        padding-top: 60px;
-        transition: left 0.5s ease; /* Smoother slide-in effect */
-        z-index: 20; /* Sidebar beneath the hamburger */
-    }
-
-    /* Sidebar when active (Slide in) */
-    .nav-active {
-        left: 0;
-    }
-
-    /* Modern Sidebar Link Styles */
-    .nav-links li {
-        margin: 20px 0;
-        padding: 10px;
-    }
-
-    .nav-links a {
-        padding: 10px 20px;
+        margin-left: auto;
         font-size: 1.2rem;
-        color: white;
-        border-radius: 8px;
-        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    .nav-links a:hover {
-        background-color: #ff9800;
-        color: white;
-    }
-
-    /* Overlay effect for the rest of the page when the sidebar is open */
-    .overlay {
+    /* Sidebar Navigation */
+    .nav-links {
+        display: none; /* Initially hidden */
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
+        width: 70%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-        z-index: 15; /* Behind the sidebar but above the content */
-        display: none; /* Hidden by default */
+        background-color: #444;
+        padding-top: 3rem;
+        flex-direction: column;
+        gap: 1rem;
+        z-index: 10;
+        overflow-y: auto;
     }
 
-    /* Show overlay when sidebar is active */
-    .overlay-active {
-        display: block;
+    /* Active Sidebar */
+    .nav-active {
+        display: flex; /* Display when active */
+    }
+
+    /* Sidebar Link Styles */
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-size: 1.2rem;
+        padding: 1rem;
+    }
+
+    /* Hero Section for Mobile */
+    .hero-section {
+        height: 80vh;
+        background: url('assets/images/hero-background.jpg') no-repeat center center/cover;
+    }
+    .hero-content {
+        padding: 2rem;
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    /* Layout for Features and Projects */
+    .features-container, .projects-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    .feature-item, .project-item {
+        width: 90%;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
 }
 /* JavaScript to add scrolled class on scroll */

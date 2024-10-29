@@ -47,25 +47,8 @@ sections.forEach(section => {
 // Toggle mobile navigation with the hamburger menu
 const menuIcon = document.querySelector('.menu-icon');
 const navLinks = document.querySelector('.nav-links');
-const overlay = document.createElement('div');
-overlay.classList.add('overlay');
 
-// Append overlay to the body
-document.body.appendChild(overlay);
-
+// Function to toggle the sidebar on mobile
 menuIcon.addEventListener('click', () => {
-    // Toggle sidebar visibility
-    navLinks.classList.toggle('nav-active');
-    
-    // Toggle overlay visibility
-    overlay.classList.toggle('overlay-active');
-    
-    // Ensure the hamburger remains clickable to close the menu
-    menuIcon.classList.toggle('menu-open');
-});
-
-// Close the sidebar if overlay is clicked
-overlay.addEventListener('click', () => {
-    navLinks.classList.remove('nav-active');
-    overlay.classList.remove('overlay-active');
+    navLinks.classList.toggle('nav-active'); // Open/close sidebar on mobile
 });
