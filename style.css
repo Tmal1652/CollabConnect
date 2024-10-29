@@ -150,14 +150,20 @@ body {
 }
 /* JavaScript to add scrolled class on scroll */
 
-/* Hero Section */
+/* Hero Section with Background Image */
 .hero-section {
     position: relative;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url('assets/images/homepage-banner.png') no-repeat center center/cover;
+    color: white;
+    text-align: center;
+    background: url('background.webp') no-repeat center center/cover;
+    /* Adjusted Overlay for Subtle Transparency */
+    background-blend-mode: overlay;
+    background-color: rgba(0, 0, 0, 0.25); /* Reduced opacity for more transparency */
+    overflow: hidden;
 }
 
 .hero-overlay {
@@ -172,9 +178,12 @@ body {
 
 .hero-content {
     position: relative;
-    z-index: 2;
-    color: white;
-    text-align: center;
+    z-index: 1; /* Ensure text is visible above the background */
+}
+
+/* Optional Styling for Text Visibility */
+.hero-section h1, .hero-section p {
+    color: rgba(255, 255, 255, 0.9); /* Slight transparency for a soft blend */
 }
 
 .hero-content h1 {
