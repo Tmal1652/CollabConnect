@@ -44,11 +44,11 @@ sections.forEach(section => {
     observer.observe(section);
 });
 
-// Toggle mobile navigation with the hamburger menu
+// Sidebar toggle functionality
 const menuIcon = document.querySelector('.menu-icon');
 const navLinks = document.querySelector('.nav-links');
 
-// Function to toggle the sidebar on mobile
+// Open and close sidebar on hamburger icon click
 menuIcon.addEventListener('click', () => {
-    navLinks.classList.toggle('nav-active'); // Open/close sidebar on mobile
+    navLinks.classList.toggle('nav-active'); // Toggle sidebar visibility
 });
