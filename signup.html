@@ -19,30 +19,35 @@
 
     <!-- Signup Section -->
     <section id="signup" class="signup-section" aria-labelledby="signup-heading">
+        <div style="padding-top: 100px; text-align: center;">
         <h2 id="signup-heading">Signup</h2>
         <p>Create an account to start collaborating.</p>
-        <form id="signupForm" class="auth-form">
-            <div class="form-group">
-                <label for="signup-name">Name</label>
-                <input type="text" id="signup-name" name="name" placeholder="Enter your name" required>
-            </div>
-            <div class="form-group">
-                <label for="signup-email">Email</label>
-                <input type="email" id="signup-email" name="email" placeholder="Enter your email" required>
-            </div>
-            <div class="form-group">
-                <label for="signup-password">Password</label>
-                <input type="password" id="signup-password" name="password" placeholder="Create a password" required>
-            </div>
-            <button type="submit" class="auth-btn">Signup</button>
-        </form>
-        <!-- Add the "Have an account?" message here -->
-        <p>Have an account? <a href="login.html">Sign in</a></p>
+        <div class="auth-form">
+          <form id="signupForm">
+              <div class="form-group">
+                  <label for="signup-name">Name</label>
+                  <input type="text" id="signup-name" name="name" placeholder="Enter your name" required>
+              </div>
+              <div class="form-group">
+                  <label for="signup-email">Email</label>
+                  <input type="email" id="signup-email" name="email" placeholder="Enter your email" required>
+              </div>
+              <div class="form-group">
+                  <label for="signup-password">Password</label>
+                  <input type="password" id="signup-password" name="password" placeholder="Create a password" required>
+              </div>
+              <button type="submit" class="auth-btn">Signup</button>
+          </form>
+          <div style="margin-top: 1.5rem;">
+            <p>Have an account? <a href="login.html" class="auth-link">Sign in</a></p>
+          </div>
+        </div>
+    </div>
     </section>
 
     <!-- Footer -->
-    <footer aria-label="Website Footer">
-        <p>© 2024 CollabConnect. All Rights Reserved.</p>
+    <footer aria-label="Website Footer" style="text-align: center;">
+        <p>© 2025 CollabConnect. All Rights Reserved.</p>
     </footer>
 </body>
 </html>

@@ -25,27 +25,57 @@
 body {
     font-family: 'Arial', sans-serif;
     line-height: 1.6;
-    background-color: #f4f4f4;
-    color: #333;
+    background: linear-gradient(180deg, #1c1d1f, #242528, #303134);
+    color: #e6e6e6;
 }
 
 /* General Navbar Styles (for both mobile and desktop) */
+/* Glassmorphism Navbar */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
-    background-color: #333;
-    color: white;
+    background: rgba(28, 29, 31, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    mix-blend-mode: normal;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
     position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 10; /* Ensure navbar is above other elements */
+    width: calc(100% - 2rem);
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    overflow: hidden;
+    background-blend-mode: overlay;
+    font-family: "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+}
+
+/* Add shadow effect to navbar on scroll */
+.navbar.scrolled {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.navbar::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.015) 40%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .navbar .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    mix-blend-mode: normal;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7), 0 0 10px rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.5px;
 }
 
 /* Default Desktop Nav Links (Horizontal for Desktop) */
@@ -59,17 +89,50 @@ body {
     margin: 0;
 }
 
+/* Glassmorphism Nav Links */
 .nav-links a {
-    color: white;
+    background: rgba(255, 255, 255, 0.05);
+    color: #e6e6e6;
+    text-shadow: none;
+    font-weight: 600;
     text-decoration: none;
     font-size: 1rem;
     padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-family: inherit;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    z-index: 1;
+}
+
+.nav-links a.active {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    text-shadow: none;
 }
 
 .nav-links a:hover {
-    background-color: #ff9800;
-    color: black;
-    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+    mix-blend-mode: normal;
+    transform: scale(1.05);
+    z-index: 2;
+}
+
+.nav-links a:hover::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 180%;
+    height: 180%;
+    background: rgba(255, 255, 255, 0.08);
+    transform: translate(-50%, -50%) scale(0.8);
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(12px);
+    z-index: 0;
 }
 
 /* Hamburger Icon - Visible on Mobile */
@@ -100,11 +163,15 @@ body {
         flex-direction: column; /* Stack links vertically */
         width: 250px;
         height: 100%;
-        background-color: #444; /* Slightly lighter background for a modern look */
-        box-shadow: 2px 0px 8px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-radius: 0 20px 20px 0;
+        border-right: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 2px 0px 8px rgba(0, 0, 0, 0.5);
         padding-top: 60px;
-        transition: left 0.5s ease; /* Smoother slide-in effect */
-        z-index: 20; /* Sidebar beneath the hamburger */
+        transition: left 0.5s ease;
+        z-index: 20;
     }
 
     /* Sidebar when active (Slide in) */
@@ -121,14 +188,17 @@ body {
     .nav-links a {
         padding: 10px 20px;
         font-size: 1.2rem;
-        color: white;
-        border-radius: 8px;
+        color: #222;
+        background: rgba(255, 255, 255, 0.3);
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
         transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .nav-links a:hover {
-        background-color: #ff9800;
-        color: white;
+        background-color: rgba(102, 204, 255, 0.3);
+        color: #66ccff;
     }
 
     /* Overlay effect for the rest of the page when the sidebar is open */
@@ -138,9 +208,9 @@ body {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-        z-index: 15; /* Behind the sidebar but above the content */
-        display: none; /* Hidden by default */
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 15;
+        display: none;
     }
 
     /* Show overlay when sidebar is active */
@@ -150,7 +220,7 @@ body {
 }
 /* JavaScript to add scrolled class on scroll */
 
-/* Hero Section with Background Image */
+/* Glassmorphism Hero Section */
 .hero-section {
     position: relative;
     height: 100vh;
@@ -160,9 +230,8 @@ body {
     color: white;
     text-align: center;
     background: url('background.webp') no-repeat center center/cover;
-    /* Adjusted Overlay for Subtle Transparency */
+    background-color: rgba(0, 0, 0, 0.3);
     background-blend-mode: overlay;
-    background-color: rgba(0, 0, 0, 0.25); /* Reduced opacity for more transparency */
     overflow: hidden;
 }
 
@@ -172,69 +241,140 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Darker overlay for improved contrast */
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .hero-content {
     position: relative;
-    z-index: 1; /* Ensure text is visible above the background */
+    z-index: 2;
+    background: rgba(40, 40, 40, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
 }
 
-/* Optional Styling for Text Visibility */
-.hero-section h1, .hero-section p {
-    color: rgba(255, 255, 255, 0.9); /* Slight transparency for a soft blend */
+.hero-content::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, rgba(200, 200, 200, 0.025) 0%, rgba(200, 200, 200, 0.0125) 40%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .hero-content h1 {
-    font-size: 3.5rem; /* Increased font size for better readability */
+    font-size: 3.5rem;
     margin-bottom: 1rem;
-    font-weight: bold; /* Boldened text for emphasis */
-    color: white;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Keeps the shadow for extra contrast */
+    font-weight: bold;
+    color: #e6e6e6;
+    text-shadow: none;
 }
 
 .hero-content p {
-    font-size: 1.5rem; /* Slightly larger text */
+    font-size: 1.5rem;
     margin-bottom: 1.5rem;
-    color: white;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Keeps the shadow for extra contrast */
+    color: #e6e6e6;
+    text-shadow: none;
 }
 
 .hero-content button {
-    background-color: #ff9800;
-    color: white;
+    position: relative;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    color: #e0e0e0;
     padding: 1rem 2rem;
-    border: none;
-    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
     font-size: 1.2rem;
-    transition: transform 0.3s ease;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.hero-content button::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.025) 40%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .hero-content button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
     transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.05);
 }
 
 @media (max-width: 768px) {
     .hero-content h1 {
         font-size: 2rem;
     }
-
     .hero-content p {
         font-size: 1rem;
     }
-
     .hero-content button {
         padding: 0.75rem 1.5rem;
         font-size: 1rem;
     }
+}
+/* Glassmorphism Glass Box (What is Clear Text AI, etc.) */
+.glass-box {
+    background: rgba(40, 40, 40, 0.8);
+    color: #e6e6e6;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 800px;
+}
+
+.glass-box::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, rgba(200, 200, 200, 0.025) 0%, rgba(200, 200, 200, 0.0125) 40%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.glass-box:hover {
+    transform: scale(1.05);
+}
+
+.glass-box h2,
+.glass-box p {
+    color: #e6e6e6;
+    text-shadow: none;
 }
 
 /* Features Section */
 .features-section {
     padding: 4rem 2rem;
     text-align: center;
-    background-color: #f9f9f9;
+    background: linear-gradient(to bottom, #1a1a1a, #1f1f1f);
 }
 
 .features-container {
@@ -245,28 +385,40 @@ body {
 }
 
 .feature-item {
-    flex: 1;
-    min-width: 250px;
     padding: 2rem;
-    background-color: white;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    border-radius: 10px;
+    background: rgba(40, 40, 40, 0.8);
+    color: #e6e6e6;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
-.feature-item:hover {
-    transform: scale(1.05);
+.feature-item::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, rgba(200, 200, 200, 0.025) 0%, rgba(200, 200, 200, 0.0125) 40%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .feature-item h3 {
     margin-bottom: 1rem;
     font-size: 1.5rem;
-    color: #333;
+    color: #e6e6e6;
+    text-shadow: none;
 }
 
 .feature-item p {
     font-size: 1rem;
-    color: #666;
+    color: #e6e6e6;
+    text-shadow: none;
 }
 
 @media (max-width: 768px) {
@@ -282,19 +434,28 @@ body {
 
 /* Placeholder Styling for Profile and Login */
 .profile-placeholder, .login-placeholder {
-    background-color: #eee;
+    background-color: #cceeff;
     padding: 2rem;
-    border: 1px solid #ccc;
+    border: 1px solid #cceeff;
     margin-top: 1.5rem;
     font-style: italic;
 }
 
 /* Footer */
+/* Glassmorphism Footer - Improved contrast and visibility */
 .footer {
     padding: 2rem;
-    background-color: #333;
-    color: white;
+    background: rgba(20, 20, 20, 0.85);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    color: #e6e6e6;
     text-align: center;
+}
+
+.footer p,
+.social-links a {
+    color: #e0e0e0;
+    text-shadow: none;
 }
 
 .footer p {
@@ -310,13 +471,12 @@ body {
 }
 
 .social-links a {
-    color: white;
     text-decoration: none;
     font-size: 1rem;
 }
 
 .social-links a:hover {
-    color: #ff9800;
+    color: #fff;
 }
 
 @media (max-width: 768px) {
@@ -327,7 +487,7 @@ body {
 
 /* Focus styles for keyboard users */
 a:focus, button:focus {
-    outline: 2px solid #ff9800;
+    outline: 2px solid #e0e0e0;
     outline-offset: 4px;
 }
 
@@ -379,14 +539,54 @@ a:focus, button:focus {
 /* Existing Styles for Home, About, Features, etc. */
 
 /* Authentication Forms */
-.auth-form {
-    background-color: #fff;
+/* Glassmorphism Auth Form */
+/* Improved contrast and readability for Auth Form */
+ .auth-form {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
     padding: 2rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     margin: 2rem auto;
-    text-align: left;
+    color: #e0e0e0;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-form::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.025) 40%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Improve visibility of auth-form labels */
+.auth-form label {
+    color: #e0e0e0;
+    font-weight: 600;
+    text-shadow: none;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+ .auth-form input {
+    background: rgba(255, 255, 255, 0.06);
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: none;
+    width: 100%;
 }
 /* Centering the Signup Section */
 .signup-section, .login-section {
@@ -401,36 +601,45 @@ a:focus, button:focus {
     margin-bottom: 1rem;
 }
 
-.auth-form label {
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.auth-form input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+/* (label and input styles above are now improved and consolidated) */
 
 .auth-form .auth-btn {
     width: 100%;
     padding: 1rem;
-    background-color: #ff9800;
-    color: white;
-    border: none;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
     cursor: pointer;
     font-size: 1rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    position: relative;
+}
+
+.auth-form .auth-btn::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.025) 40%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .auth-form .auth-btn:hover {
-    background-color: #e68900;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.07);
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.05);
 }
 
 /* Profile Section */
 .profile-section {
     padding: 4rem 2rem;
-    background-color: #f4f4f4;
+    background: linear-gradient(to bottom, #1a1a1a, #1f1f1f);
     text-align: center;
 }
 
@@ -445,33 +654,54 @@ a:focus, button:focus {
     flex: 1;
     min-width: 300px;
     padding: 2rem;
-    background-color: white;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    background: rgba(30, 30, 30, 0.4);
+    color: #e0e0e0;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    border-radius: 24px;
+    border: 1px solid rgba(200, 200, 200, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-info::after, .profile-projects::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, rgba(200, 200, 200, 0.025) 0%, rgba(200, 200, 200, 0.0125) 40%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .profile-info h3, .profile-projects h3 {
     margin-bottom: 1rem;
     font-size: 1.5rem;
-    color: #333;
+    color: #e0e0e0;
+    text-shadow: none;
 }
 
 .profile-info p, .profile-projects ul li {
     font-size: 1rem;
-    color: #666;
+    color: #e0e0e0;
+    text-shadow: none;
 }
 
 .edit-btn {
     margin-top: 1rem;
-    background-color: #ff9800;
-    color: white;
+    background: rgba(255, 255, 255, 0.06);
+    color: #e0e0e0;
     padding: 0.75rem 1.5rem;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
     cursor: pointer;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .edit-btn:hover {
-    background-color: #e68900;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
 }
 
 @media (max-width: 768px) {
@@ -499,12 +729,36 @@ a:focus, button:focus {
 }
 
 .modal-content {
-    background-color: #fff;
+    background: rgba(85, 85, 130, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), 0 0 14px rgba(120, 180, 255, 0.2), inset 0 0 1px rgba(255, 255, 255, 0.1);
     padding: 2rem;
-    border-radius: 5px;
     max-width: 500px;
     width: 100%;
+    color: #eee;
+    position: relative;
 }
+
+.modal-content h2,
+.modal-content label,
+.modal-content input {
+    color: #eee;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+ .modal-content input {
+     background: rgba(255, 255, 255, 0.1);
+     color: #fff;
+     border: 1px solid rgba(255, 255, 255, 0.3);
+     border-radius: 12px;
+     padding: 0.75rem;
+     margin-bottom: 1rem;
+     font-size: 1rem;
+     backdrop-filter: blur(8px);
+     -webkit-backdrop-filter: blur(8px);
+ }
 
 .close {
     position: absolute;
@@ -516,7 +770,7 @@ a:focus, button:focus {
 /* Projects Section */
 .upcoming-section {
     padding: 4rem 2rem;
-    background-color: #f9f9f9;
+    background: linear-gradient(to bottom, #1a1a1a, #1f1f1f);
     text-align: center;
 }
 
@@ -528,29 +782,40 @@ a:focus, button:focus {
 }
 
 .project-item {
-    flex: 1;
-    min-width: 250px;
     padding: 2rem;
-    background-color: white;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(40, 40, 40, 0.8);
+    color: #e6e6e6;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
-.project-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+.project-item::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, rgba(200, 200, 200, 0.025) 0%, rgba(200, 200, 200, 0.0125) 40%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .project-item h3 {
     margin-bottom: 1rem;
     font-size: 1.5rem;
-    color: #333;
+    color: #e6e6e6;
+    text-shadow: none;
 }
 
 .project-item p {
     font-size: 1rem;
-    color: #666;
+    color: #e6e6e6;
+    text-shadow: none;
 }
 
 @media (max-width: 768px) {
@@ -566,19 +831,20 @@ a:focus, button:focus {
 /* About Section */
 .about-section {
     padding: 4rem 2rem;
-    background-color: #f4f4f4;
+    background: linear-gradient(to bottom, #1a1a1a, #1f1f1f);
+    color: #e6e6e6;
     text-align: center;
 }
 
 .about-section h2 {
     font-size: 2.5rem;
     margin-bottom: 2rem;
-    color: #333;
+    color: #fff;
 }
 
 .about-section p {
     font-size: 1.2rem;
-    color: #666;
+    color: #cceeff;
     margin-bottom: 2rem;
     max-width: 700px;
     margin-left: auto;
@@ -592,14 +858,31 @@ a:focus, button:focus {
     flex-wrap: wrap;
 }
 
+/* Glassmorphism About Item Styles */
 .about-item {
     flex: 1;
     min-width: 250px;
     padding: 2rem;
-    background-color: white;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    transition: transform 0.3s ease;
+    background: rgba(40, 40, 40, 0.8);
+    color: #e6e6e6;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.about-item::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, rgba(200, 200, 200, 0.025) 0%, rgba(200, 200, 200, 0.0125) 40%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .about-item:hover {
@@ -609,12 +892,14 @@ a:focus, button:focus {
 .about-item h3 {
     margin-bottom: 1rem;
     font-size: 1.5rem;
-    color: #333;
+    color: #e0e0e0;
+    text-shadow: none;
 }
 
 .about-item p {
     font-size: 1rem;
-    color: #666;
+    color: #e0e0e0;
+    text-shadow: none;
 }
 
 /* Responsive Design for About Section */
@@ -628,68 +913,94 @@ a:focus, button:focus {
         margin-bottom: 2rem;
     }
 }
-/* Button Styles */
 button {
-    background-color: #ff9800;
-    color: white;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    color: #e0e0e0;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    position: relative;
     padding: 1rem 2rem;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
     cursor: pointer;
     font-size: 1.2rem;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    z-index: 1;
 }
 
-/* Button Hover */
+button::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.025) 40%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
 button:hover {
-    background-color: #e68900;
-    transform: scale(1.05); /* Smooth scaling effect */
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.2), 0 0 30px rgba(255, 255, 255, 0.08);
+    transform: scale(1.05);
+    position: relative;
+    z-index: 2;
+}
+
+button:hover::before,
+a:hover::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 180%;
+    height: 180%;
+    background: rgba(255, 255, 255, 0.08);
+    transform: translate(-50%, -50%) scale(0.8);
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(12px);
+    z-index: 0;
 }
 
 /* Links Hover Effect */
+a {
+    position: relative;
+    z-index: 1;
+}
 a:hover {
-    color: #ff9800;
-    transition: color 0.3s ease;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+    z-index: 2;
 }
 
 /* Feature and Project Item Hover */
-.feature-item:hover, .project-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+ .feature-item:hover, .project-item:hover {
+     transform: scale(1.05);
+     box-shadow:
+         0 8px 16px rgba(255, 255, 255, 0.08),
+         0 2px 10px rgba(255,255,255,0.05),
+         inset 0 0 1px rgba(255, 255, 255, 0.1);
+     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ }
 
-button:focus {
-    outline: 2px solid white;
-    outline-offset: 4px;
-}
+
 
 /* Global Text Colors */
 h1, h2, h3 {
-    color: #333333;
+    color: #e0e0e0;
 }
 
 p {
-    color: #666666;
+    color: #e0e0e0;
 }
 
-/* Feature Item Styles */
-.feature-item {
-    padding: 2rem;
-    background-color: white;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Project Item Styles */
-.project-item {
-    padding: 2rem;
-    background-color: white;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
 @media (max-width: 768px) {
     .about-content, .features-container, .projects-container {
         flex-direction: column;
@@ -743,23 +1054,15 @@ h1, h2, h3 {
     margin-top: 2rem;
 }
 
-.feature-item, .project-item {
-    flex: 1;
-    min-width: 250px;
-    padding: 2rem;
-    background-color: white;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-}
+/* .feature-item and .project-item styles are now defined above with glassmorphism */
 /* Focus States for Buttons and Links */
 button:focus, a:focus {
-    outline: 2px solid #ff9800; /* Visible outline for accessibility */
+    outline: 2px solid #e0e0e0;
     outline-offset: 4px;
 }
 
 input:focus, textarea:focus {
-    outline: 2px solid #ff9800;
+    outline: 2px solid #e0e0e0;
     outline-offset: 4px;
 }
 /* Add fade-in animation */
@@ -778,7 +1081,7 @@ input:focus, textarea:focus {
 section {
     opacity: 0;
     transform: translateY(50px);
-    animation: fadeUp 1s forwards ease-in-out;
+    animation: fadeUp 1s forwards cubic-bezier(0.4, 0, 0.2, 1);
     animation-delay: 0.2s;
 }
 
@@ -786,4 +1089,19 @@ section.in-view {
     opacity: 1;
     transform: translateY(0);
     animation: none; /* Stop animation once in view */
+}
+
+/* Auth Form Links Styling */
+.auth-form a,
+.auth-form a:visited {
+    color: #ccc !important;
+    text-shadow: none;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-form a:hover {
+    color: #fff !important;
+    text-shadow: none;
 }
