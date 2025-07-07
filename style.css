@@ -23,42 +23,45 @@
 
 /* Body and Basic Styles */
 body {
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
-    background: linear-gradient(180deg, #1c1d1f, #242528, #303134);
-    color: #e6e6e6;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Modern, clean font */
+    line-height: 1.5; /* Slightly tighter line spacing */
+    background: linear-gradient(160deg, #121212, #1a1a1a, #202020); /* Dark, modern background gradient */
+    color: #e0e0e0; /* Light gray for primary text */
+    -webkit-font-smoothing: antialiased; /* Improve font rendering on macOS */
+    -moz-osx-font-smoothing: grayscale; /* Improve font rendering on Firefox macOS */
 }
 
 /* General Navbar Styles (for both mobile and desktop) */
-/* Glassmorphism Navbar */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
-    background: rgba(28, 29, 31, 0.75);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(20, 20, 20, 0.6); /* Darker, more transparent background */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Slightly more visible border */
     mix-blend-mode: normal;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: 24px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-    position: fixed;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* More subtle shadow */
+    position: fixed; /* Keep navbar fixed at the top */
     width: calc(100% - 2rem);
     top: 1rem;
     left: 1rem;
     right: 1rem;
     z-index: 1000;
     overflow: hidden;
-    background-blend-mode: overlay;
-    font-family: "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+    background-blend-mode: overlay; /* Ensure the background blends properly */
+    transition: all 0.3s ease; /* Smooth transition for all properties */
 }
 
 /* Add shadow effect to navbar on scroll */
 .navbar.scrolled {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4); /* Adjusted shadow on scroll */
+    background: rgba(15, 15, 15, 0.7); /* Slightly darker on scroll */
 }
 
+/* Improved gradient overlay for the "liquid" effect */
 .navbar::after {
     content: "";
     position: absolute;
@@ -69,55 +72,52 @@ body {
     z-index: 1;
 }
 
+/* Logo styling */
 .navbar .logo {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #fff;
-    mix-blend-mode: normal;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7), 0 0 10px rgba(255, 255, 255, 0.2);
-    letter-spacing: 0.5px;
+    color: #e0e0e0; /* Lighter text color */
+    letter-spacing: 0.2px;
+    transition: color 0.3s ease;
 }
 
-/* Default Desktop Nav Links (Horizontal for Desktop) */
+/* Nav Links - Common Styles */
 .nav-links {
     display: flex;
     list-style: none;
     gap: 1.5rem;
+    align-items: center; /* Ensure items are vertically centered */
 }
 
 .nav-links li {
     margin: 0;
 }
 
-/* Glassmorphism Nav Links */
+/* Link Styles */
 .nav-links a {
-    background: rgba(255, 255, 255, 0.05);
-    color: #e6e6e6;
+    background: rgba(255, 255, 255, 0.04); /* More transparent */
+    color: #ccc; /* Slightly darker text */
     text-shadow: none;
     font-weight: 600;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 0.95rem;
     padding: 0.5rem 1rem;
     border-radius: 10px;
     font-family: inherit;
-    transition: all 0.3s ease-in-out;
+    transition: all 0.2s ease; /* Faster transition */
     position: relative;
     z-index: 1;
 }
 
 .nav-links a.active {
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-    text-shadow: none;
+    background: rgba(255, 255, 255, 0.08); /* More subtle active state */
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+    color: #e0e0e0;
 }
 
 .nav-links a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
-    mix-blend-mode: normal;
-    transform: scale(1.05);
-    z-index: 2;
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #fff; /* Brighter hover text */
 }
 
 .nav-links a:hover::before {
@@ -125,97 +125,71 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 180%;
-    height: 180%;
-    background: rgba(255, 255, 255, 0.08);
-    transform: translate(-50%, -50%) scale(0.8);
-    border-radius: 50%;
-    pointer-events: none;
-    filter: blur(12px);
-    z-index: 0;
+    /* Removed hover specific pseudo element - see global hover effect below */
 }
 
 /* Hamburger Icon - Visible on Mobile */
-.menu-icon {
+.menu-icon { /* Keep this for potential alternative nav */
     display: none; /* Hidden on desktop */
 }
-
+/* Mobile Styles */
 /* Mobile-specific styles */
 @media (max-width: 768px) {
     /* Hamburger Menu */
     .menu-icon {
         display: block; /* Show hamburger icon on mobile */
-        font-size: 2rem;
-        cursor: pointer;
-        margin-right: auto; /* Align hamburger on the left */
-        z-index: 30; /* Ensure hamburger icon stays on top */
+        /* ... (rest of the hamburger styles) ... */
     }
 
     .navbar .logo {
-        margin-left: auto; /* Push the logo to the right on mobile */
+        /* ... (logo styles) ... */
     }
 
-    /* Sidebar (hidden off-screen by default) */
+    /* Hide desktop nav links */
     .nav-links {
-        position: fixed;
-        top: 0;
-        left: -250px; /* Sidebar hidden off-screen initially */
-        flex-direction: column; /* Stack links vertically */
-        width: 250px;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border-radius: 0 20px 20px 0;
-        border-right: 1px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 2px 0px 8px rgba(0, 0, 0, 0.5);
-        padding-top: 60px;
-        transition: left 0.5s ease;
-        z-index: 20;
-    }
-
-    /* Sidebar when active (Slide in) */
-    .nav-active {
-        left: 0;
-    }
-
-    /* Modern Sidebar Link Styles */
-    .nav-links li {
-        margin: 20px 0;
-        padding: 10px;
-    }
-
-    .nav-links a {
-        padding: 10px 20px;
-        font-size: 1.2rem;
-        color: #222;
-        background: rgba(255, 255, 255, 0.3);
-        font-weight: 600;
-        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-        border-radius: 10px;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .nav-links a:hover {
-        background-color: rgba(102, 204, 255, 0.3);
-        color: #66ccff;
-    }
-
-    /* Overlay effect for the rest of the page when the sidebar is open */
-    .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 15;
         display: none;
-    }
+    }    
 
-    /* Show overlay when sidebar is active */
-    .overlay-active {
-        display: block;
+   /* Floating Tab Bar */
+   .tab-bar {
+       position: fixed;
+       bottom: 1rem;
+       left: 1rem;
+       right: 1rem;
+       background: rgba(20, 20, 20, 0.7);
+       backdrop-filter: blur(15px);
+       -webkit-backdrop-filter: blur(15px);
+       border-radius: 24px;
+       padding: 0.75rem 1rem;
+       display: flex;
+       justify-content: space-around;
+       align-items: center;
+       box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+       z-index: 999;
+   }
+
+   .tab-bar a {
+       color: #ccc;
+       text-decoration: none;
+       padding: 0.5rem;
+       min-width: 44px; /* Minimum touch target size */
+       min-height: 44px;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       border-radius: 8px;
+       transition: background-color 0.2s ease, color 0.2s ease;
+   }
+
+   .tab-bar a.active,
+   .tab-bar a:hover {
+       background-color: rgba(255, 255, 255, 0.1);
+       color: #fff;
+   }
+
+    /* Adjust content padding to accommodate the tab bar */
+    body {
+        padding-bottom: 4rem; /* Add padding to the bottom of the body */
     }
 }
 /* JavaScript to add scrolled class on scroll */
@@ -1104,4 +1078,34 @@ section.in-view {
 .auth-form a:hover {
     color: #fff !important;
     text-shadow: none;
+}
+
+/* Enhanced Liquid Glass Effect */
+.navbar, .hero-content, .glass-box, .feature-item, .project-item, .about-item, .auth-form, .modal-content, button {
+    transition: all 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; /* Consistent transition */
+}
+
+/* Subtle Hover Effects */
+.hero-content:hover, .glass-box:hover, .feature-item:hover, .project-item:hover, .about-item:hover, button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Add gentle background movement */
+.navbar::before, .hero-content::before, .glass-box::before, .feature-item::before, .project-item::before, .about-item::before, .auth-form::before, .modal-content::before, button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%);
+    transform: rotate(30deg);
+    pointer-events: none;
+    animation: glass-shine 10s linear infinite;
+}
+
+@keyframes glass-shine {
+    0% { transform: rotate(30deg) translate(-25%, -25%); }
+    100% { transform: rotate(30deg) translate(25%, 25%); }
 }
