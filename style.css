@@ -61,7 +61,7 @@ body {
     background: rgba(15, 15, 15, 0.7); /* Slightly darker on scroll */
 }
 
-/* Improved gradient overlay for the "liquid" effect */
+/* Improved gradient overlay for the "glass" effect */
 .navbar::after {
     content: "";
     position: absolute;
@@ -136,10 +136,7 @@ body {
 /* Mobile-specific styles */
 @media (max-width: 768px) {
     /* Hamburger Menu */
-    .menu-icon {
-        display: block; /* Show hamburger icon on mobile */
-        /* ... (rest of the hamburger styles) ... */
-    }
+    .menu-icon { display: none; } /* Removed hamburger menu */
 
     .navbar .logo {
         /* ... (logo styles) ... */
@@ -305,7 +302,7 @@ body {
         font-size: 1rem;
     }
 }
-/* Glassmorphism Glass Box (What is Clear Text AI, etc.) */
+/* Glassmorphism Glass Box  */
 .glass-box {
     background: rgba(40, 40, 40, 0.8);
     color: #e6e6e6;
@@ -1080,7 +1077,7 @@ section.in-view {
     text-shadow: none;
 }
 
-/* Enhanced Liquid Glass Effect */
+/* Enhanced Glass Effect */
 .navbar, .hero-content, .glass-box, .feature-item, .project-item, .about-item, .auth-form, .modal-content, button {
     transition: all 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; /* Consistent transition */
 }
