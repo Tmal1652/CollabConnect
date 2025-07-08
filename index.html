@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>CollabConnect - Collaborate with Creativity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -28,7 +29,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <header id="home" class="hero-section">
+    <header id="home" class="hero-section" style="transform-style: preserve-3d;">
         <div class="hero-overlay"></div> <!-- Overlay added -->
         <div class="hero-content">
             <h1>Collaborate and Create Together</h1>
@@ -78,16 +79,16 @@
       <!-- Upcoming Projects Section -->
 <section id="upcoming" class="upcoming-section" aria-labelledby="upcoming-heading">
     <h2 id="upcoming-heading">Upcoming Projects</h2>
-    <div class="projects-container">
-        <article class="project-item" aria-labelledby="project-1">
+    <div class="projects-container" style="display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 1rem;">
+        <article class="project-item" aria-labelledby="project-1" style="min-width: 300px; flex: 0 0 auto; scroll-snap-align: start;">
             <h3 id="project-1">Creative Design Sprint</h3>
             <p>A collaboration between top designers to create the next innovative product concept.</p>
         </article>
-        <article class="project-item" aria-labelledby="project-2">
+        <article class="project-item" aria-labelledby="project-2" style="min-width: 300px; flex: 0 0 auto; scroll-snap-align: start;">
             <h3 id="project-2">Social Media Campaign</h3>
             <p>Collaborate with influencers to launch an impactful campaign.</p>
         </article>
-        <article class="project-item" aria-labelledby="project-3">
+        <article class="project-item" aria-labelledby="project-3" style="min-width: 300px; flex: 0 0 auto; scroll-snap-align: start;">
             <h3 id="project-3">Code Collaboration</h3>
             <p>Join forces with developers to build an open-source project that changes the world.</p>
         </article>
@@ -147,5 +148,36 @@
 </footer>
 
     <script src="app.js"></script>
+<script>
+  const sections = document.querySelectorAll("section");
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("in-view");
+      }
+    });
+  }, {
+    threshold: 0.15
+  });
+
+  sections.forEach(section => observer.observe(section));
+</script>
+<script>
+    const hero = document.querySelector('.hero-section');
+    window.addEventListener('mousemove', e => {
+      const { innerWidth, innerHeight } = window;
+      const rotateX = ((e.clientY / innerHeight) - 0.5) * 10;
+      const rotateY = ((e.clientX / innerWidth) - 0.5) * -10;
+      hero.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    window.addEventListener('mouseout', () => {
+      hero.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    });
+  </script>
+<script>
+  // Custom cursor removed as per request
+</script>
 </body>
 </html>

@@ -1,3 +1,75 @@
+/* Phase 1: Typography Overhaul - Introduced 'Space Grotesk' for modern futuristic styling */
+/* ---Glass Bubble & Magnifier Effects --- */
+.bubble-hover {
+    position: relative;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05), inset 0 0 4px rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+.bubble-hover:hover {
+    transform: scale(1.15);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow:
+        0 0 20px rgba(255, 255, 255, 0.15),
+        inset 0 0 10px rgba(255, 255, 255, 0.08),
+        0 4px 24px rgba(0, 0, 0, 0.6);
+    filter: contrast(1.15) saturate(1.2);
+}
+
+.bubble-hover::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+    transform: rotate(30deg);
+    pointer-events: none;
+    animation: glass-shine 10s linear infinite;
+    z-index: 0;
+}
+
+/* Apply bubble-hover class and glassmorphism cues to interactive elements */
+.tab-bar a,
+button,
+.feature-item,
+.project-item,
+.about-item,
+.auth-btn {
+    border-radius: 20px;
+}
+
+.tab-bar a:hover,
+button:hover,
+.auth-btn:hover,
+.edit-btn:hover,
+.feature-item:hover,
+.project-item:hover {
+    transform: scale(1.15);
+    filter: contrast(1.2) saturate(1.3);
+    box-shadow:
+        0 0 20px rgba(0, 255, 234, 0.25),
+        0 8px 24px rgba(0, 255, 234, 0.15);
+    color: #00f2ff;
+}
+
+.tab-bar a:active,
+button:active,
+.auth-btn:active {
+    animation: pulse-glow 0.4s ease-out;
+}
+
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 0 rgba(255, 255, 255, 0); }
+    50% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.25); }
+    100% { box-shadow: 0 0 0 rgba(255, 255, 255, 0); }
+}
 /* Basic Reset */
 * {
     margin: 0;
@@ -23,9 +95,9 @@
 
 /* Body and Basic Styles */
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Modern, clean font */
+    font-family: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     line-height: 1.5; /* Slightly tighter line spacing */
-    background: linear-gradient(160deg, #121212, #1a1a1a, #202020); /* Dark, modern background gradient */
+    background: linear-gradient(135deg, #0d0d0d, #1c1c1c); /* Dark, modern background gradient */
     color: #e0e0e0; /* Light gray for primary text */
     -webkit-font-smoothing: antialiased; /* Improve font rendering on macOS */
     -moz-osx-font-smoothing: grayscale; /* Improve font rendering on Firefox macOS */
@@ -116,8 +188,9 @@ body {
 }
 
 .nav-links a:hover {
-    background-color: rgba(255, 255, 255, 0.06);
-    color: #fff; /* Brighter hover text */
+    color: #00f2ff;
+    background-color: rgba(0, 242, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 255, 234, 0.25), 0 8px 24px rgba(0, 255, 234, 0.15);
 }
 
 .nav-links a:hover::before {
@@ -128,68 +201,102 @@ body {
     /* Removed hover specific pseudo element - see global hover effect below */
 }
 
-/* Hamburger Icon - Visible on Mobile */
-.menu-icon { /* Keep this for potential alternative nav */
-    display: none; /* Hidden on desktop */
-}
 /* Mobile Styles */
-/* Mobile-specific styles */
 @media (max-width: 768px) {
-    /* Hamburger Menu */
-    .menu-icon { display: none; } /* Removed hamburger menu */
-
-    .navbar .logo {
-        /* ... (logo styles) ... */
-    }
-
     /* Hide desktop nav links */
     .nav-links {
         display: none;
     }    
 
-   /* Floating Tab Bar */
-   .tab-bar {
-       position: fixed;
-       bottom: 1rem;
-       left: 1rem;
-       right: 1rem;
-       background: rgba(20, 20, 20, 0.7);
-       backdrop-filter: blur(15px);
-       -webkit-backdrop-filter: blur(15px);
-       border-radius: 24px;
-       padding: 0.75rem 1rem;
-       display: flex;
-       justify-content: space-around;
-       align-items: center;
-       box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
-       z-index: 999;
-   }
+    /* Floating Tab Bar - Glassmorphism Style */
+    .tab-bar {
+        position: fixed;
+        bottom: 1rem;
+        left: 1rem;
+        right: 1rem;
+        background: rgba(20, 20, 20, 0.7);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-radius: 24px;
+        padding: 0.75rem 1rem;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+        z-index: 999;
+        position: relative;
+        overflow: hidden;
+    }
 
-   .tab-bar a {
-       color: #ccc;
-       text-decoration: none;
-       padding: 0.5rem;
-       min-width: 44px; /* Minimum touch target size */
-       min-height: 44px;
-       display: flex;
-       justify-content: center;
-       align-items: center;
-       border-radius: 8px;
-       transition: background-color 0.2s ease, color 0.2s ease;
-   }
+    .tab-bar::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
+        transform: rotate(30deg);
+        pointer-events: none;
+        animation: glass-shine 10s linear infinite;
+        z-index: 0;
+    }
 
-   .tab-bar a.active,
-   .tab-bar a:hover {
-       background-color: rgba(255, 255, 255, 0.1);
-       color: #fff;
-   }
+    .tab-bar a {
+        color: #ccc;
+        text-decoration: none;
+        padding: 0.5rem;
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        position: relative;
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 0 1px rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+    }
+
+    .tab-bar a::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .tab-bar a.active,
+    .tab-bar a:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+        /* --- Begin custom highlight --- */
+        box-shadow:
+            0 0 20px rgba(0, 255, 234, 0.25),
+            0 8px 24px rgba(0, 255, 234, 0.15),
+            0 0 12px rgba(255, 255, 255, 0.1);
+        background-color: rgba(0, 242, 255, 0.1);
+        color: #00f2ff;
+        /* --- End custom highlight --- */
+    }
+
+    .tab-bar a:hover::after {
+        opacity: 1;
+    }
 
     /* Adjust content padding to accommodate the tab bar */
     body {
-        padding-bottom: 4rem; /* Add padding to the bottom of the body */
+        padding-bottom: 4rem;
     }
 }
-/* JavaScript to add scrolled class on scroll */
 
 /* Glassmorphism Hero Section */
 .hero-section {
@@ -392,22 +499,13 @@ body {
     text-shadow: none;
 }
 
-@media (max-width: 768px) {
-    .features-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .feature-item {
-        margin-bottom: 2rem;
-    }
-}
+/* Responsive Design for Features Section handled in consolidated block below */
 
 /* Placeholder Styling for Profile and Login */
 .profile-placeholder, .login-placeholder {
-    background-color: #cceeff;
+    background-color: #00f2ff;
     padding: 2rem;
-    border: 1px solid #cceeff;
+    border: 1px solid #00f2ff;
     margin-top: 1.5rem;
     font-style: italic;
 }
@@ -421,6 +519,10 @@ body {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
     color: #e6e6e6;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
 }
 
 .footer p,
@@ -432,6 +534,8 @@ body {
 .footer p {
     margin-bottom: 1rem;
     font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
 .social-links {
@@ -439,6 +543,7 @@ body {
     display: flex;
     justify-content: center;
     gap: 1rem;
+    margin-top: 1rem;
 }
 
 .social-links a {
@@ -447,7 +552,8 @@ body {
 }
 
 .social-links a:hover {
-    color: #fff;
+    color: #00f2ff;
+    text-shadow: 0 0 8px rgba(0, 242, 255, 0.5);
 }
 
 @media (max-width: 768px) {
@@ -456,11 +562,6 @@ body {
     }
 }
 
-/* Focus styles for keyboard users */
-a:focus, button:focus {
-    outline: 2px solid #e0e0e0;
-    outline-offset: 4px;
-}
 
 /* Animations */
 @keyframes fadeIn {
@@ -670,17 +771,13 @@ a:focus, button:focus {
     transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.edit-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #fff;
-}
+/* .edit-btn:hover is now handled in the unified hover rule above */
 
 @media (max-width: 768px) {
     .profile-container {
         flex-direction: column;
         align-items: center;
     }
-    
     .profile-info, .profile-projects {
         margin-bottom: 2rem;
     }
@@ -789,16 +886,7 @@ a:focus, button:focus {
     text-shadow: none;
 }
 
-@media (max-width: 768px) {
-    .projects-container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .project-item {
-        margin-bottom: 2rem;
-    }
-}
+/* Responsive Design for Projects Section handled in consolidated block below */
 /* About Section */
 .about-section {
     padding: 4rem 2rem;
@@ -815,7 +903,7 @@ a:focus, button:focus {
 
 .about-section p {
     font-size: 1.2rem;
-    color: #cceeff;
+    color: #00f2ff;
     margin-bottom: 2rem;
     max-width: 700px;
     margin-left: auto;
@@ -874,16 +962,7 @@ a:focus, button:focus {
 }
 
 /* Responsive Design for About Section */
-@media (max-width: 768px) {
-    .about-content {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .about-item {
-        margin-bottom: 2rem;
-    }
-}
+/* Responsive Design for About Section handled in consolidated block below */
 button {
     background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(20px);
@@ -893,7 +972,7 @@ button {
     position: relative;
     padding: 1rem 2rem;
     border: 1px solid rgba(255, 255, 255, 0.10);
-    border-radius: 12px;
+    border-radius: 20px;
     cursor: pointer;
     font-size: 1.2rem;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -952,14 +1031,7 @@ a:hover {
 }
 
 /* Feature and Project Item Hover */
- .feature-item:hover, .project-item:hover {
-     transform: scale(1.05);
-     box-shadow:
-         0 8px 16px rgba(255, 255, 255, 0.08),
-         0 2px 10px rgba(255,255,255,0.05),
-         inset 0 0 1px rgba(255, 255, 255, 0.1);
-     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
- }
+/* .feature-item:hover, .project-item:hover now handled by .bubble-hover and new hover effects above */
 
 
 
@@ -977,31 +1049,23 @@ p {
         flex-direction: column;
         align-items: center;
     }
-
     .feature-item, .project-item, .about-item {
         margin-bottom: 2rem;
         width: 80%;
     }
-
     h1, h2, h3 {
         font-size: 1.8rem;
     }
-
     p {
         font-size: 1rem;
     }
-
     button {
         padding: 0.75rem 1.5rem;
         font-size: 1rem;
     }
 }
 /* Global Spacing */
-body {
-    padding: 0;
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-}
+/* Remove duplicate body style block; already defined at top */
 
 section {
     padding: 4rem 2rem;
@@ -1016,37 +1080,33 @@ h1, h2, h3 {
     margin-bottom: 2rem;
 }
 
-/* Feature and Project Containers */
-.features-container, .projects-container {
-    display: flex;
-    justify-content: space-around;
-    gap: 2rem;
-    flex-wrap: wrap;
-    margin-top: 2rem;
-}
+/* Remove duplicate .features-container, .projects-container responsive block */
 
 /* .feature-item and .project-item styles are now defined above with glassmorphism */
 /* Focus States for Buttons and Links */
-button:focus, a:focus {
-    outline: 2px solid #e0e0e0;
-    outline-offset: 4px;
+/* Unified focus style for accessibility */
+a:focus, button:focus, input:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #00ffe0, 0 0 10px #00ffe0;
 }
 
-input:focus, textarea:focus {
-    outline: 2px solid #e0e0e0;
-    outline-offset: 4px;
+/* Enhanced visible focus styles for key interactive elements */
+.tab-bar a:focus,
+.nav-links a:focus,
+.auth-btn:focus,
+button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px #00ffe0, 0 0 12px 2px #00ffe0;
+    z-index: 3;
+}
+
+/* Modal close button focus styling for keyboard accessibility */
+.close:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px #00ffe0, 0 0 12px 2px #00ffe0;
 }
 /* Add fade-in animation */
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+/* Only one @keyframes fadeUp definition retained above */
 
 /* Apply fade-in animation to sections */
 section {
@@ -1065,7 +1125,7 @@ section.in-view {
 /* Auth Form Links Styling */
 .auth-form a,
 .auth-form a:visited {
-    color: #ccc !important;
+    color: #e0e0e0 !important;
     text-shadow: none;
     text-decoration: none;
     font-weight: 600;
@@ -1106,3 +1166,23 @@ section.in-view {
     0% { transform: rotate(30deg) translate(-25%, -25%); }
     100% { transform: rotate(30deg) translate(25%, 25%); }
 }
+
+/* Section Wrapper Utility */
+.section-wrapper {
+  padding: 4rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .section-wrapper {
+    padding: 6rem 2rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .section-wrapper {
+    padding: 8rem 0;
+  }
+}
+
