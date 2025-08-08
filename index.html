@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>CollabConnect - Collaborate with Creativity</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#0b1323" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,10 +16,10 @@
 
     <!-- Navigation Bar -->
     <nav class="navbar" aria-label="Main Navigation">
-        
-        
         <div class="logo">CollabConnect</div>
-        
+        <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <span class="bars"></span>
+        </button>
         <!-- Sidebar Navigation (hidden by default) -->
         <ul class="nav-links" role="menu">
             <li role="menuitem"><a href="#home">Home</a></li>
@@ -29,7 +31,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <header id="home" class="hero-section" style="transform-style: preserve-3d;">
+    <header id="home" class="hero-section">
         <div class="hero-overlay"></div> <!-- Overlay added -->
         <div class="hero-content">
             <h1>Collaborate and Create Together</h1>
@@ -39,26 +41,36 @@
     </header>
 
     <!-- Main Content -->
-    <main id="main-content">
+    <main id="main-content" class="page-offset">
       
         <!-- About Section -->
-<section id="about" class="about-section" aria-labelledby="about-heading">
+<section id="about" class="about-section container" aria-labelledby="about-heading">
     <h2 id="about-heading">About CollabConnect</h2>
     <p>CollabConnect empowers teams to collaborate remotely, offering tools to bring together ideas, projects, and people in a seamless, social environment.</p>
     <div class="about-content">
-        <div class="about-item">
-            <h3>Our Mission</h3>
-            <p>To enable remote teams to work together effortlessly, no matter where they are in the world.</p>
-        </div>
-        <div class="about-item">
-            <h3>Why Choose Us</h3>
-            <p>Our platform is designed with collaboration at its core, making it easy for teams to connect, share, and innovate.</p>
-        </div>
+                <div class="about-item">
+                        <h3>Our Mission</h3>
+                        <p>To enable remote teams to work together effortlessly, no matter where they are in the world.</p>
+                        <div class="chip-row" aria-label="Highlights">
+                            <span class="chip" role="note">Remote-first</span>
+                            <span class="chip" role="note">Inclusive</span>
+                            <span class="chip" role="note">Global</span>
+                        </div>
+                </div>
+                <div class="about-item">
+                        <h3>Why Choose Us</h3>
+                        <p>Our platform is designed with collaboration at its core, making it easy for teams to connect, share, and innovate.</p>
+                        <div class="chip-row" aria-label="Highlights">
+                            <span class="chip" role="note">Collaboration</span>
+                            <span class="chip" role="note">Community</span>
+                            <span class="chip" role="note">Simplicity</span>
+                        </div>
+                </div>
     </div>
 </section>
 
       <!-- Features Section -->
-    <section id="features" class="features-section" aria-labelledby="features-heading">
+    <section id="features" class="features-section container" aria-labelledby="features-heading">
     <h2 id="features-heading">Key Features</h2>
     <div class="features-container">
         <article class="feature-item" aria-labelledby="feature-1">
@@ -77,26 +89,41 @@
         </section>
 
       <!-- Upcoming Projects Section -->
-<section id="upcoming" class="upcoming-section" aria-labelledby="upcoming-heading">
+<section id="upcoming" class="upcoming-section container" aria-labelledby="upcoming-heading">
     <h2 id="upcoming-heading">Upcoming Projects</h2>
     <div class="projects-container" style="display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 1rem;">
         <article class="project-item" aria-labelledby="project-1" style="min-width: 300px; flex: 0 0 auto; scroll-snap-align: start;">
             <h3 id="project-1">Creative Design Sprint</h3>
             <p>A collaboration between top designers to create the next innovative product concept.</p>
+            <div class="chip-row" aria-label="Project tags">
+                <span class="chip" role="note">Design</span>
+                <span class="chip" role="note">Sprint</span>
+                <span class="chip" role="note">UI/UX</span>
+            </div>
         </article>
         <article class="project-item" aria-labelledby="project-2" style="min-width: 300px; flex: 0 0 auto; scroll-snap-align: start;">
             <h3 id="project-2">Social Media Campaign</h3>
             <p>Collaborate with influencers to launch an impactful campaign.</p>
+            <div class="chip-row" aria-label="Project tags">
+                <span class="chip" role="note">Marketing</span>
+                <span class="chip" role="note">Content</span>
+                <span class="chip" role="note">Analytics</span>
+            </div>
         </article>
         <article class="project-item" aria-labelledby="project-3" style="min-width: 300px; flex: 0 0 auto; scroll-snap-align: start;">
             <h3 id="project-3">Code Collaboration</h3>
             <p>Join forces with developers to build an open-source project that changes the world.</p>
+            <div class="chip-row" aria-label="Project tags">
+                <span class="chip" role="note">Open Source</span>
+                <span class="chip" role="note">JavaScript</span>
+                <span class="chip" role="note">Community</span>
+            </div>
         </article>
     </div>
 </section>
 
 <!-- User Profile Section -->
-<section id="profile" class="profile-section" aria-labelledby="profile-heading">
+<section id="profile" class="profile-section container" aria-labelledby="profile-heading">
     <h2 id="profile-heading">Your Profile</h2>
     <p>Manage your account information and view your projects.</p>
     <div class="profile-container">
@@ -104,7 +131,7 @@
             <h3>Profile Information</h3>
             <p><strong>Name:</strong> <span id="profile-name">John Doe</span></p>
             <p><strong>Email:</strong> <span id="profile-email">johndoe@example.com</span></p>
-            <button class="edit-btn" onclick="editProfile()">Edit Profile</button>
+            <button class="edit-btn" id="editProfileBtn" onclick="editProfile()">Edit Profile</button>
         </div>
         <div class="profile-projects">
             <h3>Your Projects</h3>
@@ -117,18 +144,18 @@
 </section>
 
 <!-- Edit Profile Modal -->
-<div id="editProfileModal" class="modal">
+<div id="editProfileModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editProfileTitle" aria-hidden="true">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <h3>Edit Profile</h3>
+        <h3 id="editProfileTitle">Edit Profile</h3>
         <form id="editProfileForm">
             <div class="form-group">
                 <label for="edit-name">Name</label>
-                <input type="text" id="edit-name" name="name" value="John Doe">
+                <input type="text" id="edit-name" name="name" value="John Doe" autocomplete="name" required>
             </div>
             <div class="form-group">
                 <label for="edit-email">Email</label>
-                <input type="email" id="edit-email" name="email" value="johndoe@example.com">
+                <input type="email" id="edit-email" name="email" value="johndoe@example.com" autocomplete="email" required>
             </div>
             <button type="submit" class="auth-btn">Save Changes</button>
         </form>
@@ -141,41 +168,21 @@
 <footer class="footer" aria-label="Website Footer">
     <p>© 2025 CollabConnect. All Rights Reserved. Created by Tyler Malovrh</p>
     <ul class="social-links">
-        <li><a href="#" aria-label="Follow us on X">X</a></li>
-        <li><a href="#" aria-label="Follow us on LinkedIn">LinkedIn</a></li>
-        <li><a href="#" aria-label="Follow us on Facebook">Facebook</a></li>
+        <li><a class="chip" href="#" aria-label="Follow us on X">X</a></li>
+        <li><a class="chip" href="#" aria-label="Follow us on LinkedIn">LinkedIn</a></li>
+        <li><a class="chip" href="#" aria-label="Follow us on Facebook">Facebook</a></li>
     </ul>
 </footer>
 
     <script src="app.js"></script>
-<script>
-  const sections = document.querySelectorAll("section");
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("in-view");
-      }
-    });
-  }, {
-    threshold: 0.15
-  });
-
-  sections.forEach(section => observer.observe(section));
-</script>
-<script>
-    const hero = document.querySelector('.hero-section');
-    window.addEventListener('mousemove', e => {
-      const { innerWidth, innerHeight } = window;
-      const rotateX = ((e.clientY / innerHeight) - 0.5) * 10;
-      const rotateY = ((e.clientX / innerWidth) - 0.5) * -10;
-      hero.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    });
-
-    window.addEventListener('mouseout', () => {
-      hero.style.transform = 'rotateX(0deg) rotateY(0deg)';
-    });
-  </script>
+    <!-- Mobile Tab Bar (visible on small screens) -->
+    <nav class="tab-bar" aria-label="Quick Navigation">
+        <a href="#home" aria-label="Home">Home</a>
+        <a href="#about" aria-label="About">About</a>
+        <a href="#features" aria-label="Features">Features</a>
+        <a href="#upcoming" aria-label="Projects">Projects</a>
+    </nav>
+<!-- Removed 3D tilt on hero to keep background steady -->
 <script>
   // Custom cursor removed as per request
 </script>

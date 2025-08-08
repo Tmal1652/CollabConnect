@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Signup - CollabConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar" aria-label="Main Navigation">
         <div class="logo">CollabConnect</div>
+        <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <span class="bars"></span>
+        </button>
         <ul class="nav-links" role="menu">
             <li role="menuitem"><a href="index.html#home">Home</a></li>
             <li role="menuitem"><a href="login.html">Login</a></li>
@@ -18,9 +22,9 @@
     </nav>
 
     <!-- Signup Section -->
-    <section id="signup" class="signup-section" aria-labelledby="signup-heading">
+    <section id="signup" class="signup-section page-offset" aria-labelledby="signup-heading">
         <div style="padding-top: 100px; text-align: center;">
-        <h2 id="signup-heading">Signup</h2>
+    <h2 id="signup-heading">Signup</h2>
         <p>Create an account to start collaborating.</p>
         <div class="auth-form">
           <form id="signupForm">
@@ -49,5 +53,6 @@
     <footer aria-label="Website Footer" style="text-align: center;">
         <p>© 2025 CollabConnect. All Rights Reserved.</p>
     </footer>
+    <script src="app.js"></script>
 </body>
 </html>

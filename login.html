@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login - CollabConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar" aria-label="Main Navigation">
         <div class="logo">CollabConnect</div>
+        <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <span class="bars"></span>
+        </button>
         <ul class="nav-links" role="menu">
             <li role="menuitem"><a href="index.html#home">Home</a></li>
             <li role="menuitem"><a href="signup.html">Signup</a></li>
@@ -18,7 +22,7 @@
     </nav>
 
     <!-- Login Section -->
-    <section id="login" class="login-section" aria-labelledby="login-heading">
+    <section id="login" class="login-section page-offset" aria-labelledby="login-heading">
         <div style="padding-top: 100px;">
             <h2 id="login-heading" style="text-align: center;">Login</h2>
             <p style="text-align: center;">Sign in to access your dashboard and projects.</p>
@@ -45,5 +49,6 @@
     <footer aria-label="Website Footer" style="text-align: center;">
         <p>© 2025 CollabConnect. All Rights Reserved.</p>
     </footer>
+    <script src="app.js"></script>
 </body>
 </html>

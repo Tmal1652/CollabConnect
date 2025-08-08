@@ -1,0 +1,14 @@
+{
+  "name": "collabconnect-static",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "lint:css": "stylelint \"**/*.css\"",
+    "build:css": "node scripts/minify-css.js style.css style.min.css"
+  },
+  "devDependencies": {
+    "esbuild": "^0.21.5",
+    "stylelint": "^16.6.1",
+    "stylelint-config-standard": "^36.0.0"
+  }
+}
