@@ -13,6 +13,13 @@
   }
   const DEV_AUTO_LOGIN = localStorage.getItem('cc:devMode') === '1';
   const DEV_USER_EMAIL = 'devuser@example.com';
+  // If devMode flag has never been set, default it ON for mock/demo so user appears logged in immediately.
+  // Disable anytime with ?dev=0 in the URL.
+  if (localStorage.getItem('cc:devMode') === null) {
+    localStorage.setItem('cc:devMode','1');
+  }
+  // Re-evaluate after potential default
+  const EFFECTIVE_AUTO_LOGIN = localStorage.getItem('cc:devMode') === '1';
   // Avatar visibility toggle (?avatar=0 to hide, ?avatar=1 to show again)
   if (qs.has('avatar')) {
     if (qs.get('avatar') === '0') localStorage.setItem('cc:hideAvatar','1');
@@ -58,7 +65,7 @@
   }
 
   // Auto-login in dev before gating if not already logged in (skip if prefill requested)
-  if (DEV_AUTO_LOGIN && !localStorage.getItem(TOKEN_KEY) && !qs.has('prefill')) {
+  if (EFFECTIVE_AUTO_LOGIN && !localStorage.getItem(TOKEN_KEY) && !qs.has('prefill')) {
     try { setSession(DEV_USER_EMAIL); } catch(e){}
   }
   // Execute gating early (after potential auto-login)
@@ -72,8 +79,11 @@
     if (isLoggedIn()) {
       const nav = document.querySelector('.nav-links');
       if (nav && !nav.querySelector('#logoutBtn')) {
-        injectAvatar(nav);
-        const li = document.createElement('li');
+        // Create grouping container at end for avatar + logout for balanced spacing on mobile
+        const groupFragment = document.createDocumentFragment();
+        injectAvatar(nav); // appends avatar <li>
+  const li = document.createElement('li');
+  li.classList.add('nav-utility','nav-logout-item');
         const a = document.createElement('a');
         a.href = '#logout';
         a.id = 'logoutBtn';
@@ -92,6 +102,11 @@
         const loginLink = nav.querySelector('a[href="login.html"], a[href="./login.html"]');
         loginLink && (loginLink.style.display = 'none');
         nav.appendChild(li);
+        // Move avatar li directly before logout li for consistent cluster
+        const avatarLi = nav.querySelector('.nav-avatar')?.parentElement;
+        if (avatarLi && avatarLi !== nav.lastElementChild) {
+          nav.appendChild(avatarLi); // ensure sequential order near end
+        }
         // Admin badge
         if (getRole() === 'admin' && !nav.querySelector('.role-chip')) {
           const rli = document.createElement('li');
@@ -114,15 +129,19 @@
         setSession(email.trim().toLowerCase());
         location.replace('index.html#home');
       });
-      // Prefill if instructed via query params (?prefill=1&email=...)
-      if (qs.has('prefill')) {
+      // Prefill for mock/demo: if query ?prefill=1 OR simply not logged in (default behavior) we populate fields.
+      if (!isLoggedIn() || qs.has('prefill')) {
         const emailField = loginForm.querySelector('[name="email"]');
         const passField = loginForm.querySelector('[name="password"]');
-        if (emailField && !emailField.value) emailField.value = qs.get('email') || DEV_USER_EMAIL;
-        if (passField && !passField.value) passField.value = 'password123'; // mock password placeholder
-        // Focus login button for quick tap
+        if (emailField) emailField.value = qs.get('email') || DEV_USER_EMAIL;
+        if (passField) passField.value = 'password123';
         const btn = loginForm.querySelector('button[type="submit"]');
-        btn && setTimeout(()=>btn.focus(), 50);
+        // If ?autosubmit=1 is provided, automatically submit after small delay for seamless mock.
+        if (qs.get('autosubmit') === '1') {
+          setTimeout(()=> btn && btn.click(), 350);
+        } else {
+          btn && setTimeout(()=>btn.focus(), 60);
+        }
       }
     }
 
@@ -182,7 +201,8 @@
   if (nav.querySelector('.nav-avatar')) return;
     const email = getUser();
     const color = avatarColor(email || 'user');
-    const li = document.createElement('li');
+  const li = document.createElement('li');
+  li.classList.add('nav-utility','nav-avatar-item');
     const span = document.createElement('span');
     span.className = 'nav-avatar';
     span.setAttribute('aria-label','User avatar');
