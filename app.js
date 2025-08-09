@@ -5,9 +5,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         if (target) {
             e.preventDefault();
             target.scrollIntoView({ behavior: 'smooth' });
-            // Update active states on click
             setActiveNav(this.getAttribute('href'));
-            setActiveTab(this.getAttribute('href'));
         }
     });
 });
@@ -85,26 +83,7 @@ sections.forEach(section => {
     observer.observe(section);
 });
 
-// Sidebar toggle functionality
-const menuToggle = document.querySelector('.menu-toggle');
-const navLinks = document.querySelector('.nav-links');
-
-if (menuToggle && navLinks) {
-    menuToggle.addEventListener('click', () => {
-        const isActive = navLinks.classList.toggle('nav-active');
-        menuToggle.setAttribute('aria-expanded', isActive ? 'true' : 'false');
-    });
-
-    // Collapse menu on link click (mobile)
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            if (navLinks.classList.contains('nav-active')) {
-                navLinks.classList.remove('nav-active');
-                menuToggle.setAttribute('aria-expanded', 'false');
-            }
-        });
-    });
-}
+// Single adaptive navbar (no toggle needed)
 
 // Automatic theming is handled by CSS prefers-color-scheme.
 // If you ever need to run logic on theme changes, this listener is ready.
@@ -119,18 +98,14 @@ if (menuToggle && navLinks) {
 
 // Active nav/tab highlighting on scroll
 const navAnchors = Array.from(document.querySelectorAll('.nav-links a[href^="#"]'));
-const tabAnchors = Array.from(document.querySelectorAll('.tab-bar a[href^="#"]'));
 
-function setActive(items, hash) {
-    items.forEach(a => {
-    const isActive = a.getAttribute('href') === hash;
-    a.classList.toggle('active', isActive);
-    if (isActive) a.setAttribute('aria-current', 'page');
-    else a.removeAttribute('aria-current');
+function setActiveNav(hash) {
+    navAnchors.forEach(a => {
+        const isActive = a.getAttribute('href') === hash;
+        a.classList.toggle('active', isActive);
+        if (isActive) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
 }
-function setActiveNav(hash) { setActive(navAnchors, hash); }
-function setActiveTab(hash) { setActive(tabAnchors, hash); }
 
 function getCurrentSectionHash() {
     let current = '#home';
@@ -147,8 +122,9 @@ function getCurrentSectionHash() {
 function onScrollUpdateActive() {
     const hash = getCurrentSectionHash();
     setActiveNav(hash);
-    setActiveTab(hash);
 }
 
 window.addEventListener('scroll', onScrollUpdateActive, { passive: true });
 window.addEventListener('load', onScrollUpdateActive);
+
+// Mobile routing logic moved to mobile/router.js

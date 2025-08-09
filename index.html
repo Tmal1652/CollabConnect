@@ -8,35 +8,43 @@
     <meta name="theme-color" content="#0b1323" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- For production harden security headers (served via server config):
+         Content-Security-Policy, X-Frame-Options, Referrer-Policy, Permissions-Policy.
+         Avoid inline scripts or add nonce/hash if CSP enforced. -->
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <script src="mobile/auth.js" defer></script>
 </head>
 <body>
+    <div id="networkBanner" class="network-banner" style="display:none" role="status" aria-live="polite"></div>
     <!-- Skip to Main Content Link for Screen Readers -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <!-- Navigation Bar -->
-    <nav class="navbar" aria-label="Main Navigation">
+    <nav class="navbar" aria-label="Primary Navigation">
         <div class="logo">CollabConnect</div>
-        <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
-            <span class="bars"></span>
-        </button>
-        <!-- Sidebar Navigation (hidden by default) -->
-        <ul class="nav-links" role="menu">
-            <li role="menuitem"><a href="#home">Home</a></li>
-            <li role="menuitem"><a href="#about">About</a></li>
-            <li role="menuitem"><a href="#features">Features</a></li>
-            <li role="menuitem"><a href="#upcoming">Projects</a></li>
-            <li role="menuitem"><a href="login.html">Login</a></li>
+        <ul class="nav-links">
+            <li><a href="#home" aria-label="Home"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg></span><span class="nav-label">Home</span></a></li>
+            <li><a href="#about" aria-label="About"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span class="nav-label">About</span></a></li>
+            <li><a href="#features" aria-label="Features"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></span><span class="nav-label">Features</span></a></li>
+            <li><a href="#upcoming" aria-label="Projects"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18"/><path d="M3 12h18"/><path d="M3 17h18"/></svg></span><span class="nav-label">Projects</span></a></li>
+            <li><a href="#profile" aria-label="Profile" class="requires-auth" data-auth="hide"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5Z"/><path d="M3 22c1.5-4 5-7 9-7s7.5 3 9 7"/></svg></span><span class="nav-label">Profile</span></a></li>
+            <li><a href="login.html" aria-label="Login"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></span><span class="nav-label">Login</span></a></li>
         </ul>
     </nav>
 
     <!-- Hero Section -->
-    <header id="home" class="hero-section">
+    <header id="home" class="hero-section" data-view="home">
         <div class="hero-overlay"></div> <!-- Overlay added -->
         <div class="hero-content">
+            <span class="mobile-hero-brand" aria-hidden="true">CollabConnect</span>
             <h1>Collaborate and Create Together</h1>
             <p>The ultimate platform to bring your team’s creativity to life.</p>
             <button aria-label="Get started with CollabConnect" onclick="window.location.href='signup.html'">Get Started</button>
+            <button id="installBtn" class="install-btn" type="button" style="display:none" aria-label="Install CollabConnect App">Install App</button>
         </div>
     </header>
 
@@ -44,7 +52,7 @@
     <main id="main-content" class="page-offset">
       
         <!-- About Section -->
-<section id="about" class="about-section container" aria-labelledby="about-heading">
+<section id="about" class="about-section container" aria-labelledby="about-heading" data-view="about">
     <h2 id="about-heading">About CollabConnect</h2>
     <p>CollabConnect empowers teams to collaborate remotely, offering tools to bring together ideas, projects, and people in a seamless, social environment.</p>
     <div class="about-content">
@@ -70,7 +78,7 @@
 </section>
 
       <!-- Features Section -->
-    <section id="features" class="features-section container" aria-labelledby="features-heading">
+    <section id="features" class="features-section container" aria-labelledby="features-heading" data-view="features">
     <h2 id="features-heading">Key Features</h2>
     <div class="features-container">
         <article class="feature-item" aria-labelledby="feature-1">
@@ -89,7 +97,7 @@
         </section>
 
       <!-- Upcoming Projects Section -->
-<section id="upcoming" class="upcoming-section container" aria-labelledby="upcoming-heading">
+<section id="upcoming" class="upcoming-section container" aria-labelledby="upcoming-heading" data-view="upcoming">
     <h2 id="upcoming-heading">Upcoming Projects</h2>
     <div class="projects-container" style="display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 1rem;">
         <article class="project-item" aria-labelledby="project-1" style="min-width: 300px; flex: 0 0 auto; scroll-snap-align: start;">
@@ -123,23 +131,33 @@
 </section>
 
 <!-- User Profile Section -->
-<section id="profile" class="profile-section container" aria-labelledby="profile-heading">
-    <h2 id="profile-heading">Your Profile</h2>
-    <p>Manage your account information and view your projects.</p>
-    <div class="profile-container">
-        <div class="profile-info">
-            <h3>Profile Information</h3>
-            <p><strong>Name:</strong> <span id="profile-name">John Doe</span></p>
-            <p><strong>Email:</strong> <span id="profile-email">johndoe@example.com</span></p>
-            <button class="edit-btn" id="editProfileBtn" onclick="editProfile()">Edit Profile</button>
+<section id="profile" class="profile-section container" aria-labelledby="profile-heading" data-view="profile">
+    <header class="profile-header">
+        <div class="profile-heading-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5Z"/><path d="M3 22c1.5-4 5-7 9-7s7.5 3 9 7"/></svg></div>
+        <div>
+            <h2 id="profile-heading">Your Profile</h2>
+            <p class="profile-sub">Manage your account & activity</p>
         </div>
-        <div class="profile-projects">
-            <h3>Your Projects</h3>
-            <ul id="profile-projects-list">
-                <li>Project 1: Creative Design Sprint</li>
-                <li>Project 2: Social Media Campaign</li>
+    </header>
+    <div class="profile-grid">
+        <article class="profile-card" aria-labelledby="pc-info">
+            <h3 id="pc-info" class="card-title">Account</h3>
+            <ul class="profile-meta" aria-label="Account fields">
+              <li><span class="field-label">Name</span><span class="field-value" id="profile-name">John Doe</span></li>
+              <li><span class="field-label">Email</span><span class="field-value" id="profile-email">johndoe@example.com</span></li>
+              <li><span class="field-label">Role</span><span class="field-value" id="profile-role">User</span></li>
             </ul>
-        </div>
+            <div class="profile-actions">
+                <button class="btn subtle" id="editProfileBtn" onclick="editProfile()" aria-haspopup="dialog">Edit</button>
+            </div>
+        </article>
+        <article class="profile-card" aria-labelledby="pc-projects">
+            <h3 id="pc-projects" class="card-title">Projects <span class="badge" id="project-count">2</span></h3>
+            <ul id="profile-projects-list" class="projects-list" aria-label="Your projects">
+                <li class="proj-row"><span class="proj-dot" aria-hidden="true"></span><span class="proj-name">Creative Design Sprint</span><span class="proj-tag">Design</span></li>
+                <li class="proj-row"><span class="proj-dot" aria-hidden="true"></span><span class="proj-name">Social Media Campaign</span><span class="proj-tag">Marketing</span></li>
+            </ul>
+        </article>
     </div>
 </section>
 
@@ -165,23 +183,28 @@
     </main>
 
 <!-- Footer -->
-<footer class="footer" aria-label="Website Footer">
+<footer class="footer site-footer" aria-label="Website Footer">
     <p>© 2025 CollabConnect. All Rights Reserved. Created by Tyler Malovrh</p>
     <ul class="social-links">
-        <li><a class="chip" href="#" aria-label="Follow us on X">X</a></li>
-        <li><a class="chip" href="#" aria-label="Follow us on LinkedIn">LinkedIn</a></li>
-        <li><a class="chip" href="#" aria-label="Follow us on Facebook">Facebook</a></li>
+    <li><a class="chip" href="#" aria-label="Follow us on X" rel="noopener">X</a></li>
+    <li><a class="chip" href="#" aria-label="Follow us on LinkedIn" rel="noopener">LinkedIn</a></li>
+    <li><a class="chip" href="#" aria-label="Follow us on Facebook" rel="noopener">Facebook</a></li>
     </ul>
 </footer>
 
-    <script src="app.js"></script>
-    <!-- Mobile Tab Bar (visible on small screens) -->
-    <nav class="tab-bar" aria-label="Quick Navigation">
-        <a href="#home" aria-label="Home">Home</a>
-        <a href="#about" aria-label="About">About</a>
-        <a href="#features" aria-label="Features">Features</a>
-        <a href="#upcoming" aria-label="Projects">Projects</a>
-    </nav>
+                <script src="app.js"></script>
+        <script src="mobile/router.js" defer></script>
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('sw.js').catch(console.error);
+                });
+            }
+                        // Dev helper: purge caches quickly with ?purgeCaches=1
+                        if (location.search.includes('purgeCaches=1') && 'caches' in window) {
+                            caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).then(()=>console.log('Caches cleared'));
+                        }
+        </script>
 <!-- Removed 3D tilt on hero to keep background steady -->
 <script>
   // Custom cursor removed as per request
