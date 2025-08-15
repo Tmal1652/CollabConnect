@@ -1,2 +1,5 @@
-Placeholder for PWA icons. Add at least icon-192.png and icon-512.png here.
-Recommended to generate adaptive maskable icon as well.
+PWA icons consumed by manifest.json:
+- icon-192.png (maskable)
+- icon-512.png (maskable)
+
+Tip: generate additional sizes if needed using pwa-asset-generator or realfavicongenerator.net.

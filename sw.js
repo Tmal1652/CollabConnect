@@ -1,15 +1,20 @@
 // Enhanced service worker: split caches & runtime strategies
-const VERSION = 'v2';
+const VERSION = 'v3';
 const SHELL_CACHE = `cc-shell-${VERSION}`;
 const ASSET_CACHE = `cc-assets-${VERSION}`;
 const PAGE_CACHE = `cc-pages-${VERSION}`;
 const APP_SHELL = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/app.js',
-  '/mobile/router.js',
-  '/manifest.json'
+  'index.html',
+  'style.css',
+  'style.min.css',
+  'app.js',
+  'mobile/router.js',
+  'mobile/auth.js',
+  'manifest.json',
+  'icons/icon-192.png',
+  'icons/icon-512.png',
+  'background.webp',
+  'image.webp'
 ];
 
 const isHTML = (req) => req.destination === 'document' || (req.headers.get('accept') || '').includes('text/html');
@@ -55,7 +60,7 @@ async function networkFirst(request) {
     return fresh;
   } catch (e) {
     const cached = await caches.match(request);
-    return cached || caches.match('/index.html');
+  return cached || caches.match('index.html');
   }
 }
 
@@ -80,7 +85,7 @@ async function cacheFirst(request) {
     }
     return resp;
   } catch (e) {
-    return caches.match('/index.html');
+  return caches.match('index.html');
   }
 }
 

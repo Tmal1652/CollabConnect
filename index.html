@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>CollabConnect - Collaborate with Creativity</title>
+    <meta name="description" content="CollabConnect helps teams collaborate and create together with a beautiful, mobile-friendly experience.">
     <meta name="theme-color" content="#0b1323" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- For production harden security headers (served via server config):
          Content-Security-Policy, X-Frame-Options, Referrer-Policy, Permissions-Policy.
          Avoid inline scripts or add nonce/hash if CSP enforced. -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="preload" href="style.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="style.min.css"></noscript>
+    <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="apple-mobile-web-app-title" content="CollabConnect">
     <meta name="mobile-web-app-capable" content="yes">
     <script src="mobile/auth.js" defer></script>
 </head>
