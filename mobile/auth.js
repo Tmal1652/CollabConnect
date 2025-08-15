@@ -25,10 +25,10 @@
     if (qs.get('avatar') === '0') localStorage.setItem('cc:hideAvatar','1');
     if (qs.get('avatar') === '1') localStorage.removeItem('cc:hideAvatar');
   }
-  // Role simulation (?role=admin or ?role=user) persists; default user.
+  // Role simulation (?role=admin|user|pro) persists; default user.
   if (qs.has('role')) {
     const r = qs.get('role');
-    if (r === 'admin' || r === 'user') localStorage.setItem('cc:role', r);
+    if (r === 'admin' || r === 'user' || r === 'pro') localStorage.setItem('cc:role', r);
   }
   function getRole(){ return localStorage.getItem('cc:role') || 'user'; }
 
@@ -75,13 +75,12 @@
   // Hide profile nav until authenticated
   const profileNav = document.querySelector('a[href="#profile"].requires-auth');
   if (profileNav) profileNav.style.display = isLoggedIn() ? '' : 'none';
-    // Enhance nav: replace login link with logout if logged in
+  // Enhance nav: replace login link with logout if logged in
     if (isLoggedIn()) {
       const nav = document.querySelector('.nav-links');
       if (nav && !nav.querySelector('#logoutBtn')) {
-        // Create grouping container at end for avatar + logout for balanced spacing on mobile
-        const groupFragment = document.createDocumentFragment();
-        injectAvatar(nav); // appends avatar <li>
+    // Attach status dot to the Profile tab icon (no extra avatar item)
+    attachStatusDotToProfile();
   const li = document.createElement('li');
   li.classList.add('nav-utility','nav-logout-item');
         const a = document.createElement('a');
@@ -102,11 +101,7 @@
         const loginLink = nav.querySelector('a[href="login.html"], a[href="./login.html"]');
         loginLink && (loginLink.style.display = 'none');
         nav.appendChild(li);
-        // Move avatar li directly before logout li for consistent cluster
-        const avatarLi = nav.querySelector('.nav-avatar')?.parentElement;
-        if (avatarLi && avatarLi !== nav.lastElementChild) {
-          nav.appendChild(avatarLi); // ensure sequential order near end
-        }
+  // No extra avatar item; profile link remains in place with a status dot
         // Admin badge
         if (getRole() === 'admin' && !nav.querySelector('.role-chip')) {
           const rli = document.createElement('li');
@@ -196,33 +191,20 @@
   window.CCAuth = { isLoggedIn, getUser, getRole, logout: () => { clearSession(); location.replace('login.html'); } };
 
   // Helpers
-  function injectAvatar(nav){
-  if (localStorage.getItem('cc:hideAvatar') === '1') return;
-  if (nav.querySelector('.nav-avatar')) return;
-    const email = getUser();
-    const color = avatarColor(email || 'user');
-  const li = document.createElement('li');
-  li.classList.add('nav-utility','nav-avatar-item');
-    const span = document.createElement('span');
-    span.className = 'nav-avatar';
-    span.setAttribute('aria-label','User avatar');
-    span.style.background = color.bg;
-    span.style.color = color.fg;
-    // Inline SVG user silhouette icon (accessible)
-    span.innerHTML = '<svg class="nav-avatar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>';
-  span.addEventListener('click', () => { location.hash = '#profile'; });
-    // Role badge overlay for admins
-    if (getRole() === 'admin') {
-      const badge = document.createElement('span');
-      badge.className = 'nav-avatar-badge';
-      badge.title = 'Admin';
-      badge.textContent = 'A';
-      span.appendChild(badge);
-    }
-  li.appendChild(span);
-  // Place near right side (append before logout which is added after this call)
-  nav.appendChild(li);
+  function attachStatusDotToProfile(){
+    const profileLink = document.querySelector('.nav-links a[href="#profile"]');
+    if (!profileLink) return;
+    const icon = profileLink.querySelector('.nav-icon');
+    if (!icon) return;
+    if (icon.querySelector('.nav-status-dot')) return; // already added
+    const statusType = (localStorage.getItem('cc:devMode') === '1') ? 'dev' : (getRole() === 'pro' ? 'pro' : 'user');
+    const dot = document.createElement('span');
+    dot.className = 'nav-status-dot';
+    dot.setAttribute('data-status', statusType);
+    dot.title = statusType.charAt(0).toUpperCase() + statusType.slice(1);
+    icon.appendChild(dot);
   }
+  // Deprecated separate avatar injection — kept for reference but unused
   function avatarColor(seed){
     let h = 0; for (let i=0;i<seed.length;i++) h = (h*31 + seed.charCodeAt(i))>>>0;
     const hue = h % 360; const sat = 55; const light = 50;
