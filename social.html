@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Social – CollabConnect</title>
+  <meta name="description" content="Team feed for updates, collaboration, and creativity." />
+  <meta name="theme-color" content="#0b1323" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="preload" href="style.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="style.min.css" /></noscript>
+  <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <script src="mobile/auth.js" defer></script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav class="navbar" aria-label="Primary Navigation">
+    <div class="logo">CollabConnect</div>
+    <ul class="nav-links">
+      <li><a href="index.html#home" aria-label="Home"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg></span><span class="nav-label">Home</span></a></li>
+  <li><a href="about.html" aria-label="About"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span class="nav-label">About</span></a></li>
+  <li><a href="features.html" aria-label="Features"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></span><span class="nav-label">Features</span></a></li>
+  <li><a href="social.html" aria-label="Social" class="requires-auth active" data-auth="hide" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9h8"/><path d="M8 13h6"/><rect x="4" y="5" width="16" height="14" rx="3"/></svg></span><span class="nav-label">Social</span></a></li>
+  <li><a href="projects.html" aria-label="Projects"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18"/><path d="M3 12h18"/><path d="M3 17h18"/></svg></span><span class="nav-label">Projects</span></a></li>
+  <li><a href="profile.html" aria-label="Profile" class="requires-auth" data-auth="hide"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5Z"/><path d="M3 22c1.5-4 5-7 9-7s7.5 3 9 7"/></svg></span><span class="nav-label">Profile</span></a></li>
+      <li><a href="login.html" aria-label="Login"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></span><span class="nav-label">Login</span></a></li>
+    </ul>
+  </nav>
+
+  <main id="main" class="page-offset social-page container">
+    <header class="profile-header" style="margin-bottom: .75rem;">
+      <div class="profile-heading-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9h8"/><path d="M8 13h6"/><rect x="4" y="5" width="16" height="14" rx="3"/></svg></div>
+      <div>
+        <h1 style="font-size:1.5rem;">Team Feed</h1>
+        <p class="profile-sub">Modern, focused space for updates and collaboration</p>
+      </div>
+    </header>
+
+    <section class="social-layout">
+      <aside class="s-left s-card" aria-label="Your summary">
+        <div class="s-profile">
+          <div id="sProfileAvatar" class="avatar">U</div>
+          <div>
+            <div id="sProfileName" class="s-name">User</div>
+            <div id="sProfileEmail" class="s-email">user@example.com</div>
+            <span id="sProfileRole" class="s-role chip">User</span>
+          </div>
+        </div>
+        <ul class="s-meta">
+          <li><span>Posts</span><strong id="sMetaPosts">—</strong></li>
+          <li><span>Comments</span><strong id="sMetaComments">—</strong></li>
+        </ul>
+      </aside>
+
+      <section class="s-center">
+        <article class="composer-card" aria-labelledby="composer-title">
+          <h2 id="composer-title" class="sr-only">Create post</h2>
+          <form id="composerForm" class="composer" autocomplete="off">
+            <div class="composer-avatar">
+              <div id="composerAvatar" class="avatar" aria-hidden="true">U</div>
+            </div>
+            <div class="composer-field">
+              <label class="sr-only" for="composerText">Post text</label>
+              <textarea id="composerText" name="text" rows="3" maxlength="280" placeholder="Share what you're working on..." required></textarea>
+              <div class="composer-meta"><span id="composerCount" aria-live="polite">0/280</span></div>
+            </div>
+            <div class="composer-actions">
+              <button type="submit" class="auth-btn" disabled>Post</button>
+            </div>
+          </form>
+        </article>
+
+        <div id="feed" class="feed" aria-live="polite" aria-busy="false"></div>
+      </section>
+
+      <aside class="s-right s-card" aria-label="Trends and suggestions">
+        <div class="s-block">
+          <h2 class="s-title">Trends</h2>
+          <ul class="s-list">
+            <li><span class="tag">#DesignSprint</span><span class="count">124</span></li>
+            <li><span class="tag">#OpenSource</span><span class="count">89</span></li>
+            <li><span class="tag">#CollabTips</span><span class="count">63</span></li>
+          </ul>
+        </div>
+        <div class="s-block">
+          <h2 class="s-title">People to follow</h2>
+          <ul class="s-people">
+            <li><div class="avatar" style="--h:290">A</div><div><div class="p-name">alex.dev</div><div class="p-role">Developer</div></div><button class="btn subtle">Follow</button></li>
+            <li><div class="avatar" style="--h:120">M</div><div><div class="p-name">mia.design</div><div class="p-role">Designer</div></div><button class="btn subtle">Follow</button></li>
+            <li><div class="avatar" style="--h:30">S</div><div><div class="p-name">sam.ops</div><div class="p-role">Ops</div></div><button class="btn subtle">Follow</button></li>
+          </ul>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="footer site-footer" aria-label="Website Footer">
+    <p>© 2025 CollabConnect. All Rights Reserved. Created by Tyler Malovrh</p>
+    <ul class="social-links">
+      <li><a class="chip" href="#" aria-label="Follow us on X" rel="noopener">X</a></li>
+      <li><a class="chip" href="#" aria-label="Follow us on LinkedIn" rel="noopener">LinkedIn</a></li>
+      <li><a class="chip" href="#" aria-label="Follow us on Facebook" rel="noopener">Facebook</a></li>
+    </ul>
+  </footer>
+
+  <script src="app.js"></script>
+  <script src="social.js" defer></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(console.error);
+      });
+    }
+    // Populate left profile summary from CCAuth
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const email = (window.CCAuth && CCAuth.getUser && CCAuth.getUser()) || 'user@example.com';
+        const role = (window.CCAuth && CCAuth.getRole && CCAuth.getRole()) || 'user';
+        const name = email.split('@')[0].replace(/[^a-z0-9]+/gi,' ').replace(/\b\w/g,c=>c.toUpperCase());
+        const avatarEl = document.getElementById('sProfileAvatar');
+        const nameEl = document.getElementById('sProfileName');
+        const emailEl = document.getElementById('sProfileEmail');
+        const roleEl = document.getElementById('sProfileRole');
+        if (avatarEl) {
+          let h=0; for (let i=0;i<email.length;i++) h = (h*31 + email.charCodeAt(i))>>>0; const hue=h%360;
+          avatarEl.style.background = `hsl(${hue} 70% 45%)`;
+          avatarEl.textContent = (email.split('@')[0]||'U').charAt(0).toUpperCase();
+        }
+        nameEl && (nameEl.textContent = name);
+        emailEl && (emailEl.textContent = email);
+        roleEl && (roleEl.textContent = role.charAt(0).toUpperCase()+role.slice(1));
+      } catch(e) {}
+    });
+  </script>
+</body>
+</html>

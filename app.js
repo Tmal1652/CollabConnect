@@ -1,11 +1,15 @@
-// Smooth Scroll for internal hash links
+// Smooth Scroll for same-page hash links only
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            e.preventDefault();
-            target.scrollIntoView({ behavior: 'smooth' });
-            setActiveNav(this.getAttribute('href'));
+        const href = this.getAttribute('href');
+        // Only handle if the link stays on the same document
+        if (href && (href === '#' || href.startsWith('#'))) {
+            const target = document.querySelector(href);
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth' });
+                setActiveNav(href);
+            }
         }
     });
 });

@@ -58,7 +58,7 @@
       return true;
     }
     if ((type === 'login' || type === 'signup') && isLoggedIn()) {
-      location.replace('index.html#home');
+      location.replace('social.html');
       return true;
     }
     return false;
@@ -72,9 +72,10 @@
   if (gate()) return;
 
   document.addEventListener('DOMContentLoaded', () => {
-  // Hide profile nav until authenticated
-  const profileNav = document.querySelector('a[href="#profile"].requires-auth');
-  if (profileNav) profileNav.style.display = isLoggedIn() ? '' : 'none';
+  // Hide any nav items requiring auth (e.g., Profile, Social)
+  document.querySelectorAll('.requires-auth').forEach(el => {
+    el.style.display = isLoggedIn() ? '' : 'none';
+  });
   // Enhance nav: replace login link with logout if logged in
     if (isLoggedIn()) {
       const nav = document.querySelector('.nav-links');
@@ -121,8 +122,8 @@
         if (!validateEmail(email)) return inlineError(loginForm, 'Enter a valid email');
         if (password.length < 6) return inlineError(loginForm, 'Password must be at least 6 characters');
         // Simulate auth success
-        setSession(email.trim().toLowerCase());
-        location.replace('index.html#home');
+  setSession(email.trim().toLowerCase());
+  location.replace('social.html');
       });
       // Prefill for mock/demo: if query ?prefill=1 OR simply not logged in (default behavior) we populate fields.
       if (!isLoggedIn() || qs.has('prefill')) {
@@ -149,8 +150,8 @@
         const password = (signupForm.querySelector('[name="password"]')||{}).value || '';
         if (!validateEmail(email)) return inlineError(signupForm, 'Enter a valid email');
         if (password.length < 6) return inlineError(signupForm, 'Password must be at least 6 characters');
-        setSession(email.trim().toLowerCase());
-        location.replace('index.html#home');
+  setSession(email.trim().toLowerCase());
+  location.replace('social.html');
       });
     }
 
@@ -168,7 +169,10 @@
         roleEl && (roleEl.textContent = getRole());
         // Count projects list items if present
         const list = document.getElementById('profile-projects-list');
-        if (projCountEl && list) projCountEl.textContent = list.querySelectorAll('li').length;
+        if (projCountEl && list) {
+          const n = list.querySelectorAll('li').length;
+          projCountEl.textContent = String(n);
+        }
       }
     }
   });
@@ -192,7 +196,7 @@
 
   // Helpers
   function attachStatusDotToProfile(){
-    const profileLink = document.querySelector('.nav-links a[href="#profile"]');
+    const profileLink = document.querySelector('.nav-links a[href="#profile"], .nav-links a[href="profile.html"], .nav-links a[href="./profile.html"]');
     if (!profileLink) return;
     const icon = profileLink.querySelector('.nav-icon');
     if (!icon) return;

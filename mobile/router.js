@@ -60,8 +60,10 @@
   }
 
   function navigateTo(hash, push = false) {
-    const id = (hash || '#home').replace('#','');
-    if (!sections.some(s => s.id === id)) return;
+    let id = (hash || '#home').replace('#','');
+    if (!sections.some(s => s.id === id)) {
+      id = 'home';
+    }
     applyVisibility(id);
     setActiveNav('#'+id);
     if (push) history.pushState({ view: id }, '', '#'+id);
