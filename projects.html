@@ -25,11 +25,23 @@
   <style>/* No inline styles beyond the preload media-swap helper */</style>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
-<body>
+<body data-logo="text">
   <a href="#main" class="skip-link">Skip to main content</a>
 
   <nav class="navbar" aria-label="Primary Navigation">
-    <div class="logo">CollabConnect</div>
+    <a class="logo" href="index.html" aria-label="CollabConnect home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg class="logo-glyph" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="7" y1="12" x2="16.5" y2="7"/>
+          <line x1="7" y1="12" x2="16.5" y2="17"/>
+          <line x1="16.5" y1="7" x2="16.5" y2="17"/>
+          <circle cx="7" cy="12" r="2" fill="currentColor" stroke="none"/>
+          <circle cx="16.5" cy="7" r="2" fill="currentColor" stroke="none"/>
+          <circle cx="16.5" cy="17" r="2" fill="currentColor" stroke="none"/>
+        </svg>
+      </span>
+      <span class="logo-text"><span class="logo-strong">Collab</span>Connect</span>
+    </a>
     <ul class="nav-links">
       <li><a href="index.html#home" aria-label="Home"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg></span><span class="nav-label">Home</span></a></li>
   <li><a href="about.html" aria-label="About"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span class="nav-label">About</span></a></li>
@@ -42,11 +54,11 @@
   </nav>
 
   <main id="main" class="page-offset projects-page container">
-    <header class="profile-header" style="margin-bottom: .75rem;">
+    <header class="profile-header">
       <div class="profile-heading-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18"/><path d="M3 12h18"/><path d="M3 17h18"/></svg></div>
       <div>
-        <h1 style="font-size:1.5rem;">Projects</h1>
-        <p class="profile-sub">Discover and track initiatives across the community</p>
+  <h1 class="page-title">Projects</h1>
+  <p class="page-lead">Discover and track initiatives across the community</p>
       </div>
     </header>
 

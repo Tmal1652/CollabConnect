@@ -15,10 +15,22 @@
     <meta name="mobile-web-app-capable" content="yes">
     <script src="mobile/auth.js" defer></script>
 </head>
-<body>
+<body data-logo="text">
     <!-- Navigation Bar -->
     <nav class="navbar" aria-label="Primary Navigation">
-        <div class="logo">CollabConnect</div>
+        <a class="logo" href="index.html" aria-label="CollabConnect home">
+            <span class="logo-mark" aria-hidden="true">
+                <svg class="logo-glyph" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="12" x2="16.5" y2="7"/>
+                    <line x1="7" y1="12" x2="16.5" y2="17"/>
+                    <line x1="16.5" y1="7" x2="16.5" y2="17"/>
+                    <circle cx="7" cy="12" r="2" fill="currentColor" stroke="none"/>
+                    <circle cx="16.5" cy="7" r="2" fill="currentColor" stroke="none"/>
+                    <circle cx="16.5" cy="17" r="2" fill="currentColor" stroke="none"/>
+                </svg>
+            </span>
+            <span class="logo-text"><span class="logo-strong">Collab</span>Connect</span>
+        </a>
         <ul class="nav-links">
             <li><a href="index.html#home" aria-label="Home"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg></span><span class="nav-label">Home</span></a></li>
             <li><a href="login.html" aria-label="Login"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></span><span class="nav-label">Login</span></a></li>
@@ -26,11 +38,11 @@
     </nav>
 
     <!-- Signup Section -->
-    <section id="signup" class="signup-section page-offset" aria-labelledby="signup-heading" data-noscroll-mobile>
-        <div style="padding-top: 100px; text-align: center;">
-    <h2 id="signup-heading">Signup</h2>
-        <p>Create an account to start collaborating.</p>
-        <div class="auth-form">
+    <section id="signup" class="signup-section page-offset container" aria-labelledby="signup-heading" data-noscroll-mobile>
+    <div class="auth-wrap">
+    <h1 id="signup-heading" class="page-title">Signup</h1>
+        <p class="page-lead">Create an account to start collaborating.</p>
+        <div class="auth-form glass">
           <form id="signupForm">
               <div class="form-group">
                   <label for="signup-name">Name</label>

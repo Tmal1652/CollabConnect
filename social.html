@@ -20,11 +20,23 @@
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <script src="mobile/auth.js" defer></script>
 </head>
-<body>
+<body data-logo="text">
   <a href="#main" class="skip-link">Skip to main content</a>
 
   <nav class="navbar" aria-label="Primary Navigation">
-    <div class="logo">CollabConnect</div>
+    <a class="logo" href="index.html" aria-label="CollabConnect home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg class="logo-glyph" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="7" y1="12" x2="16.5" y2="7"/>
+          <line x1="7" y1="12" x2="16.5" y2="17"/>
+          <line x1="16.5" y1="7" x2="16.5" y2="17"/>
+          <circle cx="7" cy="12" r="2" fill="currentColor" stroke="none"/>
+          <circle cx="16.5" cy="7" r="2" fill="currentColor" stroke="none"/>
+          <circle cx="16.5" cy="17" r="2" fill="currentColor" stroke="none"/>
+        </svg>
+      </span>
+      <span class="logo-text"><span class="logo-strong">Collab</span>Connect</span>
+    </a>
     <ul class="nav-links">
       <li><a href="index.html#home" aria-label="Home"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg></span><span class="nav-label">Home</span></a></li>
   <li><a href="about.html" aria-label="About"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span class="nav-label">About</span></a></li>
@@ -35,13 +47,14 @@
       <li><a href="login.html" aria-label="Login"><span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></span><span class="nav-label">Login</span></a></li>
     </ul>
   </nav>
+  
 
   <main id="main" class="page-offset social-page container">
-    <header class="profile-header" style="margin-bottom: .75rem;">
+    <header class="profile-header">
       <div class="profile-heading-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9h8"/><path d="M8 13h6"/><rect x="4" y="5" width="16" height="14" rx="3"/></svg></div>
       <div>
-        <h1 style="font-size:1.5rem;">Team Feed</h1>
-        <p class="profile-sub">Modern, focused space for updates and collaboration</p>
+  <h1 class="page-title">Team Feed</h1>
+  <p class="page-lead">Modern, focused space for updates and collaboration</p>
       </div>
     </header>
 
@@ -62,6 +75,13 @@
       </aside>
 
       <section class="s-center">
+        <div class="shorts-header">
+          <div class="social-switch" role="tablist" aria-label="Feed view switch">
+            <button class="tab is-active" role="tab" aria-selected="true" data-view="all">Feed</button>
+            <button class="tab" role="tab" aria-selected="false" data-view="projects">Projects</button>
+            <button class="tab" role="tab" aria-selected="false" data-view="videos">Videos</button>
+          </div>
+        </div>
         <article class="composer-card" aria-labelledby="composer-title">
           <h2 id="composer-title" class="sr-only">Create post</h2>
           <form id="composerForm" class="composer" autocomplete="off">
@@ -78,8 +98,9 @@
             </div>
           </form>
         </article>
-
-        <div id="feed" class="feed" aria-live="polite" aria-busy="false"></div>
+        <div class="center-scroll" aria-label="Scrollable feed area">
+          <div id="feed" class="feed" aria-live="polite" aria-busy="false" data-mode="all"></div>
+        </div>
       </section>
 
       <aside class="s-right s-card" aria-label="Trends and suggestions">
@@ -120,26 +141,31 @@
         navigator.serviceWorker.register('sw.js').catch(console.error);
       });
     }
-    // Populate left profile summary from CCAuth
-    document.addEventListener('DOMContentLoaded', () => {
-      try {
-        const email = (window.CCAuth && CCAuth.getUser && CCAuth.getUser()) || 'user@example.com';
-        const role = (window.CCAuth && CCAuth.getRole && CCAuth.getRole()) || 'user';
-        const name = email.split('@')[0].replace(/[^a-z0-9]+/gi,' ').replace(/\b\w/g,c=>c.toUpperCase());
-        const avatarEl = document.getElementById('sProfileAvatar');
-        const nameEl = document.getElementById('sProfileName');
-        const emailEl = document.getElementById('sProfileEmail');
-        const roleEl = document.getElementById('sProfileRole');
-        if (avatarEl) {
-          let h=0; for (let i=0;i<email.length;i++) h = (h*31 + email.charCodeAt(i))>>>0; const hue=h%360;
-          avatarEl.style.background = `hsl(${hue} 70% 45%)`;
-          avatarEl.textContent = (email.split('@')[0]||'U').charAt(0).toUpperCase();
-        }
-        nameEl && (nameEl.textContent = name);
-        emailEl && (emailEl.textContent = email);
-        roleEl && (roleEl.textContent = role.charAt(0).toUpperCase()+role.slice(1));
-      } catch(e) {}
-    });
+      // View switch wiring (Feed <-> Posts-only filter)
+      (function setupViewSwitch(){
+        const tabs = document.querySelectorAll('.social-switch .tab');
+        const feedList = document.getElementById('feed');
+        if (!tabs.length || !feedList) return;
+        function setMode(mode){ feedList.setAttribute('data-mode', mode); try { localStorage.setItem('cc:social:view', mode); } catch(_){} }
+        tabs.forEach(btn => btn.addEventListener('click', () => {
+          const view = btn.dataset.view; // 'all' | 'projects' | 'videos'
+          tabs.forEach(t => { const active = t===btn; t.classList.toggle('is-active', active); t.setAttribute('aria-selected', String(active)); });
+          setMode(view === 'projects' ? 'projects' : view === 'videos' ? 'videos' : 'all');
+        }));
+        // Initialize from query or storage
+        (function init(){
+          const url = new URL(window.location.href);
+          let view = url.searchParams.get('view') || 'all';
+          try { view = localStorage.getItem('cc:social:view') || view; } catch(_){}
+          if (view === 'posts') view = 'projects';
+          const target = document.querySelector(`.social-switch .tab[data-view="${view}"]`) || document.querySelector('.social-switch .tab[data-view="all"]');
+          target && target.click();
+        })();
+      })();
+
+  // Videos are rendered like other feed items by social.js for this demo.
+  // Optional: if videos are added, autoplay/pause by visibility
+  // For the demo, videos act as static placeholders (posters only). No autoplay/lazy-load.
   </script>
 </body>
 </html>
