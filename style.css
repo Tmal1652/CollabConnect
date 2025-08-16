@@ -429,8 +429,8 @@ header[id], section[id] { scroll-margin-top: calc(var(--navbar-height) + 16px); 
     .nav-links li.nav-utility { flex:0 0 50px; }
     .nav-avatar { width:32px; height:32px; }
 }
-@media (max-width: 420px) {
-    /* Icon-only mode to prevent crowding; keep accessible name via aria-label already present */
+/* Icon-only mode sooner to avoid crowding on common phone widths */
+@media (max-width: 500px) {
     .nav-links a .nav-label { display:none; }
     .nav-links a { padding:0.48rem 0.5rem; min-width:auto; width:auto; }
     .nav-links a .nav-icon svg { width:22px; height:22px; }
