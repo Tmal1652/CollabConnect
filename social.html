@@ -259,12 +259,30 @@
           [main, nav, footer].forEach(el => el && el.removeAttribute('aria-hidden'));
         }
       }
+      function updateDevBadge(){
+        const nav = document.querySelector('.navbar');
+        if (!nav) return;
+        let badge = document.getElementById('navDevBadge');
+        const isSmall = window.matchMedia('(max-width: 820px)').matches;
+        const unlocked = !!window.CC_DISABLE_SOCIAL_MOBILE_BLOCK;
+        if (isSmall && unlocked) {
+          if (!badge) {
+            badge = document.createElement('div');
+            badge.id = 'navDevBadge';
+            badge.className = 'nav-dev-badge chip';
+            badge.textContent = 'Unlocked (dev)';
+            nav.appendChild(badge);
+          }
+          badge.hidden = false;
+        } else if (badge) {
+          badge.hidden = true;
+        }
+      }
       function evaluate(){
-        // Session flag if dev code was accepted
-        try { if (sessionStorage.getItem('cc:social:mobile:dev') === '1') { window.CC_DISABLE_SOCIAL_MOBILE_BLOCK = true; } } catch(_){}
         if (window.CC_DISABLE_SOCIAL_MOBILE_BLOCK) { apply(false); return; }
         const isSmall = window.matchMedia('(max-width: 820px)').matches;
         apply(isSmall);
+        updateDevBadge();
       }
       // Wire actions
       const homeBtn = document.getElementById('mobileSplashHome');
@@ -282,7 +300,7 @@
         return 'collabdev'; // default dev code
       }
       function grantDevAccess(){
-        try { sessionStorage.setItem('cc:social:mobile:dev', '1'); } catch(_){}
+        // Unlock only for this runtime; reload will relock
         window.CC_DISABLE_SOCIAL_MOBILE_BLOCK = true;
         devError && (devError.hidden = true);
         apply(false);
@@ -302,10 +320,11 @@
       });
       // React to viewport changes
       const mq = window.matchMedia('(max-width: 820px)');
-      mq.addEventListener ? mq.addEventListener('change', evaluate) : mq.addListener(evaluate);
-      window.addEventListener('orientationchange', evaluate);
+  mq.addEventListener ? mq.addEventListener('change', ()=>{ evaluate(); updateDevBadge(); }) : mq.addListener(()=>{ evaluate(); updateDevBadge(); });
+  window.addEventListener('orientationchange', ()=>{ evaluate(); updateDevBadge(); });
       // Initial
-      evaluate();
+  evaluate();
+  updateDevBadge();
     })();
   </script>
   <script>

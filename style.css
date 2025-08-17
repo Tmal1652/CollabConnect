@@ -449,6 +449,8 @@ body[data-logo='text'] .navbar .logo { gap: .25rem; }
     .nav-links li.nav-logout-item { order:99; }
     /* Even spacing recalibration: distribute remaining items */
     .nav-links { justify-content: space-between; }
+        /* Dev unlocked badge */
+        .nav-dev-badge { margin-left: .5rem; padding: .35rem .6rem; font-size: .68rem; border-radius: 999px; background: rgba(34,197,94,0.16); border:1px solid rgba(34,197,94,0.35); color: #b7f7c4; box-shadow: 0 2px 8px -4px rgba(0,0,0,0.3); }
 }
 
 /* Adaptive tab bar refinements for varied phone widths */
@@ -716,6 +718,12 @@ body[data-shorts] .profile-header { display: none !important; }
 .mobile-splash .btn.primary:hover { box-shadow: 0 6px 16px -4px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.25); }
 .mobile-splash-foot { margin-top: .75rem; font-size: .8rem; color: var(--text-secondary); }
 @media (min-width: 821px) { .mobile-splash { display: none !important; } }
+
+/* Role chips */
+.role-chip { display:inline-block; padding:.3rem .6rem; border-radius:999px; font-size:.72rem; font-weight:700; letter-spacing:.03em; border:1px solid var(--glass-border); background: rgba(255,255,255,0.06); color: var(--text-secondary); }
+.role-chip.admin { background: rgba(59,130,246,0.16); border-color: rgba(59,130,246,0.35); color: #bfdbfe; }
+.role-chip.dev, .chip.dev { background: rgba(250,204,21,0.16); border-color: rgba(250,204,21,0.40); color: #fde68a; }
+@media (prefers-color-scheme: light){ .role-chip.dev, .chip.dev { color:#92400e; background: rgba(250,204,21,0.22); border-color: rgba(250,204,21,0.45); } }
 
 /* Dev-only access on mobile splash */
 .mobile-splash-dev { margin-top: 1rem; padding-top: .75rem; border-top: 1px dashed var(--glass-border); }

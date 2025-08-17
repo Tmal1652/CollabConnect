@@ -5,6 +5,11 @@
 (function(){
   const TOKEN_KEY = 'cc:authToken';
   const USER_KEY = 'cc:userEmail';
+  // Mock accounts (demo only)
+  const USER1_EMAIL = 'user1@example.com';
+  const USER1_PASSWORD = 'userpass123';
+  const DEV_USER_EMAIL = 'dev@collabconnect.dev';
+  const DEV_PASSWORD = 'devpass123';
   // Development mode: enable with ?dev=1 (persists) disable with ?dev=0
   const qs = new URLSearchParams(location.search);
   if (qs.has('dev')) {
@@ -12,12 +17,6 @@
     if (qs.get('dev') === '0') localStorage.removeItem('cc:devMode');
   }
   const DEV_AUTO_LOGIN = localStorage.getItem('cc:devMode') === '1';
-  const DEV_USER_EMAIL = 'devuser@example.com';
-  // If devMode flag has never been set, default it ON for mock/demo so user appears logged in immediately.
-  // Disable anytime with ?dev=0 in the URL.
-  if (localStorage.getItem('cc:devMode') === null) {
-    localStorage.setItem('cc:devMode','1');
-  }
   // Re-evaluate after potential default
   const EFFECTIVE_AUTO_LOGIN = localStorage.getItem('cc:devMode') === '1';
   // Avatar visibility toggle (?avatar=0 to hide, ?avatar=1 to show again)
@@ -72,6 +71,10 @@
   if (gate()) return;
 
   document.addEventListener('DOMContentLoaded', () => {
+  // Clean up any leftover role chips from prior sessions
+  try {
+    document.querySelectorAll('.nav-links .role-chip').forEach(el => el.remove());
+  } catch(_){}
   // Hide any nav items requiring auth (e.g., Profile, Social)
   document.querySelectorAll('.requires-auth').forEach(el => {
     el.style.display = isLoggedIn() ? '' : 'none';
@@ -92,23 +95,19 @@
         a.innerHTML = '<span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span><span class="nav-label">Logout</span>';
         a.addEventListener('click', (e) => { 
           e.preventDefault(); 
-          const currentUser = getUser();
-          clearSession(); 
-            // Redirect with prefill params so login form is populated for mock flow
-          const emailParam = encodeURIComponent(currentUser || DEV_USER_EMAIL);
-          location.replace('login.html?prefill=1&email=' + emailParam); 
+      clearSession();
+      // Clear dev flags/role to avoid stale state after logout
+      try { localStorage.removeItem('cc:devMode'); localStorage.removeItem('cc:role'); } catch(_){}
+      // Always send the normal user prefill after logout
+      const emailParam = encodeURIComponent(USER1_EMAIL);
+      location.replace('login.html?prefill=1&source=logout&email=' + emailParam);
         });
         li.appendChild(a);
         const loginLink = nav.querySelector('a[href="login.html"], a[href="./login.html"]');
         loginLink && (loginLink.style.display = 'none');
         nav.appendChild(li);
   // No extra avatar item; profile link remains in place with a status dot
-        // Admin badge
-        if (getRole() === 'admin' && !nav.querySelector('.role-chip')) {
-          const rli = document.createElement('li');
-          rli.innerHTML = '<span class="role-chip" title="Admin">Admin</span>';
-          nav.appendChild(rli);
-        }
+    // Role chip removed to avoid redundancy; status dot is sufficient
       }
     }
 
@@ -121,16 +120,51 @@
         const password = (loginForm.querySelector('[name="password"]')||{}).value || '';
         if (!validateEmail(email)) return inlineError(loginForm, 'Enter a valid email');
         if (password.length < 6) return inlineError(loginForm, 'Password must be at least 6 characters');
-        // Simulate auth success
-  setSession(email.trim().toLowerCase());
-  location.replace('social.html');
+        // Simple auth rules:
+        // - dev account requires exact credentials and enables dev mode
+        // - user1 account requires exact credentials
+        // - any other email passes (mock/demo) and is treated as a normal user (no dev mode)
+        const emailLc = email.trim().toLowerCase();
+        const isDevLogin = emailLc === DEV_USER_EMAIL;
+        const isUser1Login = emailLc === USER1_EMAIL;
+        let passOK = true;
+        if (isDevLogin) passOK = (password === DEV_PASSWORD);
+        if (isUser1Login) passOK = (password === USER1_PASSWORD);
+        if (!passOK) return inlineError(loginForm, 'Invalid email or password');
+
+        setSession(emailLc);
+        // Set role and dev flag
+        if (isDevLogin) {
+          localStorage.setItem('cc:devMode','1');
+          localStorage.setItem('cc:role','admin');
+        } else {
+          localStorage.removeItem('cc:devMode');
+          localStorage.setItem('cc:role','user');
+        }
+        location.replace('social.html');
       });
-      // Prefill for mock/demo: if query ?prefill=1 OR simply not logged in (default behavior) we populate fields.
+      // Prefill for mock/demo.
+      // If logging out (source=logout), always prefill normal user.
+      // Otherwise, if query ?prefill=1 OR simply not logged in we populate fields.
       if (!isLoggedIn() || qs.has('prefill')) {
         const emailField = loginForm.querySelector('[name="email"]');
         const passField = loginForm.querySelector('[name="password"]');
-        if (emailField) emailField.value = qs.get('email') || DEV_USER_EMAIL;
-        if (passField) passField.value = 'password123';
+        const fromLogout = qs.get('source') === 'logout';
+        const reqEmail = (qs.get('email') || '').trim().toLowerCase();
+        const isDevEmail = /^(dev@collabconnect\.dev|devuser@example\.com)$/.test(reqEmail);
+        const preferDev = qs.get('dev') === '1' || qs.get('mode') === 'dev';
+        let prefillEmail = USER1_EMAIL;
+        if (fromLogout) {
+          prefillEmail = USER1_EMAIL;
+        } else if (reqEmail && !isDevEmail) {
+          prefillEmail = reqEmail;
+        } else if (preferDev && isDevEmail) {
+          prefillEmail = reqEmail;
+        } else {
+          prefillEmail = USER1_EMAIL;
+        }
+        if (emailField) emailField.value = prefillEmail;
+        if (passField) passField.value = (prefillEmail === DEV_USER_EMAIL ? DEV_PASSWORD : USER1_PASSWORD);
         const btn = loginForm.querySelector('button[type="submit"]');
         // If ?autosubmit=1 is provided, automatically submit after small delay for seamless mock.
         if (qs.get('autosubmit') === '1') {

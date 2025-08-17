@@ -70,7 +70,7 @@
     feedEl.innerHTML = html || emptyHTML();
   feedEl.setAttribute('aria-busy','false');
 
-    // Update sidebar counts
+    // Update sidebar counts and profile header role
     try {
       const postsCount = state.posts.length;
       const commentsCount = state.posts.reduce((acc,p)=> acc + (Array.isArray(p.comments)?p.comments.length:0), 0);
@@ -78,6 +78,20 @@
       const commentsEl = document.getElementById('sMetaComments');
       if (postsEl) postsEl.textContent = String(postsCount);
       if (commentsEl) commentsEl.textContent = String(commentsCount);
+      // Populate left profile card
+      const nameEl = document.getElementById('sProfileName');
+      const emailEl = document.getElementById('sProfileEmail');
+      const roleEl = document.getElementById('sProfileRole');
+      const avatarEl = document.getElementById('sProfileAvatar');
+      const userEmail = (window.CCAuth && CCAuth.getUser && CCAuth.getUser()) || 'guest@example.com';
+      const displayName = userEmail.split('@')[0];
+      nameEl && (nameEl.textContent = displayName);
+      emailEl && (emailEl.textContent = userEmail);
+  const simRole = (window.CCAuth && CCAuth.getRole && CCAuth.getRole()) || 'user';
+  const isDev = /^(dev@collabconnect\.dev|devuser@example\.com)$/i.test(userEmail);
+  roleEl && (roleEl.textContent = isDev ? 'Dev' : simRole.charAt(0).toUpperCase() + simRole.slice(1));
+  roleEl && roleEl.classList.toggle('dev', isDev);
+      if (avatarEl){ const { hue, init } = avatarFor(userEmail); avatarEl.textContent = init; avatarEl.style.background = `hsl(${hue} 70% 45%)`; }
     } catch(_){}
   }
 
