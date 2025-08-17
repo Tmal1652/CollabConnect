@@ -1309,6 +1309,8 @@ body[data-shorts] .profile-header { display: none !important; }
     -webkit-backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur));
     box-shadow: var(--glass-shadow);
     border-radius: var(--radius-lg);
+}
+/* Ensure media queries are top-level (not nested in a ruleset) */
 /* FINAL MOBILE OVERRIDE: center navbar and show icon + text on all phones */
 @media (max-width: 820px) {
     .navbar {
@@ -1357,6 +1359,9 @@ body[data-shorts] .profile-header { display: none !important; }
     @media (min-width: 391px) and (max-width: 820px) {
         .nav-links a .nav-label { display: inline !important; }
     }
+
+/* Continue feature-item styles after media queries */
+.feature-item {
     border: 1px solid var(--glass-stroke);
     transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
@@ -1387,6 +1392,7 @@ body[data-shorts] .profile-header { display: none !important; }
 .signup-section {
         width: min(1200px, 100% - 2rem);
         margin-left: auto; margin-right: auto;
+}
 
 /* Mobile tab icon alignment fix: consistent icon box + centered SVGs */
 @media (max-width: 820px) {
@@ -1398,8 +1404,15 @@ body[data-shorts] .profile-header { display: none !important; }
 @media (max-width: 390px) {
     .navbar .nav-links a .nav-icon { width: clamp(18px, 5vw, 22px); height: clamp(18px, 5vw, 22px); }
 }
-        margin-bottom: var(--section-gap-vertical);
-        padding: var(--section-pad-block) var(--section-pad-inline);
+/* Apply spacing/padding for these sections */
+.features-section,
+.about-section,
+.upcoming-section,
+.profile-section,
+.login-section,
+.signup-section {
+    margin-bottom: var(--section-gap-vertical);
+    padding: var(--section-pad-block) var(--section-pad-inline);
 }
 /* Add top margin except when first after hero */
 .hero-section + .features-section { margin-top: 2.75rem; }
