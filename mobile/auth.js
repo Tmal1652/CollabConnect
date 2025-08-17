@@ -63,6 +63,23 @@
     return false;
   }
 
+  // On GitHub Pages, always ensure we are NOT in dev mode and default to user1
+  // This guarantees the published link opens as a normal user, not dev.
+  try {
+    const IS_GHPAGES = /github\.io$/i.test(location.hostname);
+    if (IS_GHPAGES) {
+      // Remove any dev flags
+      localStorage.removeItem('cc:devMode');
+      // If not logged in or logged in as dev, switch to user1
+      const currentEmail = localStorage.getItem(USER_KEY) || '';
+      const isDevEmail = /^(dev@collabconnect\.dev|devuser@example\.com)$/i.test(currentEmail);
+      if (!localStorage.getItem(TOKEN_KEY) || isDevEmail) {
+        setSession(USER1_EMAIL);
+        localStorage.setItem('cc:role','user');
+      }
+    }
+  } catch(_) {}
+
   // Auto-login in dev before gating if not already logged in (skip if prefill requested)
   if (EFFECTIVE_AUTO_LOGIN && !localStorage.getItem(TOKEN_KEY) && !qs.has('prefill')) {
     try { setSession(DEV_USER_EMAIL); } catch(e){}
