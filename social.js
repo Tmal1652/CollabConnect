@@ -397,6 +397,16 @@
     updateComposerState();
   }
 
+  // Mobile composer integration: listen for new post event
+  window.addEventListener('cc:composer:new', (e) => {
+    const text = (e.detail && e.detail.text || '').trim();
+    if (!text) return;
+    const author = (window.CCAuth && CCAuth.getUser && CCAuth.getUser()) || 'guest@example.com';
+    state.posts.push({ id: 'p'+Math.random().toString(36).slice(2,8), type: 'project', author, text, likes: [], comments: [], createdAt: now() });
+    if (state.posts.length > 100) state.posts = state.posts.slice(-100);
+    save(state); render();
+  });
+
   function updateComposerState(){
     const val = (textarea.value || '');
     const clean = val.replace(/\s+/g,' ').trim();

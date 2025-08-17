@@ -101,6 +101,27 @@
         <div class="center-scroll" aria-label="Scrollable feed area">
           <div id="feed" class="feed" aria-live="polite" aria-busy="false" data-mode="all"></div>
         </div>
+        <!-- Mobile-only compose entrypoint (FAB) and modal -->
+        <button id="composerFab" class="composer-fab" aria-label="Create a post" hidden>＋</button>
+        <div id="composerMobileModal" class="modal" aria-hidden="true">
+          <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="composerMobileTitle">
+            <button class="close" aria-label="Close">×</button>
+            <h3 id="composerMobileTitle">Create post</h3>
+            <form id="composerFormMobile" class="composer" autocomplete="off">
+              <div class="composer-avatar">
+                <div id="composerAvatarMobile" class="avatar" aria-hidden="true">U</div>
+              </div>
+              <div class="composer-field">
+                <label class="sr-only" for="composerTextMobile">Post text</label>
+                <textarea id="composerTextMobile" name="text" rows="4" maxlength="280" placeholder="Share what you're working on..." required></textarea>
+                <div class="composer-meta"><span id="composerCountMobile" aria-live="polite">0/280</span></div>
+              </div>
+              <div class="composer-actions">
+                <button type="submit" class="auth-btn" disabled>Post</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </section>
 
       <aside class="s-right s-card" aria-label="Trends and suggestions">
@@ -135,6 +156,41 @@
 
   <script src="app.js"></script>
   <script src="social.js" defer></script>
+  <!-- Mobile splash overlay: blocks Social on phones until optimization is done -->
+  <div id="mobileBlocker" class="mobile-splash" role="dialog" aria-modal="true" aria-labelledby="mobileSplashTitle" aria-describedby="mobileSplashDesc" hidden>
+    <div class="mobile-splash-card" role="document">
+      <div class="mobile-splash-brand">
+        <span class="logo-mark" aria-hidden="true">
+          <svg class="logo-glyph" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="7" y1="12" x2="16.5" y2="7"/>
+            <line x1="7" y1="12" x2="16.5" y2="17"/>
+            <line x1="16.5" y1="7" x2="16.5" y2="17"/>
+            <circle cx="7" cy="12" r="2" fill="currentColor" stroke="none"/>
+            <circle cx="16.5" cy="7" r="2" fill="currentColor" stroke="none"/>
+            <circle cx="16.5" cy="17" r="2" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span class="logo-text"><span class="logo-strong">Collab</span>Connect</span>
+      </div>
+      <h2 id="mobileSplashTitle">Mobile version in development</h2>
+      <p id="mobileSplashDesc" class="mobile-splash-desc">The Social experience isn’t ready for mobile yet. Please use the desktop site for now. We’re polishing the mobile version.</p>
+      <div class="mobile-splash-actions">
+        <button id="mobileSplashHome" class="btn primary">Go to Home</button>
+      </div>
+      <p class="mobile-splash-foot">Thanks for your patience.</p>
+
+      <div class="mobile-splash-dev" aria-labelledby="devOnlyLabel">
+        <div id="devOnlyLabel" class="dev-badge" aria-hidden="false">Devs only</div>
+        <form id="mobileSplashDevForm" class="dev-form" autocomplete="off">
+          <label class="sr-only" for="mobileDevPass">Dev access code</label>
+          <input id="mobileDevPass" type="password" placeholder="Enter dev code" required />
+          <button type="submit" class="btn primary">Enter</button>
+        </form>
+        <p class="dev-hint">Enter the dev code to preview the mobile Social experience.</p>
+        <p role="alert" id="devError" class="dev-error" hidden>Incorrect code. Try again.</p>
+      </div>
+    </div>
+  </div>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -145,8 +201,13 @@
       (function setupViewSwitch(){
         const tabs = document.querySelectorAll('.social-switch .tab');
         const feedList = document.getElementById('feed');
+        const scrollWrap = document.querySelector('.center-scroll');
         if (!tabs.length || !feedList) return;
-        function setMode(mode){ feedList.setAttribute('data-mode', mode); try { localStorage.setItem('cc:social:view', mode); } catch(_){} }
+        function setMode(mode){
+          feedList.setAttribute('data-mode', mode);
+          if (scrollWrap) scrollWrap.classList.toggle('videos-mode', mode === 'videos');
+          try { localStorage.setItem('cc:social:view', mode); } catch(_){}
+        }
         tabs.forEach(btn => btn.addEventListener('click', () => {
           const view = btn.dataset.view; // 'all' | 'projects' | 'videos'
           tabs.forEach(t => { const active = t===btn; t.classList.toggle('is-active', active); t.setAttribute('aria-selected', String(active)); });
@@ -166,6 +227,129 @@
   // Videos are rendered like other feed items by social.js for this demo.
   // Optional: if videos are added, autoplay/pause by visibility
   // For the demo, videos act as static placeholders (posters only). No autoplay/lazy-load.
+  </script>
+  <!-- Dev-only mobile access code -->
+  <script>
+    window.CC_MOBILE_DEV_CODE = '123';
+  </script>
+  <script>
+    // Block Social on mobile widths until optimization is complete.
+    // To remove the splash later, delete this block or set window.CC_DISABLE_SOCIAL_MOBILE_BLOCK = true before this runs.
+    (function mobileSplashGuard(){
+      const overlay = document.getElementById('mobileBlocker');
+      if (!overlay) return;
+      // Dev/preview override via query param
+      try {
+        const url = new URL(window.location.href);
+        if (url.searchParams.get('mobilePreview') === '1') {
+          window.CC_DISABLE_SOCIAL_MOBILE_BLOCK = true;
+        }
+      } catch(_){}
+      function apply(state){
+        const main = document.getElementById('main');
+        const nav = document.querySelector('.navbar');
+        const footer = document.querySelector('.site-footer');
+        if (state) {
+          overlay.hidden = false;
+          document.documentElement.style.overflow = 'hidden';
+          [main, nav, footer].forEach(el => el && el.setAttribute('aria-hidden', 'true'));
+        } else {
+          overlay.hidden = true;
+          document.documentElement.style.overflow = '';
+          [main, nav, footer].forEach(el => el && el.removeAttribute('aria-hidden'));
+        }
+      }
+      function evaluate(){
+        // Session flag if dev code was accepted
+        try { if (sessionStorage.getItem('cc:social:mobile:dev') === '1') { window.CC_DISABLE_SOCIAL_MOBILE_BLOCK = true; } } catch(_){}
+        if (window.CC_DISABLE_SOCIAL_MOBILE_BLOCK) { apply(false); return; }
+        const isSmall = window.matchMedia('(max-width: 820px)').matches;
+        apply(isSmall);
+      }
+      // Wire actions
+      const homeBtn = document.getElementById('mobileSplashHome');
+      if (homeBtn) homeBtn.addEventListener('click', () => { window.location.href = 'index.html'; });
+      // Dev-only access
+      const devForm = document.getElementById('mobileSplashDevForm');
+      const devInput = document.getElementById('mobileDevPass');
+      const devError = document.getElementById('devError');
+      function getDevCode(){
+        try {
+          if (window.CC_MOBILE_DEV_CODE && typeof CC_MOBILE_DEV_CODE === 'string') return CC_MOBILE_DEV_CODE;
+          const stored = localStorage.getItem('cc:social:mobile:devcode');
+          if (stored) return stored;
+        } catch(_){}
+        return 'collabdev'; // default dev code
+      }
+      function grantDevAccess(){
+        try { sessionStorage.setItem('cc:social:mobile:dev', '1'); } catch(_){}
+        window.CC_DISABLE_SOCIAL_MOBILE_BLOCK = true;
+        devError && (devError.hidden = true);
+        apply(false);
+      }
+      devForm && devForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = (devInput && devInput.value) ? devInput.value.trim() : '';
+        if (!input) return;
+        const code = getDevCode();
+        if (input === code) {
+          grantDevAccess();
+          devInput && (devInput.value = '');
+        } else {
+          devError && (devError.hidden = false);
+          setTimeout(()=>{ devError && (devError.hidden = true); }, 1800);
+        }
+      });
+      // React to viewport changes
+      const mq = window.matchMedia('(max-width: 820px)');
+      mq.addEventListener ? mq.addEventListener('change', evaluate) : mq.addListener(evaluate);
+      window.addEventListener('orientationchange', evaluate);
+      // Initial
+      evaluate();
+    })();
+  </script>
+  <script>
+    // Mobile composer wiring (FAB + modal), independent from desktop composer
+    (function mobileComposer(){
+      const fab = document.getElementById('composerFab');
+      const modal = document.getElementById('composerMobileModal');
+      const closeBtn = modal?.querySelector('.close');
+      const form = document.getElementById('composerFormMobile');
+      const textarea = document.getElementById('composerTextMobile');
+      const postBtn = form ? form.querySelector('button[type="submit"]') : null;
+      const counter = document.getElementById('composerCountMobile');
+      const avatar = document.getElementById('composerAvatarMobile');
+
+      function showFab(state){ if (fab) fab.hidden = !state; }
+      function open(){ if (!modal) return; modal.setAttribute('aria-hidden','false'); modal.style.display='flex'; textarea?.focus(); }
+      function close(){ if (!modal) return; modal.setAttribute('aria-hidden','true'); modal.style.display=''; }
+      function onResize(){ const isSmall = window.matchMedia('(max-width: 820px)').matches; showFab(isSmall); if (!isSmall) close(); }
+
+      // Init avatar from auth
+      (function initAvatar(){ try { const email = (window.CCAuth && CCAuth.getUser && CCAuth.getUser()) || 'user@example.com'; const init = (email.split('@')[0]||'U')[0].toUpperCase(); avatar && (avatar.textContent = init); } catch(_){} })();
+
+      function updateState(){ const val = (textarea?.value || ''); const clean = val.replace(/\s+/g,' ').trim(); const max = parseInt(textarea?.getAttribute('maxlength')||'280',10); if (counter) counter.textContent = `${Math.min(val.length, max)}/${max}`; if (postBtn) postBtn.disabled = clean.length === 0; }
+
+      fab && fab.addEventListener('click', open);
+      closeBtn && closeBtn.addEventListener('click', close);
+      modal && modal.addEventListener('click', (e)=>{ if (e.target === modal) close(); });
+      textarea && textarea.addEventListener('input', updateState);
+      textarea && textarea.addEventListener('keydown', e => { if ((e.metaKey||e.ctrlKey) && e.key==='Enter'){ e.preventDefault(); postBtn && !postBtn.disabled && postBtn.click(); }});
+      form && form.addEventListener('submit', e => {
+        e.preventDefault();
+        const text = (textarea.value||'').replace(/\s+/g,' ').trim();
+        if (!text) return;
+        try {
+          // Reuse social.js composer format via event
+          const ev = new CustomEvent('cc:composer:new', { detail: { text } });
+          window.dispatchEvent(ev);
+        } catch(_){ /* no-op */ }
+        textarea.value = ''; updateState(); close();
+      });
+
+      window.addEventListener('resize', onResize);
+      onResize(); updateState();
+    })();
   </script>
 </body>
 </html>
