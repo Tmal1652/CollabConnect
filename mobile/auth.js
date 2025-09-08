@@ -43,20 +43,25 @@
   function clearSession(){ localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY); }
 
   function pageType(){
-    const p = location.pathname.split('/').pop();
-    if (p === '' || p === 'index.html') return 'index';
-    if (p === 'login.html') return 'login';
-    if (p === 'signup.html') return 'signup';
-    return 'other';
+    // Determine the current page and whether it should be protected.
+    const p = (location.pathname.split('/').pop() || '').toLowerCase();
+    const page = p || 'index.html';
+    const PROTECTED_PAGES = new Set(['social.html','profile.html']);
+    const isLogin = page === 'login.html';
+    const isSignup = page === 'signup.html';
+    const isProtected = PROTECTED_PAGES.has(page);
+    return { page, isLogin, isSignup, isProtected };
   }
 
   function gate(){
-    const type = pageType();
-    if ((type === 'index' || type === 'other') && !isLoggedIn()) {
+    const { isLogin, isSignup, isProtected } = pageType();
+    // Only protect explicitly marked pages (e.g., Social, Profile)
+    if (isProtected && !isLoggedIn()) {
       location.replace('login.html');
       return true;
     }
-    if ((type === 'login' || type === 'signup') && isLoggedIn()) {
+    // If already logged in, keep users away from auth pages
+    if ((isLogin || isSignup) && isLoggedIn()) {
       location.replace('social.html');
       return true;
     }
@@ -115,9 +120,8 @@
       clearSession();
       // Clear dev flags/role to avoid stale state after logout
       try { localStorage.removeItem('cc:devMode'); localStorage.removeItem('cc:role'); } catch(_){}
-      // Always send the normal user prefill after logout
-      const emailParam = encodeURIComponent(USER1_EMAIL);
-      location.replace('login.html?prefill=1&source=logout&email=' + emailParam);
+      // Redirect locally with a simple status flag; prefill is handled on the login page.
+      location.replace('login.html?source=logout');
         });
         li.appendChild(a);
         const loginLink = nav.querySelector('a[href="login.html"], a[href="./login.html"]');

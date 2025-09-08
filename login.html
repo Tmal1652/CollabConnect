@@ -42,7 +42,10 @@
         <div class="auth-wrap">
             <h1 id="login-heading" class="page-title">Login</h1>
             <p class="page-lead">Sign in to access your dashboard and projects.</p>
-            <div class="auth-form glass">
+                        <div class="auth-form glass">
+                            <div id="logoutNotice" class="form-info" role="status" aria-live="polite" style="display:none; margin-bottom:.75rem; color:#b7e3ff">
+                                You’ve been signed out.
+                            </div>
               <form id="loginForm">
                   <div class="form-group">
                       <label for="login-email">Email</label>
@@ -56,12 +59,16 @@
               </form>
               <div style="margin-top: 1.5rem;">
                 <p>Don't have an account? <a href="signup.html" class="auth-link">Create an account</a></p>
+                                <div style="margin-top:.75rem">
+                                    <button type="button" id="demoLoginBtn" class="auth-btn" aria-describedby="demoHelp" style="width:100%">Continue as demo user</button>
+                                    <div id="demoHelp" class="sr-only">Fills demo credentials and signs you in for the mock demo.</div>
+                                </div>
               </div>
             </div>
         </div>
     </section>
 
-        <script src="app.js"></script>
+                <script src="app.js"></script>
     <script src="mobile/router.js" defer></script>
         <script>
             if ('serviceWorker' in navigator) {
@@ -69,6 +76,31 @@
                     navigator.serviceWorker.register('sw.js').catch(console.error);
                 });
             }
+                        // Show a lightweight signed-out message when arriving from logout
+                        (function(){
+                            try {
+                                const qs = new URLSearchParams(location.search);
+                                if (qs.get('source') === 'logout') {
+                                    const el = document.getElementById('logoutNotice');
+                                    if (el) el.style.display = '';
+                                }
+                            } catch(_){}
+                        })();
+                                    // Demo sign-in: client-side prefill + submit for mock usage only
+                                    (function(){
+                                        const btn = document.getElementById('demoLoginBtn');
+                                        if (!btn) return;
+                                        btn.addEventListener('click', function(){
+                                            const form = document.getElementById('loginForm');
+                                            if (!form) return;
+                                            const email = form.querySelector('[name="email"]');
+                                            const pass = form.querySelector('[name="password"]');
+                                            if (email) email.value = 'user1@example.com';
+                                            if (pass) pass.value = 'userpass123';
+                                            const submit = form.querySelector('button[type="submit"]');
+                                            submit && submit.click();
+                                        });
+                                    })();
         </script>
 </body>
 </html>
