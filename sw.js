@@ -1,5 +1,5 @@
 // Enhanced service worker: split caches & runtime strategies
-const VERSION = 'v4';
+const VERSION = 'v6';
 const SHELL_CACHE = `cc-shell-${VERSION}`;
 const ASSET_CACHE = `cc-assets-${VERSION}`;
 const PAGE_CACHE = `cc-pages-${VERSION}`;

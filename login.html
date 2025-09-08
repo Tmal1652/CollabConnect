@@ -57,13 +57,9 @@
                   </div>
                   <button type="submit" class="auth-btn">Login</button>
               </form>
-              <div style="margin-top: 1.5rem;">
-                <p>Don't have an account? <a href="signup.html" class="auth-link">Create an account</a></p>
-                                <div style="margin-top:.75rem">
-                                    <button type="button" id="demoLoginBtn" class="auth-btn" aria-describedby="demoHelp" style="width:100%">Continue as demo user</button>
-                                    <div id="demoHelp" class="sr-only">Fills demo credentials and signs you in for the mock demo.</div>
-                                </div>
-              </div>
+                            <div style="margin-top: 1.5rem;">
+                                <p>Don't have an account? <a href="signup.html" class="auth-link">Create an account</a></p>
+                            </div>
             </div>
         </div>
     </section>
@@ -84,23 +80,8 @@
                                     const el = document.getElementById('logoutNotice');
                                     if (el) el.style.display = '';
                                 }
-                            } catch(_){}
+                            } catch(_){ }
                         })();
-                                    // Demo sign-in: client-side prefill + submit for mock usage only
-                                    (function(){
-                                        const btn = document.getElementById('demoLoginBtn');
-                                        if (!btn) return;
-                                        btn.addEventListener('click', function(){
-                                            const form = document.getElementById('loginForm');
-                                            if (!form) return;
-                                            const email = form.querySelector('[name="email"]');
-                                            const pass = form.querySelector('[name="password"]');
-                                            if (email) email.value = 'user1@example.com';
-                                            if (pass) pass.value = 'userpass123';
-                                            const submit = form.querySelector('button[type="submit"]');
-                                            submit && submit.click();
-                                        });
-                                    })();
         </script>
 </body>
 </html>

@@ -3,22 +3,15 @@
 // This placeholder manages a pseudo session token in localStorage to drive app flow.
 
 (function(){
+  // DEMO MODE: disable real auth logic and use simple redirects for login/logout
+  // Set to true to neutralize gating and storage and make the demo always work.
+  const DEMO_MODE = true;
   const TOKEN_KEY = 'cc:authToken';
   const USER_KEY = 'cc:userEmail';
   // Mock accounts (demo only)
   const USER1_EMAIL = 'user1@example.com';
   const USER1_PASSWORD = 'userpass123';
-  const DEV_USER_EMAIL = 'dev@collabconnect.dev';
-  const DEV_PASSWORD = 'devpass123';
-  // Development mode: enable with ?dev=1 (persists) disable with ?dev=0
   const qs = new URLSearchParams(location.search);
-  if (qs.has('dev')) {
-    if (qs.get('dev') === '1') localStorage.setItem('cc:devMode','1');
-    if (qs.get('dev') === '0') localStorage.removeItem('cc:devMode');
-  }
-  const DEV_AUTO_LOGIN = localStorage.getItem('cc:devMode') === '1';
-  // Re-evaluate after potential default
-  const EFFECTIVE_AUTO_LOGIN = localStorage.getItem('cc:devMode') === '1';
   // Avatar visibility toggle (?avatar=0 to hide, ?avatar=1 to show again)
   if (qs.has('avatar')) {
     if (qs.get('avatar') === '0') localStorage.setItem('cc:hideAvatar','1');
@@ -68,45 +61,21 @@
     return false;
   }
 
-  // On GitHub Pages, always ensure we are NOT in dev mode and default to user1
-  // This guarantees the published link opens as a normal user, not dev.
-  try {
-    const IS_GHPAGES = /github\.io$/i.test(location.hostname);
-    if (IS_GHPAGES) {
-      // Remove any dev flags
-      localStorage.removeItem('cc:devMode');
-      // If not logged in or logged in as dev, switch to user1
-      const currentEmail = localStorage.getItem(USER_KEY) || '';
-      const isDevEmail = /^(dev@collabconnect\.dev|devuser@example\.com)$/i.test(currentEmail);
-      if (!localStorage.getItem(TOKEN_KEY) || isDevEmail) {
-        setSession(USER1_EMAIL);
-        localStorage.setItem('cc:role','user');
-      }
-    }
-  } catch(_) {}
-
-  // Auto-login in dev before gating if not already logged in (skip if prefill requested)
-  if (EFFECTIVE_AUTO_LOGIN && !localStorage.getItem(TOKEN_KEY) && !qs.has('prefill')) {
-    try { setSession(DEV_USER_EMAIL); } catch(e){}
-  }
-  // Execute gating early (after potential auto-login)
-  if (gate()) return;
+  // In DEMO_MODE, skip any auto-login/gating. If needed in future, re-enable gate() above.
 
   document.addEventListener('DOMContentLoaded', () => {
   // Clean up any leftover role chips from prior sessions
   try {
     document.querySelectorAll('.nav-links .role-chip').forEach(el => el.remove());
   } catch(_){}
-  // Hide any nav items requiring auth (e.g., Profile, Social)
+  // In DEMO_MODE, always show auth-required nav items; otherwise respect login state
   document.querySelectorAll('.requires-auth').forEach(el => {
-    el.style.display = isLoggedIn() ? '' : 'none';
+    el.style.display = DEMO_MODE ? '' : (isLoggedIn() ? '' : 'none');
   });
-  // Enhance nav: replace login link with logout if logged in
-    if (isLoggedIn()) {
+  // Enhance nav: in DEMO_MODE always provide a Logout button that simply redirects
+    if (DEMO_MODE || isLoggedIn()) {
       const nav = document.querySelector('.nav-links');
       if (nav && !nav.querySelector('#logoutBtn')) {
-    // Attach status dot to the Profile tab icon (no extra avatar item)
-    attachStatusDotToProfile();
   const li = document.createElement('li');
   li.classList.add('nav-utility','nav-logout-item');
         const a = document.createElement('a');
@@ -117,11 +86,12 @@
         a.innerHTML = '<span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span><span class="nav-label">Logout</span>';
         a.addEventListener('click', (e) => { 
           e.preventDefault(); 
-      clearSession();
-      // Clear dev flags/role to avoid stale state after logout
-      try { localStorage.removeItem('cc:devMode'); localStorage.removeItem('cc:role'); } catch(_){}
-      // Redirect locally with a simple status flag; prefill is handled on the login page.
-      location.replace('login.html?source=logout');
+      if (!DEMO_MODE) {
+        clearSession();
+        try { localStorage.removeItem('cc:devMode'); localStorage.removeItem('cc:role'); } catch(_){}
+      }
+      // Simple redirect for demo
+      location.href = 'login.html?source=logout';
         });
         li.appendChild(a);
         const loginLink = nav.querySelector('a[href="login.html"], a[href="./login.html"]');
@@ -132,62 +102,52 @@
       }
     }
 
+    // Ensure profile nav icon shows a status dot (role-colored)
+    try {
+      const profileLink = document.querySelector('.nav-links a[href="profile.html"], .nav-links a[href="./profile.html"]');
+      if (profileLink) {
+        const icon = profileLink.querySelector('.nav-icon');
+        if (icon) {
+          // Avoid duplicates if navigating client-side
+          icon.querySelectorAll('.nav-status-dot').forEach(n => n.remove());
+          const dot = document.createElement('span');
+          dot.className = 'nav-status-dot';
+          // Map role to data-status for CSS colors
+          const role = (DEMO_MODE ? (localStorage.getItem('cc:role') || 'user') : getRole());
+          dot.setAttribute('data-status', role === 'pro' ? 'pro' : role === 'admin' ? 'dev' : 'user');
+          icon.appendChild(dot);
+        }
+      }
+    } catch(_) {}
+
     // Login form handler
     const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
+  if (loginForm) {
       loginForm.addEventListener('submit', e => {
         e.preventDefault();
+    if (DEMO_MODE) { location.href = 'social.html'; return; }
         const email = (loginForm.querySelector('[name="email"]')||{}).value || '';
         const password = (loginForm.querySelector('[name="password"]')||{}).value || '';
         if (!validateEmail(email)) return inlineError(loginForm, 'Enter a valid email');
         if (password.length < 6) return inlineError(loginForm, 'Password must be at least 6 characters');
-        // Simple auth rules:
-        // - dev account requires exact credentials and enables dev mode
-        // - user1 account requires exact credentials
-        // - any other email passes (mock/demo) and is treated as a normal user (no dev mode)
-        const emailLc = email.trim().toLowerCase();
-        const isDevLogin = emailLc === DEV_USER_EMAIL;
-        const isUser1Login = emailLc === USER1_EMAIL;
-        let passOK = true;
-        if (isDevLogin) passOK = (password === DEV_PASSWORD);
-        if (isUser1Login) passOK = (password === USER1_PASSWORD);
-        if (!passOK) return inlineError(loginForm, 'Invalid email or password');
-
-        setSession(emailLc);
-        // Set role and dev flag
-        if (isDevLogin) {
-          localStorage.setItem('cc:devMode','1');
-          localStorage.setItem('cc:role','admin');
-        } else {
-          localStorage.removeItem('cc:devMode');
-          localStorage.setItem('cc:role','user');
-        }
-        location.replace('social.html');
+  const emailLc = email.trim().toLowerCase();
+  if (password.length < 6) return inlineError(loginForm, 'Password must be at least 6 characters');
+  setSession(emailLc);
+  localStorage.setItem('cc:role','user');
+  location.replace('social.html');
       });
       // Prefill for mock/demo.
-      // If logging out (source=logout), always prefill normal user.
+      // If logging out (source=logout), prefill normal user, but DO NOT auto-submit.
       // Otherwise, if query ?prefill=1 OR simply not logged in we populate fields.
-      if (!isLoggedIn() || qs.has('prefill')) {
+      if (DEMO_MODE || !isLoggedIn() || qs.has('prefill')) {
         const emailField = loginForm.querySelector('[name="email"]');
         const passField = loginForm.querySelector('[name="password"]');
-        const fromLogout = qs.get('source') === 'logout';
-        const reqEmail = (qs.get('email') || '').trim().toLowerCase();
-        const isDevEmail = /^(dev@collabconnect\.dev|devuser@example\.com)$/.test(reqEmail);
-        const preferDev = qs.get('dev') === '1' || qs.get('mode') === 'dev';
-        let prefillEmail = USER1_EMAIL;
-        if (fromLogout) {
-          prefillEmail = USER1_EMAIL;
-        } else if (reqEmail && !isDevEmail) {
-          prefillEmail = reqEmail;
-        } else if (preferDev && isDevEmail) {
-          prefillEmail = reqEmail;
-        } else {
-          prefillEmail = USER1_EMAIL;
-        }
+  let prefillEmail = USER1_EMAIL;
         if (emailField) emailField.value = prefillEmail;
-        if (passField) passField.value = (prefillEmail === DEV_USER_EMAIL ? DEV_PASSWORD : USER1_PASSWORD);
+  if (passField) passField.value = USER1_PASSWORD;
         const btn = loginForm.querySelector('button[type="submit"]');
-        // If ?autosubmit=1 is provided, automatically submit after small delay for seamless mock.
+        // Only auto-submit when explicitly requested via ?autosubmit=1.
+        // In DEMO_MODE we do NOT auto-submit to allow the user to click Log In.
         if (qs.get('autosubmit') === '1') {
           setTimeout(()=> btn && btn.click(), 350);
         } else {
@@ -198,15 +158,16 @@
 
     // Signup form handler
     const signupForm = document.getElementById('signupForm');
-    if (signupForm) {
+  if (signupForm) {
       signupForm.addEventListener('submit', e => {
         e.preventDefault();
-        const email = (signupForm.querySelector('[name="email"]')||{}).value || '';
-        const password = (signupForm.querySelector('[name="password"]')||{}).value || '';
-        if (!validateEmail(email)) return inlineError(signupForm, 'Enter a valid email');
-        if (password.length < 6) return inlineError(signupForm, 'Password must be at least 6 characters');
-  setSession(email.trim().toLowerCase());
-  location.replace('social.html');
+    if (DEMO_MODE) { location.href = 'social.html'; return; }
+    const email = (signupForm.querySelector('[name="email"]')||{}).value || '';
+    const password = (signupForm.querySelector('[name="password"]')||{}).value || '';
+    if (!validateEmail(email)) return inlineError(signupForm, 'Enter a valid email');
+    if (password.length < 6) return inlineError(signupForm, 'Password must be at least 6 characters');
+    setSession(email.trim().toLowerCase());
+    location.replace('social.html');
       });
     }
 
@@ -247,22 +208,9 @@
   }
 
   // Expose minimal API for future modules
-  window.CCAuth = { isLoggedIn, getUser, getRole, logout: () => { clearSession(); location.replace('login.html'); } };
+  window.CCAuth = { isLoggedIn, getUser, getRole, logout: () => { location.href = 'login.html?source=logout'; } };
 
   // Helpers
-  function attachStatusDotToProfile(){
-    const profileLink = document.querySelector('.nav-links a[href="#profile"], .nav-links a[href="profile.html"], .nav-links a[href="./profile.html"]');
-    if (!profileLink) return;
-    const icon = profileLink.querySelector('.nav-icon');
-    if (!icon) return;
-    if (icon.querySelector('.nav-status-dot')) return; // already added
-    const statusType = (localStorage.getItem('cc:devMode') === '1') ? 'dev' : (getRole() === 'pro' ? 'pro' : 'user');
-    const dot = document.createElement('span');
-    dot.className = 'nav-status-dot';
-    dot.setAttribute('data-status', statusType);
-    dot.title = statusType.charAt(0).toUpperCase() + statusType.slice(1);
-    icon.appendChild(dot);
-  }
   // Deprecated separate avatar injection — kept for reference but unused
   function avatarColor(seed){
     let h = 0; for (let i=0;i<seed.length;i++) h = (h*31 + seed.charCodeAt(i))>>>0;
