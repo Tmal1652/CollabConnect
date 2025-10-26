@@ -196,6 +196,25 @@ body {
     caret-color: var(--accent);
 }
 
+/* Browser UA adjustments */
+@supports (-webkit-appearance: none) {
+    /* Safari/WebKit tweaks */
+    .navbar { 
+        backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur));
+        -webkit-backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur));
+    }
+}
+@-moz-document url-prefix() {
+    /* Firefox: slightly stronger borders for contrast */
+    .glass, .navbar, .chip, .social-switch .tab { border-color: rgba(255,255,255,0.16); }
+}
+
+/* Consistent focus ring */
+a:focus-visible, button:focus-visible, .chip:focus-visible, .social-switch .tab:focus-visible, .auth-form .auth-btn:focus-visible, .composer .auth-btn:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
 /* Reusable frosted glass utilities */
 .glass {
     background: linear-gradient(140deg, var(--glass-tint) 0%, var(--glass-tint-alt) 100%);
@@ -224,6 +243,75 @@ body {
 }
 
 html { color-scheme: dark light; }
+
+/* Cross-browser glass support and fallbacks */
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    :root { --blur-strong: blur(12px); --blur-soft: blur(6px); }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    /* Fallback: slightly more opaque surfaces when backdrop-filter unsupported */
+    .glass,
+    .navbar,
+    .modal,
+    .footer,
+    .auth-form .auth-btn,
+    .chip,
+    .social-switch .tab,
+    .composer .auth-btn {
+        background: rgba(20, 26, 40, 0.92) !important;
+        border-color: rgba(255,255,255,0.08) !important;
+        box-shadow: 0 8px 22px rgba(0,0,0,0.45);
+    }
+}
+
+/* Reduced motion: respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
+}
+
+/* Performance: let large scrollers skip initial paint until needed */
+.feed, .projects-container { content-visibility: auto; contain-intrinsic-size: 600px 800px; }
+
+/* Fluid “liquid glass” hover effects */
+/* Reusable shimmer for links, chips, buttons */
+.nav-links a, .chip, .auth-form .auth-btn, .composer .auth-btn {
+    position: relative;
+    overflow: hidden;
+    will-change: transform, box-shadow;
+    transform: translateZ(0);
+}
+.nav-links a::before,
+.chip::before,
+.auth-form .auth-btn::before,
+.composer .auth-btn::before {
+    content: "";
+    position: absolute;
+    top: -20%; left: -30%; right: -30%; bottom: -20%;
+    background:
+      radial-gradient(120px 60px at 0% 50%, rgba(255,255,255,0.22), rgba(255,255,255,0) 60%),
+      linear-gradient(140deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+    mix-blend-mode: screen;
+    filter: blur(0.3px);
+    opacity: 0;
+    transform: translateX(-35%);
+    transition: opacity .35s ease, transform .8s cubic-bezier(.22, .61, .36, 1);
+    pointer-events: none;
+}
+.nav-links a:hover::before,
+.chip:hover::before,
+.auth-form .auth-btn:hover::before,
+.composer .auth-btn:hover::before {
+    opacity: .9;
+    transform: translateX(60%);
+}
+/* Subtle lift and inner-glow on hover/active */
+.nav-links a:hover, .chip:hover, .auth-form .auth-btn:hover:not([disabled]), .composer .auth-btn:hover:not([disabled]) {
+    box-shadow: 0 10px 28px -10px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.22);
+    transform: translateY(-1px);
+}
+.nav-links a:active, .chip:active, .auth-form .auth-btn:active:not([disabled]), .composer .auth-btn:active:not([disabled]) {
+    transform: translateY(0);
+}
 
 /* Light mode readability refinements */
 @media (prefers-color-scheme: light) {
@@ -391,13 +479,37 @@ body[data-logo='text'] .navbar .logo { gap: .25rem; }
     padding: 0.5rem 1rem;
     border-radius: var(--radius-sm);
     font-family: inherit;
-    transition: all 0.2s ease; /* Faster transition */
+    transition: all 0.22s ease;
     position: relative;
     z-index: 1;
     border: 1px solid transparent;
         display: inline-flex;
         align-items: center;
         gap: 0.55rem;
+}
+.nav-links a:hover, .nav-links a.active {
+    background: linear-gradient(150deg, rgba(var(--accent-rgb),0.18), rgba(var(--accent-rgb),0.06));
+    border-color: var(--accent-outline);
+}
+
+/* Glassy chips and tabs */
+.chip, .social-switch .tab {
+    background: linear-gradient(150deg, var(--glass-tint), var(--glass-tint-alt));
+    border: 1px solid var(--glass-stroke);
+    backdrop-filter: saturate(var(--glass-saturation)) blur(calc(var(--glass-blur) * 0.75));
+    -webkit-backdrop-filter: saturate(var(--glass-saturation)) blur(calc(var(--glass-blur) * 0.75));
+}
+.social-switch .tab:hover { background: linear-gradient(150deg, rgba(var(--accent-rgb),0.16), rgba(var(--accent-rgb),0.06)); }
+.social-switch .tab.is-active, .social-switch .tab[aria-selected="true"] { background: rgba(var(--accent-rgb),0.12); border-color: var(--accent-outline); }
+
+/* Composer/auth primary buttons */
+.composer .auth-btn, .auth-form .auth-btn {
+    background: linear-gradient(180deg, rgba(var(--accent-rgb),0.35), rgba(var(--accent-rgb),0.20));
+    color: #fff;
+}
+.composer .auth-btn[disabled], .auth-form .auth-btn[disabled] {
+    background: linear-gradient(180deg, rgba(120,130,150,0.35), rgba(120,130,150,0.20));
+    color: rgba(255,255,255,0.8);
 }
 
 .nav-links a .nav-icon { display: inline-flex; line-height: 0; opacity: .85; }
@@ -866,10 +978,10 @@ body[data-shorts] .profile-header { display: none !important; }
 
 .hero-content button {
     position: relative;
-    background: linear-gradient(155deg, var(--glass-tint), var(--glass-tint-alt));
+    background: linear-gradient(180deg, rgba(var(--accent-rgb),0.35), rgba(var(--accent-rgb),0.20));
     backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur));
     -webkit-backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur));
-    color: var(--text-primary);
+    color: #fff;
     padding: 1rem 2rem;
     border: 1px solid var(--glass-stroke);
     border-radius: 14px;
@@ -892,11 +1004,8 @@ body[data-shorts] .profile-header { display: none !important; }
     mix-blend-mode: overlay;
 }
 
-.hero-content button:hover {
-    background-color: var(--glass-bg);
-    transform: none;
-    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.05);
-}
+.hero-content button:hover { box-shadow: 0 10px 28px -10px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.22); transform: translateY(-1px); }
+.hero-content button:active { transform: translateY(0); }
 
 @media (max-width: 768px) {
     .hero-content h1 {

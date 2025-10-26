@@ -3,8 +3,8 @@
 // This placeholder manages a pseudo session token in localStorage to drive app flow.
 
 (function(){
-  // DEMO MODE: disable real auth logic and use simple redirects for login/logout
-  // Set to true to neutralize gating and storage and make the demo always work.
+  // DEMO MODE: fully disable auth UI and flows for mockup
+  // When true, no logout button is injected and auth-required items are shown.
   const DEMO_MODE = true;
   const TOKEN_KEY = 'cc:authToken';
   const USER_KEY = 'cc:userEmail';
@@ -48,12 +48,11 @@
 
   function gate(){
     const { isLogin, isSignup, isProtected } = pageType();
-    // Only protect explicitly marked pages (e.g., Social, Profile)
+    if (DEMO_MODE) return false; // no gating in demo
     if (isProtected && !isLoggedIn()) {
       location.replace('login.html');
       return true;
     }
-    // If already logged in, keep users away from auth pages
     if ((isLogin || isSignup) && isLoggedIn()) {
       location.replace('social.html');
       return true;
@@ -68,39 +67,10 @@
   try {
     document.querySelectorAll('.nav-links .role-chip').forEach(el => el.remove());
   } catch(_){}
-  // In DEMO_MODE, always show auth-required nav items; otherwise respect login state
+  // In DEMO_MODE, show auth-required nav items; don't inject logout or modify nav
   document.querySelectorAll('.requires-auth').forEach(el => {
-    el.style.display = DEMO_MODE ? '' : (isLoggedIn() ? '' : 'none');
+    el.style.display = '';
   });
-  // Enhance nav: in DEMO_MODE always provide a Logout button that simply redirects
-    if (DEMO_MODE || isLoggedIn()) {
-      const nav = document.querySelector('.nav-links');
-      if (nav && !nav.querySelector('#logoutBtn')) {
-  const li = document.createElement('li');
-  li.classList.add('nav-utility','nav-logout-item');
-        const a = document.createElement('a');
-        a.href = '#logout';
-        a.id = 'logoutBtn';
-        a.className = 'nav-action';
-        a.setAttribute('role','button');
-        a.innerHTML = '<span class="nav-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span><span class="nav-label">Logout</span>';
-        a.addEventListener('click', (e) => { 
-          e.preventDefault(); 
-      if (!DEMO_MODE) {
-        clearSession();
-        try { localStorage.removeItem('cc:devMode'); localStorage.removeItem('cc:role'); } catch(_){}
-      }
-      // Simple redirect for demo
-      location.href = 'login.html?source=logout';
-        });
-        li.appendChild(a);
-        const loginLink = nav.querySelector('a[href="login.html"], a[href="./login.html"]');
-        loginLink && (loginLink.style.display = 'none');
-        nav.appendChild(li);
-  // No extra avatar item; profile link remains in place with a status dot
-    // Role chip removed to avoid redundancy; status dot is sufficient
-      }
-    }
 
     // Ensure profile nav icon shows a status dot (role-colored)
     try {
@@ -208,7 +178,8 @@
   }
 
   // Expose minimal API for future modules
-  window.CCAuth = { isLoggedIn, getUser, getRole, logout: () => { location.href = 'login.html?source=logout'; } };
+  // In demo, logout is a no-op with a toast message if desired
+  window.CCAuth = { isLoggedIn, getUser, getRole, logout: () => { try { alert('Auth disabled in mockup'); } catch(_){} } };
 
   // Helpers
   // Deprecated separate avatar injection — kept for reference but unused
