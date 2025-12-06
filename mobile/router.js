@@ -9,7 +9,12 @@
   const LAST_KEY = 'cc:lastView';
 
   let previousId = null;
+  let isTransitioning = false;
+  
   function applyVisibility(targetId) {
+    if (isTransitioning) return; // Prevent rapid navigation glitches
+    isTransitioning = true;
+    
     sections.forEach(sec => {
       const active = sec.id === targetId;
       if (!isMobile()) {
@@ -18,14 +23,17 @@
         return;
       }
       if (active) {
-        sec.style.display = '';
-        sec.classList.add('view-active','view-enter');
-        // remove enter class after animation
-        setTimeout(()=>sec.classList.remove('view-enter'), 320);
+        // Use requestAnimationFrame to ensure smooth rendering
+        requestAnimationFrame(() => {
+          sec.style.display = '';
+          sec.classList.add('view-active','view-enter');
+          // remove enter class after animation
+          setTimeout(() => sec.classList.remove('view-enter'), 320);
+        });
       } else if (sec.id === previousId) {
         // animate out previous
         sec.classList.add('view-exit');
-        setTimeout(()=>{
+        setTimeout(() => {
           sec.classList.remove('view-exit','view-active');
           if (isMobile() && sec.id !== targetId) sec.style.display='none';
         }, 210);
@@ -35,6 +43,9 @@
       }
     });
     previousId = targetId;
+    
+    // Allow new transitions after animation completes
+    setTimeout(() => { isTransitioning = false; }, 350);
     // Footer only on home in mobile
     if (footer) {
       if (isMobile()) footer.style.display = targetId === 'home' ? '' : 'none';

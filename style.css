@@ -694,8 +694,8 @@ body[data-logo='text'] .navbar .logo { gap: .25rem; }
     }
 
 @media (max-width: 820px) {
-    /* Single-view mode: sections hidden inline via JS; fade transitions */
-    [data-view] { transition: opacity 0.28s ease; }
+    /* Single-view mode: sections hidden inline via JS; animations handled by view classes */
+    [data-view] { /* Transition removed to avoid conflict with animations */ }
     [data-view][style*='display: none'] { opacity: 0; }
     .navbar {
         top: auto;

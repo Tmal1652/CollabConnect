@@ -1,18 +1,5 @@
-// Smooth Scroll for same-page hash links only
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        // Only handle if the link stays on the same document
-        if (href && (href === '#' || href.startsWith('#'))) {
-            const target = document.querySelector(href);
-            if (target) {
-                e.preventDefault();
-                target.scrollIntoView({ behavior: 'smooth' });
-                setActiveNav(href);
-            }
-        }
-    });
-});
+// Navigation is handled by mobile/router.js to avoid conflicts
+// Desktop smooth scroll is native browser behavior for hash links
 // JavaScript to handle the opening and closing of the Edit Profile modal
 let lastFocusedBeforeModal = null;
 function editProfile() {
