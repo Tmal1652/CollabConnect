@@ -12,9 +12,7 @@
     <!-- For production harden security headers (served via server config):
          Content-Security-Policy, X-Frame-Options, Referrer-Policy, Permissions-Policy.
          Avoid inline scripts or add nonce/hash if CSP enforced. -->
-    <link rel="preload" href="style.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="style.min.css"></noscript>
-    <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="mobile-fix.css">
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,6 +23,7 @@
     <meta name="apple-mobile-web-app-title" content="CollabConnect">
     <meta name="mobile-web-app-capable" content="yes">
     <script src="mobile/auth.js" defer></script>
+    <script src="page-init.js" defer></script>
 </head>
 <body data-logo="text">
     <div id="networkBanner" class="network-banner" style="display:none" role="status" aria-live="polite"></div>
@@ -60,11 +59,21 @@
     <header id="home" class="hero-section" data-view="home">
         <div class="hero-overlay"></div> <!-- Overlay added -->
         <div class="hero-content">
-            <span class="mobile-hero-brand" aria-hidden="true">CollabConnect</span>
+            <div class="hero-intro">
+                <span class="mobile-hero-brand" aria-hidden="true">CollabConnect</span>
+                <span class="hero-eyebrow">Built for creative teams</span>
+            </div>
             <h1>Collaborate and Create Together</h1>
-            <p>The ultimate platform to bring your team’s creativity to life.</p>
-            <button aria-label="Go to the Social feed" onclick="window.location.href='social.html'">Get Started</button>
-            <button id="installBtn" class="install-btn" type="button" style="display:none" aria-label="Install CollabConnect App">Install App</button>
+            <p class="hero-subtext">Bring projects, updates, and creative momentum into one focused space built for teams.</p>
+            <div class="hero-actions" role="group" aria-label="Primary actions">
+                <button class="hero-btn hero-btn-primary" aria-label="Go to the Social feed" onclick="window.location.href='social.html'">Open Team Feed</button>
+                <button id="installBtn" class="install-btn hero-btn hero-btn-secondary" type="button" style="display:none" aria-label="Install CollabConnect App">Install App</button>
+            </div>
+            <ul class="hero-metrics" aria-label="CollabConnect highlights">
+                <li><span>Feed</span><strong>Team updates</strong></li>
+                <li><span>Projects</span><strong>Shared momentum</strong></li>
+                <li><span>Mobile</span><strong>PWA ready</strong></li>
+            </ul>
         </div>
     </header>
 
@@ -87,7 +96,7 @@
 
 <!-- Footer -->
 <footer class="footer site-footer" aria-label="Website Footer">
-    <p>© 2025 CollabConnect. All Rights Reserved. Created by Tyler Malovrh</p>
+    <p>© 2026 CollabConnect. All Rights Reserved. Created by Tyler Malovrh</p>
     <ul class="social-links">
     <li><a class="chip" href="#" aria-label="Follow us on X" rel="noopener">X</a></li>
     <li><a class="chip" href="#" aria-label="Follow us on LinkedIn" rel="noopener">LinkedIn</a></li>
@@ -97,20 +106,5 @@
 
         <script src="app.js"></script>
     <script src="mobile/router.js" defer></script>
-        <script>
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('sw.js').catch(console.error);
-                });
-            }
-                        // Dev helper: purge caches quickly with ?purgeCaches=1
-                        if (location.search.includes('purgeCaches=1') && 'caches' in window) {
-                            caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).then(()=>console.log('Caches cleared'));
-                        }
-        </script>
-<!-- Removed 3D tilt on hero to keep background steady -->
-<script>
-  // Custom cursor removed as per request
-</script>
 </body>
 </html>

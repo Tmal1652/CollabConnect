@@ -10,6 +10,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
 	<link rel="manifest" href="manifest.json" />
 	<link rel="apple-touch-icon" href="icons/icon-192.png" />
+	<script src="page-init.js" defer></script>
 	<style>
 		:root { --m-tabbar-h: 64px; --m-pad: 16px; }
 		html, body { height: 100%; }
@@ -110,12 +111,5 @@
 	</main>
 
 	<script src="mobile/app.js" defer></script>
-	<script>
-		if ('serviceWorker' in navigator) {
-			window.addEventListener('load', () => {
-				navigator.serviceWorker.register('sw.js').catch(()=>{});
-			});
-		}
-	</script>
 </body>
 </html>

@@ -6,15 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Signup - CollabConnect</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="preload" href="style.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="style.min.css"></noscript>
-    <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="mobile-fix.css">
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     <script src="mobile/auth.js" defer></script>
+    <script src="page-init.js" defer></script>
 </head>
 <body data-logo="text">
     <!-- Navigation Bar -->
@@ -40,6 +39,7 @@
     <!-- Signup Section -->
     <section id="signup" class="signup-section page-offset container" aria-labelledby="signup-heading" data-noscroll-mobile>
     <div class="auth-wrap">
+        <p class="page-kicker">Get started</p>
     <h1 id="signup-heading" class="page-title">Signup</h1>
         <p class="page-lead">Create an account to start collaborating.</p>
         <div class="auth-form glass">
@@ -58,7 +58,7 @@
               </div>
               <button type="submit" class="auth-btn">Signup</button>
           </form>
-                    <div style="margin-top: 1.5rem;">
+                    <div class="auth-support">
                         <p>This is a mockup. Accounts are disabled.</p>
                     </div>
         </div>
@@ -67,12 +67,5 @@
 
         <script src="app.js"></script>
         <script src="mobile/router.js" defer></script>
-        <script>
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('sw.js').catch(console.error);
-                });
-            }
-        </script>
 </body>
 </html>

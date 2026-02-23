@@ -9,9 +9,7 @@
   <meta name="theme-color" content="#0b1323" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="preload" href="style.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="style.min.css" /></noscript>
-  <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="manifest" href="manifest.json" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -19,6 +17,7 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <script src="mobile/auth.js" defer></script>
+    <script src="page-init.js" defer></script>
 </head>
 <body data-logo="text">
   <a href="#main" class="skip-link">Skip to main content</a>
@@ -48,12 +47,14 @@
   </nav>
 
   <main id="main" class="page-offset social-page container">
-    <header class="profile-header">
+    <header class="profile-header page-shell-header">
       <div class="profile-heading-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9h8"/><path d="M8 13h6"/><rect x="4" y="5" width="16" height="14" rx="3"/></svg></div>
-      <div>
+      <div class="page-heading-copy">
+        <p class="page-kicker">Collaboration Hub</p>
         <h1 class="page-title">Team Feed</h1>
         <p class="page-lead">Modern, focused space for updates and collaboration</p>
       </div>
+      <div class="page-header-chip" role="note" aria-label="Workspace status">Live workspace</div>
     </header>
 
     <section class="social-layout">
@@ -70,6 +71,7 @@
           <li><span>Posts</span><strong id="sMetaPosts">—</strong></li>
           <li><span>Comments</span><strong id="sMetaComments">—</strong></li>
         </ul>
+        <p class="s-caption">Use the center feed to share quick progress, blockers, and wins.</p>
       </aside>
 
       <section class="s-center">
@@ -125,6 +127,7 @@
       <aside class="s-right s-card" aria-label="Trends and suggestions">
         <div class="s-block">
           <h2 class="s-title">Trends</h2>
+          <p class="s-caption">Topics gaining momentum across the workspace</p>
           <ul class="s-list">
             <li><span class="tag">#DesignSprint</span><span class="count">124</span></li>
             <li><span class="tag">#OpenSource</span><span class="count">89</span></li>
@@ -133,6 +136,7 @@
         </div>
         <div class="s-block">
           <h2 class="s-title">People to follow</h2>
+          <p class="s-caption">Discover collaborators outside your current project circle</p>
           <ul class="s-people">
             <li><div class="avatar" style="--h:290">A</div><div><div class="p-name">alex.dev</div><div class="p-role">Developer</div></div><button class="btn subtle">Follow</button></li>
             <li><div class="avatar" style="--h:120">M</div><div><div class="p-name">mia.design</div><div class="p-role">Designer</div></div><button class="btn subtle">Follow</button></li>
@@ -144,7 +148,7 @@
   </main>
 
   <footer class="footer site-footer" aria-label="Website Footer">
-    <p>© 2025 CollabConnect. All Rights Reserved. Created by Tyler Malovrh</p>
+    <p>© 2026 CollabConnect. All Rights Reserved. Created by Tyler Malovrh</p>
     <ul class="social-links">
       <li><a class="chip" href="#" aria-label="Follow us on X" rel="noopener">X</a></li>
       <li><a class="chip" href="#" aria-label="Follow us on LinkedIn" rel="noopener">LinkedIn</a></li>

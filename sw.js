@@ -1,13 +1,24 @@
 // Enhanced service worker: split caches & runtime strategies
-const VERSION = 'v7';
+const VERSION = 'v8';
 const SHELL_CACHE = `cc-shell-${VERSION}`;
 const ASSET_CACHE = `cc-assets-${VERSION}`;
 const PAGE_CACHE = `cc-pages-${VERSION}`;
 const APP_SHELL = [
   'index.html',
+  'about.html',
+  'features.html',
+  'social.html',
+  'projects.html',
+  'profile.html',
+  'login.html',
+  'signup.html',
+  'app.html',
   'style.css',
   'style.min.css',
   'app.js',
+  'social.js',
+  'projects.js',
+  'mobile/app.js',
   'mobile/router.js',
   'mobile/auth.js',
   'manifest.json',
@@ -55,12 +66,18 @@ self.addEventListener('fetch', (event) => {
 async function networkFirst(request) {
   try {
     const fresh = await fetch(request);
-    const cache = await caches.open(PAGE_CACHE);
-    cache.put(request, fresh.clone());
+    if (fresh && (fresh.ok || fresh.type === 'opaque')) {
+      const cache = await caches.open(PAGE_CACHE);
+      cache.put(request, fresh.clone());
+    }
     return fresh;
   } catch (e) {
-    const cached = await caches.match(request);
-  return cached || caches.match('index.html');
+    const cached = await caches.match(request, { ignoreSearch: true });
+    if (cached) return cached;
+    if (request.mode === 'navigate') {
+      return caches.match('index.html');
+    }
+    return Response.error();
   }
 }
 
@@ -68,10 +85,14 @@ async function staleWhileRevalidate(request) {
   const cache = await caches.open(ASSET_CACHE);
   const cached = await cache.match(request);
   const networkPromise = fetch(request).then(resp => {
-    cache.put(request, resp.clone());
+    if (resp && (resp.ok || resp.type === 'opaque')) {
+      cache.put(request, resp.clone());
+    }
     return resp;
   }).catch(() => cached);
-  return cached || networkPromise;
+  if (cached) return cached;
+  const resp = await networkPromise;
+  return resp || Response.error();
 }
 
 async function cacheFirst(request) {
@@ -79,13 +100,13 @@ async function cacheFirst(request) {
   if (cached) return cached;
   try {
     const resp = await fetch(request);
-    if (request.url.startsWith(self.location.origin)) {
+    if (request.url.startsWith(self.location.origin) && resp && (resp.ok || resp.type === 'opaque')) {
       const cache = await caches.open(ASSET_CACHE);
       cache.put(request, resp.clone());
     }
     return resp;
   } catch (e) {
-  return caches.match('index.html');
+    return cached || Response.error();
   }
 }
 

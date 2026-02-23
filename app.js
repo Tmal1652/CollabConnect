@@ -49,6 +49,7 @@ document.addEventListener('click', (e) => {
 // Sticky Navbar Scroll Effect
 window.addEventListener('scroll', function() {
     const navbar = document.querySelector('.navbar');
+    if (!navbar) return;
     if (window.scrollY > 50) {
         navbar.classList.add('scrolled');
     } else {
@@ -61,18 +62,20 @@ const options = {
     threshold: 0.1
 };
 
-const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('in-view');
-            observer.unobserve(entry.target); // Stop observing once it animates in
-        }
-    });
-}, options);
+if ('IntersectionObserver' in window && sections.length) {
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                observer.unobserve(entry.target); // Stop observing once it animates in
+            }
+        });
+    }, options);
 
-sections.forEach(section => {
-    observer.observe(section);
-});
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+}
 
 // Single adaptive navbar (no toggle needed)
 
@@ -111,11 +114,14 @@ function getCurrentSectionHash() {
 }
 
 function onScrollUpdateActive() {
+    if (!navAnchors.length) return;
     const hash = getCurrentSectionHash();
     setActiveNav(hash);
 }
 
-window.addEventListener('scroll', onScrollUpdateActive, { passive: true });
-window.addEventListener('load', onScrollUpdateActive);
+if (navAnchors.length) {
+    window.addEventListener('scroll', onScrollUpdateActive, { passive: true });
+    window.addEventListener('load', onScrollUpdateActive);
+}
 
 // Mobile routing logic moved to mobile/router.js

@@ -9,9 +9,7 @@
   <meta name="theme-color" content="#0b1323" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="preload" href="style.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="style.min.css" /></noscript>
-  <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="manifest" href="manifest.json" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -19,6 +17,7 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <script src="mobile/auth.js" defer></script>
+    <script src="page-init.js" defer></script>
 </head>
 <body data-logo="text">
   <a href="#main" class="skip-link">Skip to main content</a>
@@ -76,7 +75,7 @@
   </main>
 
   <footer class="footer site-footer" aria-label="Website Footer">
-    <p>© 2025 CollabConnect. All Rights Reserved. Created by Tyler Malovrh</p>
+    <p>© 2026 CollabConnect. All Rights Reserved. Created by Tyler Malovrh</p>
     <ul class="social-links">
       <li><a class="chip" href="#" aria-label="Follow us on X" rel="noopener">X</a></li>
       <li><a class="chip" href="#" aria-label="Follow us on LinkedIn" rel="noopener">LinkedIn</a></li>
@@ -85,12 +84,5 @@
   </footer>
 
   <script src="app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(console.error);
-      });
-    }
-  </script>
 </body>
 </html>

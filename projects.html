@@ -9,20 +9,14 @@
   <meta name="theme-color" content="#0b1323" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="preload" href="style.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="style.min.css" /></noscript>
-  <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="mobile-web-app-capable" content="yes" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <script src="mobile/auth.js" defer></script>
-  <script>
-    // ensure stylesheet media swap for print-loaded css
-    (function(){ var l=document.querySelector('link[rel="stylesheet"][media="print"]'); if(l){ l.addEventListener('load', ()=> l.media='all'); }})();
-  </script>
-  <style>/* No inline styles beyond the preload media-swap helper */</style>
+    <script src="page-init.js" defer></script>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body data-logo="text">
@@ -53,18 +47,21 @@
   </nav>
 
   <main id="main" class="page-offset projects-page container">
-    <header class="profile-header">
+    <header class="profile-header page-shell-header">
       <div class="profile-heading-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18"/><path d="M3 12h18"/><path d="M3 17h18"/></svg></div>
-      <div>
-  <h1 class="page-title">Projects</h1>
-  <p class="page-lead">Discover and track initiatives across the community</p>
+      <div class="page-heading-copy">
+        <p class="page-kicker">Community Initiatives</p>
+        <h1 class="page-title">Projects</h1>
+        <p class="page-lead">Discover and track initiatives across the community</p>
       </div>
+      <div class="page-header-chip" role="note" aria-label="Catalog mode">Open catalog</div>
     </header>
 
     <section class="projects-layout">
       <aside class="s-left s-card" aria-label="Filters">
         <div class="s-block">
           <h2 class="s-title">Quick filters</h2>
+          <p class="s-caption">Filter by discipline to narrow projects faster.</p>
           <div class="chip-row" role="group" aria-label="Project filters">
             <button class="chip" data-filter="all" aria-pressed="true">All</button>
             <button class="chip" data-filter="design" aria-pressed="false">Design</button>
@@ -74,6 +71,7 @@
         </div>
         <div class="s-block">
           <h2 class="s-title">Status</h2>
+          <p class="s-caption">High-level pipeline snapshot</p>
           <ul class="s-list">
             <li><span>Planned</span><span class="count">2</span></li>
             <li><span>Active</span><span class="count">1</span></li>
@@ -117,6 +115,7 @@
       <aside class="s-right s-card" aria-label="Tags and suggestions">
         <div class="s-block">
           <h2 class="s-title">Popular tags</h2>
+          <p class="s-caption">Common topics used across project posts</p>
           <ul class="s-list">
             <li><span class="tag">#Design</span><span class="count">18</span></li>
             <li><span class="tag">#OpenSource</span><span class="count">12</span></li>
@@ -125,6 +124,7 @@
         </div>
         <div class="s-block">
           <h2 class="s-title">Tips</h2>
+          <p class="s-caption">Ways to make projects easier to discover</p>
           <ul class="s-list">
             <li>Use clear tags so others can find your project</li>
             <li>Share progress on the Social page</li>
@@ -135,7 +135,7 @@
   </main>
 
   <footer class="footer site-footer" aria-label="Website Footer">
-    <p>© 2025 CollabConnect. All Rights Reserved. Created by Tyler Malovrh</p>
+    <p>© 2026 CollabConnect. All Rights Reserved. Created by Tyler Malovrh</p>
     <ul class="social-links">
       <li><a class="chip" href="#" aria-label="Follow us on X" rel="noopener">X</a></li>
       <li><a class="chip" href="#" aria-label="Follow us on LinkedIn" rel="noopener">LinkedIn</a></li>
@@ -145,12 +145,5 @@
 
   <script src="app.js"></script>
   <script src="projects.js" defer></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(console.error);
-      });
-    }
-  </script>
 </body>
 </html>

@@ -6,15 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login - CollabConnect</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="preload" href="style.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="style.min.css"></noscript>
-    <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="mobile-fix.css">
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     <script src="mobile/auth.js" defer></script>
+    <script src="page-init.js" defer></script>
 </head>
 <body data-logo="text">
     <!-- Navigation Bar -->
@@ -41,10 +40,11 @@
     <!-- Login Section -->
     <section id="login" class="login-section page-offset container" aria-labelledby="login-heading" data-noscroll-mobile>
         <div class="auth-wrap">
+            <p class="page-kicker">Welcome back</p>
             <h1 id="login-heading" class="page-title">Login</h1>
             <p class="page-lead">Sign in to access your dashboard and projects.</p>
                         <div class="auth-form glass">
-                            <div id="logoutNotice" class="form-info" role="status" aria-live="polite" style="display:none; margin-bottom:.75rem; color:#b7e3ff">
+                            <div id="logoutNotice" class="form-info" role="status" aria-live="polite" style="display:none; margin-bottom:.75rem;">
                                 You’ve been signed out.
                             </div>
               <form id="loginForm">
@@ -58,7 +58,7 @@
                   </div>
                   <button type="submit" class="auth-btn">Login</button>
               </form>
-                            <div style="margin-top: 1.5rem;">
+                            <div class="auth-support">
                                 <p>Don't have an account? <a href="signup.html" class="auth-link">Create an account</a></p>
                             </div>
             </div>
@@ -68,11 +68,6 @@
                 <script src="app.js"></script>
     <script src="mobile/router.js" defer></script>
         <script>
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('sw.js').catch(console.error);
-                });
-            }
                         // Show a lightweight signed-out message when arriving from logout
                         (function(){
                             try {
