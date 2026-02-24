@@ -40,23 +40,27 @@ The goal is to create a space where people can:
 - Service Worker (offline/app-shell caching support)
 
 ## Project Structure (Key Files)
-- `/Users/tmalovrh1652/Documents/GitHub/CollabConnect/index.html` - home page
-- `/Users/tmalovrh1652/Documents/GitHub/CollabConnect/about.html` - about page
-- `/Users/tmalovrh1652/Documents/GitHub/CollabConnect/features.html` - features page
-- `/Users/tmalovrh1652/Documents/GitHub/CollabConnect/social.html` - social/collaboration feed page
-- `/Users/tmalovrh1652/Documents/GitHub/CollabConnect/projects.html` - projects page
-- `/Users/tmalovrh1652/Documents/GitHub/CollabConnect/profile.html` - profile page
-- `/Users/tmalovrh1652/Documents/GitHub/CollabConnect/style.css` - shared styles and design system
-- `/Users/tmalovrh1652/Documents/GitHub/CollabConnect/app.js` - shared UI interactions
-- `/Users/tmalovrh1652/Documents/GitHub/CollabConnect/page-init.js` - shared boot logic (service worker + cache helper + mobile splash gate)
-- `/Users/tmalovrh1652/Documents/GitHub/CollabConnect/mobile/router.js` - mobile routing helpers (legacy/mobile behavior support)
-- `/Users/tmalovrh1652/Documents/GitHub/CollabConnect/sw.js` - service worker
+- `index.html` - home page
+- `about.html` - about page
+- `features.html` - features page
+- `social.html` - social/collaboration feed page
+- `projects.html` - projects page
+- `profile.html` - profile page
+- `style.css` - shared styles and design system
+- `app.js` - shared UI interactions
+- `page-init.js` - shared boot logic (service worker + cache helper + mobile splash gate)
+- `mobile/router.js` - mobile routing helpers (legacy/mobile behavior support)
+- `sw.js` - service worker
 
 ## Getting Started
 This is a static project. You can run it locally with a simple static server.
 
+### Clone the repository
+- `git clone <your-repo-url>`
+- `cd CollabConnect`
+
 ### Option 1: Open directly
-- Open `/Users/tmalovrh1652/Documents/GitHub/CollabConnect/index.html` in a browser
+- Open `index.html` in a browser
 
 Note:
 - Some service worker behavior may be limited when using `file://`
