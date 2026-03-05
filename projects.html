@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#0b1323" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=1.9.2">
   <link rel="manifest" href="manifest.json" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -127,6 +127,14 @@
           <h2 id="projectsMainHeading">Portfolio demo project hub</h2>
           <p>Use this space to demo project discovery, team alignment, and collaboration workflows across personal and community initiatives.</p>
         </div>
+
+        <section
+          id="projectsActiveFilters"
+          class="projects-active-filters"
+          aria-live="polite"
+          aria-label="Selected filters"
+          hidden
+        ></section>
 
         <div id="projectsList" class="projects-v2-list" aria-live="polite" aria-busy="false"></div>
         <div id="projectsEmpty" class="empty-feed projects-v2-empty" hidden aria-live="polite">
@@ -320,6 +328,6 @@
   </footer>
 
   <script src="app.js"></script>
-  <script src="projects.js" defer></script>
+  <script src="projects.js?v=1.9.2" defer></script>
 </body>
 </html>

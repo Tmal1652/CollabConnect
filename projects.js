@@ -2,6 +2,8 @@
   const PROJECTS_KEY = "cc:projects:v1";
   const UI_KEY = "cc:projects:ui:v1";
   const SOCIAL_KEY = "cc:social:v2";
+  const PROJECTS_SEED_VERSION_KEY = "cc:projects:seed-version";
+  const PROJECTS_SEED_VERSION = 3;
 
   const DEFAULT_UI = {
     view: "my",
@@ -42,6 +44,19 @@
     seeking: "Seeking Collaborators",
   };
 
+  const FILTER_KIND_LABEL = {
+    discipline: "Discipline",
+    status: "Status",
+    type: "Type",
+    search: "Search",
+  };
+
+  const FILTER_OPTIONS = {
+    discipline: ["all", "dev", "design", "marketing", "product", "ops"],
+    status: ["all", "planned", "active", "review", "completed", "archived"],
+    type: ["all", "featured", "seeking", "standard"],
+  };
+
   const els = {};
   let state = { projects: [] };
   let ui = { ...DEFAULT_UI, filters: { ...DEFAULT_UI.filters } };
@@ -66,7 +81,11 @@
   }
 
   function toArray(value) {
-    return Array.isArray(value) ? value : [];
+    if (Array.isArray(value)) return value;
+    if (value && typeof value === "object" && typeof value.length === "number") {
+      return Array.from(value);
+    }
+    return [];
   }
 
   function normalizeStr(value, fallback) {
@@ -144,42 +163,43 @@
   }
 
   function normalizeProject(project, i) {
-    const createdAt = normalizeStr(project.createdAt, nowIso());
-    const updatedAt = normalizeStr(project.updatedAt, createdAt);
-    const tags = toArray(project.tags).map((t) => normalizeStr(t, "")).filter(Boolean);
-    const stack = toArray(project.stack).map((t) => normalizeStr(t, "")).filter(Boolean);
-    const goals = toArray(project.goals).map((g) => normalizeStr(g, "")).filter(Boolean);
-    const members = toArray(project.members)
+    const source = project && typeof project === "object" ? project : {};
+    const createdAt = normalizeStr(source.createdAt, nowIso());
+    const updatedAt = normalizeStr(source.updatedAt, createdAt);
+    const tags = toArray(source.tags).map((t) => normalizeStr(t, "")).filter(Boolean);
+    const stack = toArray(source.stack).map((t) => normalizeStr(t, "")).filter(Boolean);
+    const goals = toArray(source.goals).map((g) => normalizeStr(g, "")).filter(Boolean);
+    const members = toArray(source.members)
       .map((m) => ({ name: normalizeStr(m && m.name, "Team member"), role: normalizeStr(m && m.role, "Contributor") }))
       .filter((m) => m.name);
-    const milestones = toArray(project.milestones)
+    const milestones = toArray(source.milestones)
       .map((m) => ({
         title: normalizeStr(m && m.title, "Milestone"),
         due: normalizeStr(m && m.due, "TBD"),
         state: ["todo", "doing", "done"].includes((m && m.state) || "") ? m.state : "todo",
       }))
       .filter((m) => m.title);
-    const activity = toArray(project.activity)
+    const activity = toArray(source.activity)
       .map((a) => ({ text: normalizeStr(a && a.text, "Updated project"), createdAt: normalizeStr(a && a.createdAt, updatedAt) }))
       .filter((a) => a.text);
 
-    const ownerType = ["my", "community", "shared"].includes(project.ownerType) ? project.ownerType : "community";
-    const status = ["planned", "active", "review", "completed", "archived"].includes(project.status)
-      ? project.status
+    const ownerType = ["my", "community", "shared"].includes(source.ownerType) ? source.ownerType : "community";
+    const status = ["planned", "active", "review", "completed", "archived"].includes(source.status)
+      ? source.status
       : "planned";
-    const discipline = ["dev", "design", "marketing", "product", "ops"].includes(project.discipline)
-      ? project.discipline
+    const discipline = ["dev", "design", "marketing", "product", "ops"].includes(source.discipline)
+      ? source.discipline
       : "dev";
-    const projectType = ["standard", "featured", "seeking"].includes(project.projectType)
-      ? project.projectType
-      : (project.isFeatured ? "featured" : "standard");
+    const projectType = ["standard", "featured", "seeking"].includes(source.projectType)
+      ? source.projectType
+      : (source.isFeatured ? "featured" : "standard");
 
     return {
-      id: normalizeStr(project.id, `seed-${i + 1}`),
+      id: normalizeStr(source.id, `seed-${i + 1}`),
       ownerType,
-      title: normalizeStr(project.title, "Untitled Project"),
-      summary: normalizeStr(project.summary, "No summary yet."),
-      description: normalizeStr(project.description, "No description provided yet."),
+      title: normalizeStr(source.title, "Untitled Project"),
+      summary: normalizeStr(source.summary, "No summary yet."),
+      description: normalizeStr(source.description, "No description provided yet."),
       status,
       discipline,
       projectType,
@@ -191,7 +211,7 @@
       activity,
       updatedAt,
       createdAt,
-      isFeatured: Boolean(project.isFeatured || projectType === "featured"),
+      isFeatured: Boolean(source.isFeatured || projectType === "featured"),
     };
   }
 
@@ -256,6 +276,162 @@
         updatedAt: ts(65),
       },
       {
+        id: "my-realestate-site",
+        ownerType: "my",
+        title: "Luxury Real Estate Listing Site",
+        summary: "Modern property showcase site with map search, listing pages, and lead capture forms.",
+        description:
+          "Portfolio-ready real estate website concept focused on premium visuals, fast listing discovery, and a smooth contact flow for agents and buyers.",
+        status: "active",
+        discipline: "dev",
+        projectType: "featured",
+        tags: ["real-estate", "web", "portfolio"],
+        stack: ["HTML", "CSS", "JavaScript"],
+        goals: ["Launch listing browse UX", "Improve map + filter discoverability", "Ship polished lead form flow"],
+        members: [
+          { name: "Tyler", role: "Frontend" },
+          { name: "Maya", role: "UX" },
+        ],
+        milestones: [
+          { title: "Homepage + listings layout", due: "2026-03-14", state: "done" },
+          { title: "Property detail templates", due: "2026-03-18", state: "doing" },
+          { title: "Lead capture QA pass", due: "2026-03-22", state: "todo" },
+        ],
+        activity: [
+          { text: "Refined filter controls for listing search", createdAt: ts(140) },
+          { text: "Updated hero and typography contrast", createdAt: ts(55) },
+        ],
+        createdAt: ts(6000),
+        updatedAt: ts(40),
+        isFeatured: true,
+      },
+      {
+        id: "my-figma-design-kit",
+        ownerType: "my",
+        title: "Figma Component Kit",
+        summary: "Reusable Figma components and interaction patterns for product landing pages.",
+        description:
+          "A design kit used to accelerate mockups, align spacing/typography, and keep UI decisions consistent across marketing and product pages.",
+        status: "planned",
+        discipline: "design",
+        projectType: "standard",
+        tags: ["figma", "design-system", "components"],
+        stack: ["Figma", "Design Tokens"],
+        goals: ["Finalize button and card variants", "Document spacing and typography usage"],
+        members: [
+          { name: "Tyler", role: "Design" },
+          { name: "Alex", role: "Frontend" },
+        ],
+        milestones: [
+          { title: "Core component library setup", due: "2026-03-19", state: "doing" },
+          { title: "Usage docs and handoff notes", due: "2026-03-23", state: "todo" },
+        ],
+        activity: [{ text: "Added metallic CTA and form states", createdAt: ts(320) }],
+        createdAt: ts(6800),
+        updatedAt: ts(260),
+      },
+      {
+        id: "my-realestate-admin-console",
+        ownerType: "my",
+        title: "Real Estate Admin Console",
+        summary: "Internal dashboard for listings, agents, and lead workflows.",
+        description:
+          "Desktop-focused admin interface prototype for real estate operations with status tracking, listing moderation, and pipeline visibility.",
+        status: "review",
+        discipline: "ops",
+        projectType: "standard",
+        tags: ["real-estate", "dashboard", "admin"],
+        stack: ["JavaScript", "Charts", "CSS"],
+        goals: ["Finalize listing moderation flow", "Improve dashboard readability"],
+        members: [
+          { name: "Tyler", role: "Frontend" },
+          { name: "Sam", role: "Ops" },
+        ],
+        milestones: [
+          { title: "Ops table interactions", due: "2026-03-17", state: "doing" },
+          { title: "QA checklist", due: "2026-03-21", state: "todo" },
+        ],
+        activity: [{ text: "Refined table and status badge hierarchy", createdAt: ts(180) }],
+        createdAt: ts(7100),
+        updatedAt: ts(130),
+      },
+      {
+        id: "my-figma-mobile-flow-mock",
+        ownerType: "my",
+        title: "Figma Mobile Flow Mock",
+        summary: "Early mobile user-flow mockups for the future responsive redesign phase.",
+        description:
+          "Figma exploration focused on navigation hierarchy, simplified cards, and readable controls for small-screen project browsing.",
+        status: "active",
+        discipline: "design",
+        projectType: "seeking",
+        tags: ["figma", "mobile", "ux"],
+        stack: ["Figma", "Prototype Flows"],
+        goals: ["Validate mobile information hierarchy", "Prepare handoff frames"],
+        members: [
+          { name: "Tyler", role: "Design" },
+          { name: "Mia", role: "UX Reviewer" },
+        ],
+        milestones: [
+          { title: "Navigation flow prototype", due: "2026-03-16", state: "doing" },
+          { title: "Usability critique", due: "2026-03-20", state: "todo" },
+        ],
+        activity: [{ text: "Updated bottom-nav exploration in Figma", createdAt: ts(95) }],
+        createdAt: ts(5400),
+        updatedAt: ts(80),
+      },
+      {
+        id: "my-client-portal-mvp",
+        ownerType: "my",
+        title: "Client Project Portal MVP",
+        summary: "Simple collaboration portal concept for client updates and approvals.",
+        description:
+          "A lightweight project portal demo showing status updates, approvals, shared notes, and milestone visibility for client-facing workflows.",
+        status: "planned",
+        discipline: "product",
+        projectType: "standard",
+        tags: ["portal", "client", "mvp"],
+        stack: ["HTML", "CSS", "JavaScript"],
+        goals: ["Define MVP scope", "Prototype status + approval interactions"],
+        members: [
+          { name: "Tyler", role: "Product" },
+          { name: "Alex", role: "Frontend" },
+        ],
+        milestones: [
+          { title: "Scope brief", due: "2026-03-18", state: "todo" },
+          { title: "Interaction prototype", due: "2026-03-23", state: "todo" },
+        ],
+        activity: [{ text: "Outlined MVP journey and permission states", createdAt: ts(430) }],
+        createdAt: ts(8600),
+        updatedAt: ts(420),
+      },
+      {
+        id: "my-brand-content-refresh",
+        ownerType: "my",
+        title: "Brand + Content Refresh",
+        summary: "Messaging and page-content refresh for portfolio positioning and clarity.",
+        description:
+          "Cross-page rewrite effort to improve copy hierarchy, improve readability, and better explain the collaboration-first value proposition.",
+        status: "completed",
+        discipline: "marketing",
+        projectType: "featured",
+        tags: ["content", "branding", "portfolio"],
+        stack: ["Content Strategy", "Docs"],
+        goals: ["Sharpen positioning copy", "Improve CTA clarity across pages"],
+        members: [
+          { name: "Tyler", role: "Owner" },
+          { name: "Nora", role: "Content" },
+        ],
+        milestones: [
+          { title: "Messaging pass", due: "2026-03-03", state: "done" },
+          { title: "Final proofread", due: "2026-03-05", state: "done" },
+        ],
+        activity: [{ text: "Published finalized copy across core pages", createdAt: ts(720) }],
+        createdAt: ts(12800),
+        updatedAt: ts(700),
+        isFeatured: true,
+      },
+      {
         id: "community-open-docs",
         ownerType: "community",
         title: "Open Documentation Jam",
@@ -306,6 +482,157 @@
         activity: [{ text: "Initial concept brief approved", createdAt: ts(900) }],
         createdAt: ts(12000),
         updatedAt: ts(900),
+      },
+      {
+        id: "community-figma-accessibility-audit",
+        ownerType: "community",
+        title: "Figma Accessibility Audit Sprint",
+        summary: "Community review of contrast, spacing, and readable component states in Figma mockups.",
+        description:
+          "Designers and developers collaborate on accessibility-first improvements to reusable Figma files before implementation.",
+        status: "review",
+        discipline: "design",
+        projectType: "seeking",
+        tags: ["figma", "accessibility", "review"],
+        stack: ["Figma", "WCAG Checklist"],
+        goals: ["Audit key components", "Create accessible token recommendations"],
+        members: [
+          { name: "Mia", role: "Design" },
+          { name: "Jordan", role: "QA" },
+        ],
+        milestones: [
+          { title: "Contrast audit pass", due: "2026-03-13", state: "doing" },
+          { title: "Design handoff recommendations", due: "2026-03-17", state: "todo" },
+        ],
+        activity: [{ text: "Flagged low-contrast chip variants for revision", createdAt: ts(150) }],
+        createdAt: ts(9000),
+        updatedAt: ts(110),
+      },
+      {
+        id: "community-realestate-analytics",
+        ownerType: "community",
+        title: "Real Estate Market Pulse Dashboard",
+        summary: "Collaborative dashboard concept to track property trends and neighborhood insights.",
+        description:
+          "Cross-discipline project combining product planning, data storytelling, and frontend implementation for real estate analytics.",
+        status: "active",
+        discipline: "product",
+        projectType: "standard",
+        tags: ["real-estate", "dashboard", "analytics"],
+        stack: ["JavaScript", "Charts", "Figma"],
+        goals: ["Define useful KPI set", "Prototype trend and map visualizations"],
+        members: [
+          { name: "Nora", role: "Product" },
+          { name: "Sam", role: "Frontend" },
+        ],
+        milestones: [
+          { title: "Dashboard wireframes", due: "2026-03-12", state: "done" },
+          { title: "Interactive chart prototype", due: "2026-03-18", state: "doing" },
+        ],
+        activity: [{ text: "Published first KPI shortlist for community feedback", createdAt: ts(210) }],
+        createdAt: ts(9800),
+        updatedAt: ts(95),
+      },
+      {
+        id: "community-open-housing-map",
+        ownerType: "community",
+        title: "Open Housing Map",
+        summary: "Community map concept for listing affordable and available housing resources.",
+        description:
+          "A collaborative civic-tech style map project where contributors curate location data and accessibility notes for housing opportunities.",
+        status: "active",
+        discipline: "dev",
+        projectType: "seeking",
+        tags: ["real-estate", "map", "community"],
+        stack: ["JavaScript", "Map APIs", "GeoJSON"],
+        goals: ["Improve map filters", "Add contributor review workflow"],
+        members: [
+          { name: "Jordan", role: "Developer" },
+          { name: "Mia", role: "Design" },
+        ],
+        milestones: [
+          { title: "Map data validation", due: "2026-03-15", state: "doing" },
+          { title: "Public beta prep", due: "2026-03-22", state: "todo" },
+        ],
+        activity: [{ text: "Added neighborhood accessibility tags", createdAt: ts(170) }],
+        createdAt: ts(9300),
+        updatedAt: ts(120),
+      },
+      {
+        id: "community-figma-ui-challenge",
+        ownerType: "community",
+        title: "Figma UI Challenge Week",
+        summary: "Open challenge to redesign common collaboration screens in Figma.",
+        description:
+          "Weekly Figma challenge where designers and developers propose practical improvements to dashboard, feed, and project card interfaces.",
+        status: "planned",
+        discipline: "design",
+        projectType: "featured",
+        tags: ["figma", "challenge", "ui"],
+        stack: ["Figma", "Design Critique"],
+        goals: ["Encourage design collaboration", "Collect reusable UI patterns"],
+        members: [
+          { name: "Mia", role: "Host" },
+          { name: "Alex", role: "Frontend Reviewer" },
+        ],
+        milestones: [
+          { title: "Challenge brief publish", due: "2026-03-18", state: "todo" },
+          { title: "Submission review stream", due: "2026-03-24", state: "todo" },
+        ],
+        activity: [{ text: "Drafted challenge prompts and judging rubric", createdAt: ts(290) }],
+        createdAt: ts(10400),
+        updatedAt: ts(275),
+        isFeatured: true,
+      },
+      {
+        id: "community-startup-content-lab",
+        ownerType: "community",
+        title: "Startup Content Lab",
+        summary: "Collaborative content sprint for founders sharing product progress updates.",
+        description:
+          "Founders and creators co-write launch notes, progress posts, and user update templates that are easier to read and ship consistently.",
+        status: "review",
+        discipline: "marketing",
+        projectType: "standard",
+        tags: ["startup", "content", "growth"],
+        stack: ["Docs", "Content Templates"],
+        goals: ["Improve clarity of progress updates", "Create reusable launch templates"],
+        members: [
+          { name: "Nora", role: "Marketing" },
+          { name: "Devin", role: "Advisor" },
+        ],
+        milestones: [
+          { title: "Template set v1", due: "2026-03-12", state: "done" },
+          { title: "Community feedback pass", due: "2026-03-19", state: "doing" },
+        ],
+        activity: [{ text: "Collected founder feedback on update templates", createdAt: ts(240) }],
+        createdAt: ts(11200),
+        updatedAt: ts(205),
+      },
+      {
+        id: "community-product-discovery-circle",
+        ownerType: "community",
+        title: "Product Discovery Circle",
+        summary: "Peer group for validating feature ideas and prioritization decisions.",
+        description:
+          "A recurring collaboration group where teams share hypotheses, roadmap tradeoffs, and user feedback before implementation.",
+        status: "completed",
+        discipline: "product",
+        projectType: "standard",
+        tags: ["product", "discovery", "research"],
+        stack: ["Research Notes", "Roadmap"],
+        goals: ["Improve feature prioritization quality", "Reduce avoidable scope churn"],
+        members: [
+          { name: "Jordan", role: "Product" },
+          { name: "Sam", role: "Facilitator" },
+        ],
+        milestones: [
+          { title: "Discovery session series", due: "2026-03-02", state: "done" },
+          { title: "Playbook summary", due: "2026-03-06", state: "done" },
+        ],
+        activity: [{ text: "Published final discovery session takeaways", createdAt: ts(980) }],
+        createdAt: ts(14900),
+        updatedAt: ts(960),
       },
       {
         id: "shared-design-system",
@@ -364,10 +691,177 @@
         createdAt: ts(18000),
         updatedAt: ts(1600),
       },
+      {
+        id: "shared-portfolio-case-studies",
+        ownerType: "shared",
+        title: "Portfolio Case Study Pack",
+        summary: "Shared templates and writing framework for documenting project outcomes clearly.",
+        description:
+          "A collaborative resource that helps teams and individual creators package their projects into high-quality portfolio case studies.",
+        status: "active",
+        discipline: "marketing",
+        projectType: "standard",
+        tags: ["portfolio", "content", "case-study"],
+        stack: ["Markdown", "Notion", "Figma"],
+        goals: ["Standardize case study sections", "Improve story clarity for project outcomes"],
+        members: [
+          { name: "Tyler", role: "Owner" },
+          { name: "Nora", role: "Content" },
+        ],
+        milestones: [
+          { title: "Case study template draft", due: "2026-03-11", state: "done" },
+          { title: "Peer review round", due: "2026-03-16", state: "doing" },
+        ],
+        activity: [{ text: "Added before/after structure guidance", createdAt: ts(130) }],
+        createdAt: ts(7600),
+        updatedAt: ts(85),
+      },
+      {
+        id: "shared-figma-handbook",
+        ownerType: "shared",
+        title: "Figma Collaboration Handbook",
+        summary: "Shared standards for file organization, naming, and handoff between design and dev.",
+        description:
+          "Practical operating guide for collaborative Figma work so contributors can move faster with fewer handoff issues.",
+        status: "completed",
+        discipline: "ops",
+        projectType: "featured",
+        tags: ["figma", "handoff", "collaboration"],
+        stack: ["Figma", "Docs"],
+        goals: ["Reduce file chaos", "Improve developer-ready design specs"],
+        members: [
+          { name: "Mia", role: "Design" },
+          { name: "Alex", role: "Frontend" },
+        ],
+        milestones: [
+          { title: "Naming conventions finalized", due: "2026-03-01", state: "done" },
+          { title: "Handoff checklist adopted", due: "2026-03-04", state: "done" },
+        ],
+        activity: [{ text: "Handbook adopted by shared workspace teams", createdAt: ts(620) }],
+        createdAt: ts(15400),
+        updatedAt: ts(600),
+        isFeatured: true,
+      },
+      {
+        id: "shared-realestate-template-pack",
+        ownerType: "shared",
+        title: "Real Estate Site Template Pack",
+        summary: "Shared starter templates for property listings, detail pages, and agent profiles.",
+        description:
+          "Cross-team template initiative so contributors can quickly prototype and present real estate website concepts with consistent quality.",
+        status: "active",
+        discipline: "dev",
+        projectType: "featured",
+        tags: ["real-estate", "templates", "frontend"],
+        stack: ["HTML", "CSS", "JavaScript"],
+        goals: ["Standardize page templates", "Improve handoff from design to code"],
+        members: [
+          { name: "Tyler", role: "Frontend" },
+          { name: "Alex", role: "UI Engineer" },
+        ],
+        milestones: [
+          { title: "Template library v1", due: "2026-03-13", state: "doing" },
+          { title: "Shared documentation", due: "2026-03-19", state: "todo" },
+        ],
+        activity: [{ text: "Added standardized listing-detail template pair", createdAt: ts(145) }],
+        createdAt: ts(9700),
+        updatedAt: ts(90),
+        isFeatured: true,
+      },
+      {
+        id: "shared-figma-plugin-experiments",
+        ownerType: "shared",
+        title: "Figma Plugin Experiments",
+        summary: "Shared experiments for automating repetitive design-system tasks in Figma.",
+        description:
+          "Team-led exploration of plugin workflows to automate naming, token syncing, and component quality checks.",
+        status: "review",
+        discipline: "design",
+        projectType: "seeking",
+        tags: ["figma", "plugin", "automation"],
+        stack: ["Figma Plugins", "Scripting"],
+        goals: ["Reduce manual design cleanup", "Improve consistency in handoff files"],
+        members: [
+          { name: "Mia", role: "Design Systems" },
+          { name: "Devon", role: "Automation" },
+        ],
+        milestones: [
+          { title: "Plugin prototype tests", due: "2026-03-16", state: "doing" },
+          { title: "Adoption recommendation", due: "2026-03-22", state: "todo" },
+        ],
+        activity: [{ text: "Validated token-sync plugin behavior", createdAt: ts(220) }],
+        createdAt: ts(10800),
+        updatedAt: ts(175),
+      },
+      {
+        id: "shared-release-retro-board",
+        ownerType: "shared",
+        title: "Release Retrospective Board",
+        summary: "Shared board for release learnings, regressions, and follow-up actions.",
+        description:
+          "Operational collaboration board used by product, design, and engineering to capture release outcomes and improve the next cycle.",
+        status: "active",
+        discipline: "ops",
+        projectType: "standard",
+        tags: ["retro", "release", "operations"],
+        stack: ["Kanban", "Runbook"],
+        goals: ["Capture actionable release learnings", "Track remediation ownership"],
+        members: [
+          { name: "Sam", role: "Ops" },
+          { name: "Jordan", role: "Product" },
+        ],
+        milestones: [
+          { title: "Retro board structure", due: "2026-03-10", state: "done" },
+          { title: "Action-item tracking rollout", due: "2026-03-17", state: "doing" },
+        ],
+        activity: [{ text: "Added post-release issue taxonomy", createdAt: ts(190) }],
+        createdAt: ts(11700),
+        updatedAt: ts(160),
+      },
+      {
+        id: "shared-growth-experiment-library",
+        ownerType: "shared",
+        title: "Growth Experiment Library",
+        summary: "Shared catalog of messaging and outreach experiments with outcomes.",
+        description:
+          "A collaborative repository of growth tests, hypotheses, and outcomes so teams can reuse proven tactics and avoid repeating failed tests.",
+        status: "planned",
+        discipline: "marketing",
+        projectType: "standard",
+        tags: ["growth", "experiments", "knowledge-base"],
+        stack: ["Docs", "Analytics"],
+        goals: ["Centralize growth learnings", "Improve experiment quality over time"],
+        members: [
+          { name: "Nora", role: "Growth" },
+          { name: "Tyler", role: "Product" },
+        ],
+        milestones: [
+          { title: "Experiment template spec", due: "2026-03-18", state: "todo" },
+          { title: "Initial library population", due: "2026-03-25", state: "todo" },
+        ],
+        activity: [{ text: "Drafted scoring criteria for experiment outcomes", createdAt: ts(360) }],
+        createdAt: ts(12300),
+        updatedAt: ts(330),
+      },
     ].map(normalizeProject);
   }
 
+  function mergeMissingSeedProjects(projects) {
+    const existing = toArray(projects).map(normalizeProject);
+    const seen = new Set(existing.map((project) => project.id));
+    const missing = seedProjects().filter((project) => !seen.has(project.id));
+    if (!missing.length) return existing;
+    return [...existing, ...missing];
+  }
+
   function loadState() {
+    let storedSeedVersion = 0;
+    try {
+      storedSeedVersion = Number(localStorage.getItem(PROJECTS_SEED_VERSION_KEY) || 0);
+    } catch (_) {
+      storedSeedVersion = 0;
+    }
+
     let raw = null;
     try {
       raw = safeParse(localStorage.getItem(PROJECTS_KEY) || "null", null);
@@ -378,12 +872,28 @@
       const seeded = { projects: seedProjects() };
       try {
         localStorage.setItem(PROJECTS_KEY, JSON.stringify(seeded));
+        localStorage.setItem(PROJECTS_SEED_VERSION_KEY, String(PROJECTS_SEED_VERSION));
       } catch (_) {
         // Best-effort persistence for demo mode.
       }
       return seeded;
     }
-    return { projects: raw.projects.map(normalizeProject) };
+
+    let projects = raw.projects.map(normalizeProject);
+    const mergedProjects = mergeMissingSeedProjects(projects);
+    const hasNewSeedEntries = mergedProjects.length !== projects.length;
+    projects = mergedProjects;
+
+    if (hasNewSeedEntries || storedSeedVersion < PROJECTS_SEED_VERSION) {
+      try {
+        localStorage.setItem(PROJECTS_KEY, JSON.stringify({ projects }));
+        localStorage.setItem(PROJECTS_SEED_VERSION_KEY, String(PROJECTS_SEED_VERSION));
+      } catch (_) {
+        // Best-effort persistence for demo mode.
+      }
+    }
+
+    return { projects };
   }
 
   function saveState() {
@@ -494,6 +1004,99 @@
     return sorted;
   }
 
+  function valueLabelForFilter(kind, value) {
+    if (kind === "discipline") return DISCIPLINE_LABEL[value] || "All";
+    if (kind === "status") return STATUS_LABEL[value] || "All";
+    if (kind === "type") return TYPE_LABEL[value] || "All";
+    return value;
+  }
+
+  function getActiveFilters() {
+    const active = [];
+    if (ui.filters.discipline !== "all") {
+      active.push({
+        kind: "discipline",
+        label: FILTER_KIND_LABEL.discipline,
+        value: ui.filters.discipline,
+        valueLabel: valueLabelForFilter("discipline", ui.filters.discipline),
+      });
+    }
+    if (ui.filters.status !== "all") {
+      active.push({
+        kind: "status",
+        label: FILTER_KIND_LABEL.status,
+        value: ui.filters.status,
+        valueLabel: valueLabelForFilter("status", ui.filters.status),
+      });
+    }
+    if (ui.filters.type !== "all") {
+      active.push({
+        kind: "type",
+        label: FILTER_KIND_LABEL.type,
+        value: ui.filters.type,
+        valueLabel: valueLabelForFilter("type", ui.filters.type),
+      });
+    }
+
+    const query = ui.search.trim();
+    if (query) {
+      active.push({
+        kind: "search",
+        label: FILTER_KIND_LABEL.search,
+        value: query,
+        valueLabel: query,
+      });
+    }
+
+    return active;
+  }
+
+  function renderActiveFilters() {
+    if (!els.projectsActiveFilters) return;
+
+    const active = getActiveFilters();
+    if (!active.length) {
+      els.projectsActiveFilters.hidden = true;
+      els.projectsActiveFilters.innerHTML = "";
+      return;
+    }
+
+    const pills = active
+      .map((item) => {
+        const ariaLabel = `Remove ${item.label} filter: ${item.valueLabel}`;
+        return `
+          <button
+            type="button"
+            class="chip projects-active-pill"
+            data-action="remove-filter"
+            data-filter-kind="${escapeHTML(item.kind)}"
+            aria-label="${escapeHTML(ariaLabel)}"
+          >
+            <span class="projects-active-pill-key">${escapeHTML(item.label)}</span>
+            <span class="projects-active-pill-value">${escapeHTML(item.valueLabel)}</span>
+            <span class="projects-active-pill-close" aria-hidden="true">×</span>
+          </button>
+        `;
+      })
+      .join("");
+
+    els.projectsActiveFilters.hidden = false;
+    els.projectsActiveFilters.innerHTML = `
+      <span class="projects-active-label">Active filters</span>
+      <div class="projects-active-pills" role="group" aria-label="Selected filters">
+        ${pills}
+      </div>
+      <button
+        type="button"
+        class="btn subtle projects-active-clear"
+        data-action="clear-filters"
+        aria-label="Clear all filters"
+      >
+        Clear all
+      </button>
+    `;
+  }
+
   function statusClass(status) {
     return `status-${status}`;
   }
@@ -541,6 +1144,7 @@
     }
 
     els.projectsList.setAttribute("aria-busy", "false");
+    renderActiveFilters();
     renderInsights(list);
   }
 
@@ -556,18 +1160,14 @@
     if (els.insightSeekingTotal) els.insightSeekingTotal.textContent = String(seekingCount);
 
     if (els.projectsSavedView) {
-      const applied = [];
-      if (ui.filters.discipline !== "all") applied.push(`discipline: ${ui.filters.discipline}`);
-      if (ui.filters.status !== "all") applied.push(`status: ${ui.filters.status}`);
-      if (ui.filters.type !== "all") applied.push(`type: ${ui.filters.type}`);
-      if (ui.search.trim()) applied.push(`search: "${ui.search.trim()}"`);
+      const applied = getActiveFilters().map((item) => `${item.label}: ${item.valueLabel}`);
 
       const text = `${VIEW_LABEL[ui.view]} • ${ui.sort} sort${applied.length ? ` • ${applied.join(", ")}` : ""}`;
       els.projectsSavedView.textContent = text;
     }
 
     if (els.projectsMainHeading) {
-      els.projectsMainHeading.textContent = `${VIEW_LABEL[ui.view]} workspace`;
+      els.projectsMainHeading.textContent = `${VIEW_LABEL[ui.view]} workspace (${filteredList.length})`;
     }
   }
 
@@ -604,24 +1204,48 @@
 
   function setFilter(kind, value, options) {
     if (!["discipline", "status", "type"].includes(kind)) return;
+    const allowedValues = FILTER_OPTIONS[kind] || [];
+    const nextValue = allowedValues.includes(value) ? value : "all";
     const opts = options || {};
     const shouldPersist = opts.persist !== false;
     const shouldRender = opts.render !== false;
 
-    ui.filters[kind] = value;
+    ui.filters[kind] = nextValue;
 
     const chips = toArray(els.filterButtonsByKind && els.filterButtonsByKind[kind]);
     chips.forEach((chip) => {
-      chip.setAttribute("aria-pressed", String(chip.dataset.filterValue === value));
+      chip.setAttribute("aria-pressed", String(chip.dataset.filterValue === nextValue));
     });
 
     if (shouldPersist) saveUi();
     if (shouldRender) renderProjects();
   }
 
-  function resetUiState() {
+  function removeActiveFilter(kind) {
+    if (kind === "search") {
+      clearTimeout(searchTimer);
+      ui.search = "";
+      if (els.projectsSearch) els.projectsSearch.value = "";
+      saveUi();
+      renderProjects();
+      return;
+    }
+
+    if (!FILTER_OPTIONS[kind]) return;
+    setFilter(kind, "all");
+  }
+
+  function clearAllFilters() {
+    resetUiState({ preserveView: true });
+  }
+
+  function resetUiState(options) {
+    const opts = options || {};
+    const preserveView = opts.preserveView !== false;
+    const nextView = preserveView ? ui.view : DEFAULT_UI.view;
+
     clearTimeout(searchTimer);
-    ui = { ...DEFAULT_UI, filters: { ...DEFAULT_UI.filters } };
+    ui = { ...DEFAULT_UI, view: nextView, filters: { ...DEFAULT_UI.filters } };
     if (els.projectsSearch) els.projectsSearch.value = "";
     if (els.projectsSort) els.projectsSort.value = ui.sort;
     setView(ui.view, { persist: false, render: false, projectId: null });
@@ -985,7 +1609,12 @@
     const filterBtns = toArray(els.filterButtons);
     filterBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
-        setFilter(btn.dataset.filterKind, btn.dataset.filterValue);
+        const kind = btn.dataset.filterKind;
+        const value = btn.dataset.filterValue;
+        if (!kind || !value) return;
+        const isSameSelection = ui.filters[kind] === value;
+        const nextValue = isSameSelection && value !== "all" ? "all" : value;
+        setFilter(kind, nextValue);
       });
     });
 
@@ -1013,11 +1642,28 @@
     }
 
     if (els.resetProjectsUiBtn) {
-      els.resetProjectsUiBtn.addEventListener("click", resetUiState);
+      els.resetProjectsUiBtn.addEventListener("click", clearAllFilters);
     }
 
     if (els.projectsEmptyResetBtn) {
-      els.projectsEmptyResetBtn.addEventListener("click", resetUiState);
+      els.projectsEmptyResetBtn.addEventListener("click", clearAllFilters);
+    }
+
+    if (els.projectsActiveFilters) {
+      els.projectsActiveFilters.addEventListener("click", (event) => {
+        const btn = event.target.closest("button[data-action]");
+        if (!btn) return;
+
+        if (btn.dataset.action === "remove-filter") {
+          const kind = btn.dataset.filterKind;
+          if (kind) removeActiveFilter(kind);
+          return;
+        }
+
+        if (btn.dataset.action === "clear-filters") {
+          clearAllFilters();
+        }
+      });
     }
 
     if (els.projectsList) {
@@ -1113,6 +1759,7 @@
     els.projectsSearch = document.getElementById("projectsSearch");
     els.projectsSort = document.getElementById("projectsSort");
     els.projectsMainHeading = document.getElementById("projectsMainHeading");
+    els.projectsActiveFilters = document.getElementById("projectsActiveFilters");
 
     els.newProjectBtn = document.getElementById("newProjectBtn");
     els.resetProjectsUiBtn = document.getElementById("resetProjectsUiBtn");

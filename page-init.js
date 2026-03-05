@@ -68,11 +68,22 @@
 
   // Dev helper: purge caches quickly with ?purgeCaches=1
   if (location.search.includes("purgeCaches=1") && "caches" in window) {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("purgeCaches");
+    const nextHref = url.toString();
+
     caches
       .keys()
       .then((keys) => Promise.all(keys.map((k) => caches.delete(k))))
-      .then(() => console.log("Caches cleared"))
-      .catch(console.error);
+      .then(() => {
+        console.log("Caches cleared");
+        window.location.replace(nextHref);
+      })
+      .catch((error) => {
+        console.error(error);
+        window.location.replace(nextHref);
+      });
+    return;
   }
 
   if (document.readyState === "loading") {
