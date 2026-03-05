@@ -7,14 +7,20 @@
 	<meta name="description" content="Mobile-first mock: swipeable collaboration feed." />
 	<meta name="theme-color" content="#0b1323" media="(prefers-color-scheme: dark)">
 	<meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)">
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 	<link rel="manifest" href="manifest.json" />
 	<link rel="apple-touch-icon" href="icons/icon-192.png" />
 	<script src="page-init.js" defer></script>
 	<style>
-		:root { --m-tabbar-h: 64px; --m-pad: 16px; }
+		:root {
+			--m-tabbar-h: 64px;
+			--m-pad: 16px;
+			--m-font-body: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+			--m-font-heading: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+		}
 		html, body { height: 100%; }
-		body.m-body { margin: 0; background: #0b1323; color: #e9edf6; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+		body.m-body { margin: 0; background: #0b1323; color: #e9edf6; font-family: var(--m-font-body); }
+		h1, h2, .m-name { font-family: var(--m-font-heading); letter-spacing: -0.01em; }
 		a { color: inherit; text-decoration: none; }
 		/* App shell */
 		.m-app { position: fixed; inset: 0; display: grid; grid-template-rows: 1fr auto; }

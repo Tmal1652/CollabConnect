@@ -1,9 +1,9 @@
-# CollabConnect (Static) - v1.8.0
+# CollabConnect (Static) - v1.9.0
 
 CollabConnect is a collaboration-first social platform concept built as a static multi-page web app. It is designed to help developers, teams, and creators share ideas, post progress, get feedback, and build projects together in a more positive, project-centered environment.
 
 ## Status
-- Current release: `v1.8.0`
+- Current release: `v1.9.0`
 - Platform focus (current phase): `Desktop-first`
 - Mobile: temporary splash screen shown on small screens (`desktop-only for now`, mobile redesign coming later)
 
@@ -26,7 +26,12 @@ The goal is to create a space where people can:
 - PWA/service worker support (static app shell caching)
 - Accessibility-minded UI patterns (keyboard/focus/readability improvements)
 
-## Recent Highlights (v1.8.0)
+## Recent Highlights (v1.9.0)
+- Projects Hub overhaul with rich desktop demo interactions:
+  - `My Projects`, `Community`, `Shared` views
+  - search, filters, sort, create/edit, archive/restore
+  - project detail modal with milestones/activity
+  - share-to-social demo integration via localStorage
 - Redesigned `About` page with clearer collaboration-first messaging and layered content structure
 - Redesigned `Features` page to align with About page positioning and visual hierarchy
 - Added desktop-priority mobile splash gate for small screens
@@ -124,6 +129,11 @@ If you plan to publish this project publicly for reuse, add a license file (for 
 - Tyler Malovrh
 
 ## Version History (Recent)
+### v1.9.0
+- Projects Hub redesign and demo-state architecture
+- Local-persistent project workflows (create/edit/archive/share)
+- Cross-page demo sharing into Social feed
+
 ### v1.8.0
 - About + Features redesigns
 - Desktop-only mobile splash gate

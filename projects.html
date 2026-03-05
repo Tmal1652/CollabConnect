@@ -8,7 +8,7 @@
   <meta name="description" content="Explore upcoming and ongoing projects on CollabConnect." />
   <meta name="theme-color" content="#0b1323" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -46,93 +46,269 @@
     </ul>
   </nav>
 
-  <main id="main" class="page-offset projects-page container">
+  <main id="main" class="page-offset projects-page projects-page-v2 container">
     <header class="profile-header page-shell-header">
       <div class="profile-heading-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18"/><path d="M3 12h18"/><path d="M3 17h18"/></svg></div>
       <div class="page-heading-copy">
-        <p class="page-kicker">Community Initiatives</p>
-        <h1 class="page-title">Projects</h1>
-        <p class="page-lead">Discover and track initiatives across the community</p>
+        <p class="page-kicker">Projects Hub</p>
+        <h1 class="page-title">Build, discover, and share projects in one workspace</h1>
+        <p class="page-lead">This is the main home for projects on CollabConnect, from your own work to shared and community initiatives.</p>
       </div>
-      <div class="page-header-chip" role="note" aria-label="Catalog mode">Open catalog</div>
+      <div class="page-header-chip" role="note" aria-label="Workspace mode">Demo portfolio</div>
     </header>
 
-    <section class="projects-layout">
-      <aside class="s-left s-card" aria-label="Filters">
+    <section class="projects-v2-layout" aria-label="Projects workspace">
+      <aside class="projects-v2-controls s-card" aria-label="Project controls">
         <div class="s-block">
-          <h2 class="s-title">Quick filters</h2>
-          <p class="s-caption">Filter by discipline to narrow projects faster.</p>
-          <div class="chip-row" role="group" aria-label="Project filters">
-            <button class="chip" data-filter="all" aria-pressed="true">All</button>
-            <button class="chip" data-filter="design" aria-pressed="false">Design</button>
-            <button class="chip" data-filter="marketing" aria-pressed="false">Marketing</button>
-            <button class="chip" data-filter="dev" aria-pressed="false">Dev</button>
+          <h2 class="s-title">Views</h2>
+          <p class="s-caption">Switch between your work and community collaboration.</p>
+          <div id="projectsViewTabs" class="projects-view-tabs" role="tablist" aria-label="Project views">
+            <button class="tab chip" type="button" role="tab" data-view="my" aria-selected="true">My Projects</button>
+            <button class="tab chip" type="button" role="tab" data-view="community" aria-selected="false">Community</button>
+            <button class="tab chip" type="button" role="tab" data-view="shared" aria-selected="false">Shared</button>
           </div>
         </div>
+
+        <div class="s-block">
+          <h2 class="s-title">Find projects</h2>
+          <label class="sr-only" for="projectsSearch">Search projects</label>
+          <input id="projectsSearch" class="projects-search" type="search" placeholder="Search title, summary, tags..." autocomplete="off" />
+          <label class="sr-only" for="projectsSort">Sort projects</label>
+          <select id="projectsSort" class="projects-sort" aria-label="Sort projects">
+            <option value="recent">Most recent</option>
+            <option value="active">Most active</option>
+            <option value="alpha">Alphabetical</option>
+          </select>
+        </div>
+
+        <div class="s-block">
+          <h2 class="s-title">Discipline</h2>
+          <div class="chip-row projects-filter-group" role="group" aria-label="Discipline filters">
+            <button class="chip" type="button" data-filter-kind="discipline" data-filter-value="all" aria-pressed="true">All</button>
+            <button class="chip" type="button" data-filter-kind="discipline" data-filter-value="dev" aria-pressed="false">Dev</button>
+            <button class="chip" type="button" data-filter-kind="discipline" data-filter-value="design" aria-pressed="false">Design</button>
+            <button class="chip" type="button" data-filter-kind="discipline" data-filter-value="marketing" aria-pressed="false">Marketing</button>
+            <button class="chip" type="button" data-filter-kind="discipline" data-filter-value="product" aria-pressed="false">Product</button>
+            <button class="chip" type="button" data-filter-kind="discipline" data-filter-value="ops" aria-pressed="false">Ops</button>
+          </div>
+        </div>
+
         <div class="s-block">
           <h2 class="s-title">Status</h2>
-          <p class="s-caption">High-level pipeline snapshot</p>
-          <ul class="s-list">
-            <li><span>Planned</span><span class="count">2</span></li>
-            <li><span>Active</span><span class="count">1</span></li>
-          </ul>
+          <div class="chip-row projects-filter-group" role="group" aria-label="Status filters">
+            <button class="chip" type="button" data-filter-kind="status" data-filter-value="all" aria-pressed="true">All</button>
+            <button class="chip" type="button" data-filter-kind="status" data-filter-value="planned" aria-pressed="false">Planned</button>
+            <button class="chip" type="button" data-filter-kind="status" data-filter-value="active" aria-pressed="false">Active</button>
+            <button class="chip" type="button" data-filter-kind="status" data-filter-value="review" aria-pressed="false">Review</button>
+            <button class="chip" type="button" data-filter-kind="status" data-filter-value="completed" aria-pressed="false">Completed</button>
+            <button class="chip" type="button" data-filter-kind="status" data-filter-value="archived" aria-pressed="false">Archived</button>
+          </div>
+        </div>
+
+        <div class="s-block">
+          <h2 class="s-title">Type</h2>
+          <div class="chip-row projects-filter-group" role="group" aria-label="Type filters">
+            <button class="chip" type="button" data-filter-kind="type" data-filter-value="all" aria-pressed="true">All</button>
+            <button class="chip" type="button" data-filter-kind="type" data-filter-value="featured" aria-pressed="false">Featured</button>
+            <button class="chip" type="button" data-filter-kind="type" data-filter-value="seeking" aria-pressed="false">Seeking collaborators</button>
+            <button class="chip" type="button" data-filter-kind="type" data-filter-value="standard" aria-pressed="false">Standard</button>
+          </div>
+        </div>
+
+        <div class="s-block">
+          <button id="newProjectBtn" class="auth-btn projects-new-btn" type="button">New Project</button>
+          <button id="resetProjectsUiBtn" class="btn subtle projects-reset-btn" type="button">Reset filters</button>
         </div>
       </aside>
 
-      <section class="s-center">
-        <div class="projects-container" id="projectsList">
-          <article class="project-item" aria-labelledby="project-1" data-tags="design planned">
-            <h3 id="project-1">Creative Design Sprint</h3>
-            <p>A collaboration between top designers to create the next innovative product concept.</p>
-            <div class="chip-row" aria-label="Project tags">
-              <span class="chip" role="note">Design</span>
-              <span class="chip" role="note">Sprint</span>
-              <span class="chip" role="note">UI/UX</span>
-            </div>
-          </article>
-          <article class="project-item" aria-labelledby="project-2" data-tags="marketing active">
-            <h3 id="project-2">Social Media Campaign</h3>
-            <p>Collaborate with influencers to launch an impactful campaign.</p>
-            <div class="chip-row" aria-label="Project tags">
-              <span class="chip" role="note">Marketing</span>
-              <span class="chip" role="note">Content</span>
-              <span class="chip" role="note">Analytics</span>
-            </div>
-          </article>
-          <article class="project-item" aria-labelledby="project-3" data-tags="dev planned">
-            <h3 id="project-3">Code Collaboration</h3>
-            <p>Join forces with developers to build an open-source project that changes the world.</p>
-            <div class="chip-row" aria-label="Project tags">
-              <span class="chip" role="note">Open Source</span>
-              <span class="chip" role="note">JavaScript</span>
-              <span class="chip" role="note">Community</span>
-            </div>
-          </article>
+      <section class="projects-v2-main" aria-label="Projects list">
+        <div class="projects-v2-banner">
+          <p class="page-kicker">Projects Workspace</p>
+          <h2 id="projectsMainHeading">Portfolio demo project hub</h2>
+          <p>Use this space to demo project discovery, team alignment, and collaboration workflows across personal and community initiatives.</p>
         </div>
-  <p id="projectsEmpty" class="empty-feed" style="display:none" aria-live="polite">No projects match your filter.</p>
+
+        <div id="projectsList" class="projects-v2-list" aria-live="polite" aria-busy="false"></div>
+        <div id="projectsEmpty" class="empty-feed projects-v2-empty" hidden aria-live="polite">
+          <p>No projects match your current search and filters.</p>
+          <button id="projectsEmptyResetBtn" type="button" class="btn subtle">Clear filters</button>
+        </div>
       </section>
 
-      <aside class="s-right s-card" aria-label="Tags and suggestions">
+      <aside class="projects-v2-insights s-card" aria-label="Project insights">
         <div class="s-block">
-          <h2 class="s-title">Popular tags</h2>
-          <p class="s-caption">Common topics used across project posts</p>
+          <h2 class="s-title">Workspace snapshot</h2>
           <ul class="s-list">
-            <li><span class="tag">#Design</span><span class="count">18</span></li>
-            <li><span class="tag">#OpenSource</span><span class="count">12</span></li>
-            <li><span class="tag">#Marketing</span><span class="count">9</span></li>
+            <li><span>Total in view</span><span id="insightViewTotal" class="count">0</span></li>
+            <li><span>Active projects</span><span id="insightActiveTotal" class="count">0</span></li>
+            <li><span>Collaboration seekers</span><span id="insightSeekingTotal" class="count">0</span></li>
+            <li><span>Archived</span><span id="insightArchivedTotal" class="count">0</span></li>
           </ul>
         </div>
+
         <div class="s-block">
-          <h2 class="s-title">Tips</h2>
-          <p class="s-caption">Ways to make projects easier to discover</p>
+          <h2 class="s-title">Current view</h2>
+          <p id="projectsSavedView" class="s-caption">No view selected yet.</p>
+        </div>
+
+        <div class="s-block">
+          <h2 class="s-title">Demo tips</h2>
           <ul class="s-list">
-            <li>Use clear tags so others can find your project</li>
-            <li>Share progress on the Social page</li>
+            <li>Create and edit projects to simulate portfolio workflows.</li>
+            <li>Use Share to push a project update into the Social feed.</li>
+            <li>Open details to present milestones and activity timeline.</li>
           </ul>
         </div>
       </aside>
     </section>
+
+    <p id="projectsToast" class="projects-toast" role="status" aria-live="polite" hidden></p>
   </main>
+
+  <div id="projectDetailModal" class="modal project-detail-modal" aria-hidden="true">
+    <div class="modal-content project-detail-content" role="dialog" aria-modal="true" aria-labelledby="projectDetailTitle">
+      <button type="button" class="close" data-close-modal="detail" aria-label="Close project details">×</button>
+      <p class="page-kicker">Project details</p>
+      <h2 id="projectDetailTitle" class="project-detail-title">Project</h2>
+      <p id="projectDetailSummary" class="project-detail-summary"></p>
+
+      <div class="project-detail-meta chip-row" aria-label="Project metadata">
+        <span id="detailStatus" class="chip" role="note"></span>
+        <span id="detailDiscipline" class="chip" role="note"></span>
+        <span id="detailUpdated" class="chip" role="note"></span>
+      </div>
+
+      <div id="detailDescriptionBlock" class="project-detail-block">
+        <h3>Description</h3>
+        <p id="projectDetailDescription"></p>
+      </div>
+      <div id="detailGoalsBlock" class="project-detail-block" hidden>
+        <h3>Goals</h3>
+        <ul id="detailGoals" class="project-detail-list"></ul>
+      </div>
+      <div class="project-detail-block">
+        <h3>Stack</h3>
+        <div id="detailStack" class="chip-row"></div>
+      </div>
+      <div class="project-detail-block">
+        <h3>Tags</h3>
+        <div id="detailTags" class="chip-row"></div>
+      </div>
+      <div id="detailMembersBlock" class="project-detail-block" hidden>
+        <h3>Members</h3>
+        <ul id="detailMembers" class="project-detail-list"></ul>
+      </div>
+      <div id="detailMilestonesBlock" class="project-detail-block" hidden>
+        <h3>Milestones</h3>
+        <ul id="detailMilestones" class="project-detail-list"></ul>
+      </div>
+      <div id="detailActivityBlock" class="project-detail-block">
+        <h3>Recent activity</h3>
+        <ul id="detailActivity" class="project-detail-list"></ul>
+      </div>
+
+      <div class="project-detail-actions">
+        <button id="detailShareBtn" type="button" class="auth-btn project-share-btn">Share to Social</button>
+        <button id="detailEditBtn" type="button" class="btn subtle">Edit Project</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="projectFormModal" class="modal project-form-modal" aria-hidden="true">
+    <div class="modal-content project-form-content" role="dialog" aria-modal="true" aria-labelledby="projectFormTitle">
+      <button type="button" class="close" data-close-modal="form" aria-label="Close project form">×</button>
+      <h2 id="projectFormTitle">New Project</h2>
+      <form id="projectForm" class="project-form" autocomplete="off">
+        <input id="projectFormId" name="id" type="hidden" />
+        <input id="projectFormMode" name="mode" type="hidden" value="create" />
+
+        <label>
+          Title
+          <input id="projectTitle" name="title" type="text" required maxlength="80" />
+        </label>
+        <label>
+          Summary
+          <textarea id="projectSummary" name="summary" rows="2" required maxlength="180"></textarea>
+        </label>
+        <label>
+          Description
+          <textarea id="projectDescription" name="description" rows="4" required maxlength="520"></textarea>
+        </label>
+
+        <div class="project-form-grid">
+          <label>
+            View
+            <select id="projectOwnerType" name="ownerType">
+              <option value="my">My Projects</option>
+              <option value="community">Community Projects</option>
+              <option value="shared">Shared Projects</option>
+            </select>
+          </label>
+          <label>
+            Status
+            <select id="projectStatus" name="status">
+              <option value="planned">Planned</option>
+              <option value="active">Active</option>
+              <option value="review">Review</option>
+              <option value="completed">Completed</option>
+              <option value="archived">Archived</option>
+            </select>
+          </label>
+          <label>
+            Discipline
+            <select id="projectDiscipline" name="discipline">
+              <option value="dev">Dev</option>
+              <option value="design">Design</option>
+              <option value="marketing">Marketing</option>
+              <option value="product">Product</option>
+              <option value="ops">Ops</option>
+            </select>
+          </label>
+          <label>
+            Type
+            <select id="projectType" name="projectType">
+              <option value="standard">Standard</option>
+              <option value="featured">Featured</option>
+              <option value="seeking">Seeking collaborators</option>
+            </select>
+          </label>
+        </div>
+
+        <label>
+          Tags (comma separated)
+          <input id="projectTags" name="tags" type="text" placeholder="collab, ui, open-source" />
+        </label>
+
+        <button id="projectAdvancedToggle" type="button" class="btn subtle project-advanced-toggle" aria-expanded="false" aria-controls="projectAdvancedFields">
+          More details (optional)
+        </button>
+
+        <div id="projectAdvancedFields" class="project-advanced-fields" hidden>
+          <label>
+            Stack (comma separated)
+            <input id="projectStack" name="stack" type="text" placeholder="JavaScript, HTML, CSS" />
+          </label>
+          <label>
+            Goals (one per line)
+            <textarea id="projectGoals" name="goals" rows="3" placeholder="Ship initial MVP"></textarea>
+          </label>
+          <label>
+            Members (one per line, format: Name | Role)
+            <textarea id="projectMembers" name="members" rows="3" placeholder="Alex | Frontend"></textarea>
+          </label>
+          <label>
+            Milestones (one per line, format: Title | YYYY-MM-DD | todo/doing/done)
+            <textarea id="projectMilestones" name="milestones" rows="4" placeholder="Launch demo | 2026-04-01 | todo"></textarea>
+          </label>
+        </div>
+
+        <div class="project-form-actions">
+          <button type="button" id="projectFormCancel" class="btn subtle">Cancel</button>
+          <button type="submit" class="auth-btn">Save Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <footer class="footer site-footer" aria-label="Website Footer">
     <p>© 2026 CollabConnect. All Rights Reserved. Created by Tyler Malovrh</p>

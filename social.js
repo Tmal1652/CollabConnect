@@ -288,7 +288,7 @@
   }
   function escapeHTML(s){
     if (typeof s !== 'string') return '';
-    return s.replace(/[&<>\"]+/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    return s.replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
   }
 
   // Event delegation to avoid rebinding after each render
@@ -302,8 +302,8 @@
   });
 
   feedEl.addEventListener('submit', (e) => {
-    const f = e.target.closest('.comment-form');
-    if (f) return onCommentSubmit(e);
+    const formEl = e.target.closest('.comment-form');
+    if (formEl) return onCommentSubmit(e, formEl);
   });
 
   function findPost(el){
@@ -335,18 +335,23 @@
 
   function onCommentToggle(el){
     const card = el.closest('.post-card');
+    if (!card) return;
     const region = card.querySelector('.comments');
+    if (!region) return;
     const expanded = el.getAttribute('aria-expanded') === 'true';
     el.setAttribute('aria-expanded', String(!expanded));
     region.hidden = expanded;
     if (!expanded) region.querySelector('input')?.focus();
   }
 
-  function onCommentSubmit(e){
+  function onCommentSubmit(e, formEl){
     e.preventDefault();
-    const { idx } = findPost(e.target);
+    const activeForm = formEl || e.target.closest('.comment-form');
+    if (!activeForm) return;
+    const { idx } = findPost(activeForm);
     if (idx < 0) return;
-    const input = e.currentTarget.querySelector('input[name="text"]');
+    const input = activeForm.querySelector('input[name="text"]');
+    if (!input) return;
     const text = (input.value || '').trim();
     if (!text) return;
     const author = (window.CCAuth && CCAuth.getUser && CCAuth.getUser()) || 'guest@example.com';
@@ -356,7 +361,7 @@
   }
 
   function onPollVote(el){
-    const { card, idx } = findPost(el);
+    const { idx } = findPost(el);
     if (idx < 0) return;
     const p = state.posts[idx];
     if (p.type !== 'poll') return;
@@ -430,5 +435,9 @@
   }
 
   // Initial render on DOM ready
-  document.addEventListener('DOMContentLoaded', render);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', render, { once: true });
+  } else {
+    render();
+  }
 })();
