@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#0b1323" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=1.9.2">
+  <link rel="stylesheet" href="style.css?v=2.0.5">
   <link rel="manifest" href="manifest.json" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -54,23 +54,32 @@
         <h1 class="page-title">Build, discover, and share projects in one workspace</h1>
         <p class="page-lead">This is the main home for projects on CollabConnect, from your own work to shared and community initiatives.</p>
       </div>
-      <div class="page-header-chip" role="note" aria-label="Workspace mode">Demo portfolio</div>
+      <div class="page-header-chip" role="note" aria-label="Workspace mode">Projects Workspace</div>
     </header>
 
     <section class="projects-v2-layout" aria-label="Projects workspace">
       <aside class="projects-v2-controls s-card" aria-label="Project controls">
         <div class="s-block">
           <h2 class="s-title">Views</h2>
-          <p class="s-caption">Switch between your work and community collaboration.</p>
+          <p class="s-caption">Switch between personal, community, and shared collaboration tracks.</p>
           <div id="projectsViewTabs" class="projects-view-tabs" role="tablist" aria-label="Project views">
             <button class="tab chip" type="button" role="tab" data-view="my" aria-selected="true">My Projects</button>
             <button class="tab chip" type="button" role="tab" data-view="community" aria-selected="false">Community</button>
             <button class="tab chip" type="button" role="tab" data-view="shared" aria-selected="false">Shared</button>
           </div>
+          <button
+            id="viewArchivedBtn"
+            class="btn subtle projects-archived-shortcut"
+            type="button"
+            aria-pressed="false"
+          >
+            Open Archive
+          </button>
         </div>
 
         <div class="s-block">
           <h2 class="s-title">Find projects</h2>
+          <p class="s-caption">Search by title, summary, tags, stack, or team members.</p>
           <label class="sr-only" for="projectsSearch">Search projects</label>
           <input id="projectsSearch" class="projects-search" type="search" placeholder="Search title, summary, tags..." autocomplete="off" />
           <label class="sr-only" for="projectsSort">Sort projects</label>
@@ -93,7 +102,7 @@
           </div>
         </div>
 
-        <div class="s-block">
+        <div class="s-block projects-status-block">
           <h2 class="s-title">Status</h2>
           <div class="chip-row projects-filter-group" role="group" aria-label="Status filters">
             <button class="chip" type="button" data-filter-kind="status" data-filter-value="all" aria-pressed="true">All</button>
@@ -101,7 +110,6 @@
             <button class="chip" type="button" data-filter-kind="status" data-filter-value="active" aria-pressed="false">Active</button>
             <button class="chip" type="button" data-filter-kind="status" data-filter-value="review" aria-pressed="false">Review</button>
             <button class="chip" type="button" data-filter-kind="status" data-filter-value="completed" aria-pressed="false">Completed</button>
-            <button class="chip" type="button" data-filter-kind="status" data-filter-value="archived" aria-pressed="false">Archived</button>
           </div>
         </div>
 
@@ -116,16 +124,18 @@
         </div>
 
         <div class="s-block">
-          <button id="newProjectBtn" class="auth-btn projects-new-btn" type="button">New Project</button>
           <button id="resetProjectsUiBtn" class="btn subtle projects-reset-btn" type="button">Reset filters</button>
         </div>
       </aside>
 
       <section class="projects-v2-main" aria-label="Projects list">
         <div class="projects-v2-banner">
-          <p class="page-kicker">Projects Workspace</p>
-          <h2 id="projectsMainHeading">Portfolio demo project hub</h2>
-          <p>Use this space to demo project discovery, team alignment, and collaboration workflows across personal and community initiatives.</p>
+          <div class="projects-v2-banner-head">
+            <p class="page-kicker" id="projectsBannerKicker">Projects Workspace</p>
+            <button id="newProjectBtnTop" class="auth-btn projects-banner-new-btn" type="button" data-action="new-project">New Project</button>
+          </div>
+          <h2 id="projectsMainHeading">Projects workspace</h2>
+          <p id="projectsBannerLead">Use this workspace to demo discovery, collaboration, and project updates across your own work, community initiatives, and shared efforts.</p>
         </div>
 
         <section
@@ -138,7 +148,7 @@
 
         <div id="projectsList" class="projects-v2-list" aria-live="polite" aria-busy="false"></div>
         <div id="projectsEmpty" class="empty-feed projects-v2-empty" hidden aria-live="polite">
-          <p>No projects match your current search and filters.</p>
+          <p id="projectsEmptyText">No projects match your current filters.</p>
           <button id="projectsEmptyResetBtn" type="button" class="btn subtle">Clear filters</button>
         </div>
       </section>
@@ -163,8 +173,8 @@
           <h2 class="s-title">Demo tips</h2>
           <ul class="s-list">
             <li>Create and edit projects to simulate portfolio workflows.</li>
-            <li>Use Share to push a project update into the Social feed.</li>
-            <li>Open details to present milestones and activity timeline.</li>
+            <li>Use Share to post to Social or send updates to collaborators.</li>
+            <li>Use Details to present milestones, members, and activity clearly.</li>
           </ul>
         </div>
       </aside>
@@ -175,7 +185,11 @@
 
   <div id="projectDetailModal" class="modal project-detail-modal" aria-hidden="true">
     <div class="modal-content project-detail-content" role="dialog" aria-modal="true" aria-labelledby="projectDetailTitle">
-      <button type="button" class="close" data-close-modal="detail" aria-label="Close project details">×</button>
+      <button type="button" class="close" data-close-modal="detail" aria-label="Close project details">
+        <svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6L18 18M18 6L6 18" />
+        </svg>
+      </button>
       <p class="page-kicker">Project details</p>
       <h2 id="projectDetailTitle" class="project-detail-title">Project</h2>
       <p id="projectDetailSummary" class="project-detail-summary"></p>
@@ -216,7 +230,7 @@
       </div>
 
       <div class="project-detail-actions">
-        <button id="detailShareBtn" type="button" class="auth-btn project-share-btn">Share to Social</button>
+        <button id="detailShareBtn" type="button" class="auth-btn project-share-btn">Share</button>
         <button id="detailEditBtn" type="button" class="btn subtle">Edit Project</button>
       </div>
     </div>
@@ -224,7 +238,11 @@
 
   <div id="projectFormModal" class="modal project-form-modal" aria-hidden="true">
     <div class="modal-content project-form-content" role="dialog" aria-modal="true" aria-labelledby="projectFormTitle">
-      <button type="button" class="close" data-close-modal="form" aria-label="Close project form">×</button>
+      <button type="button" class="close" data-close-modal="form" aria-label="Close project form">
+        <svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6L18 18M18 6L6 18" />
+        </svg>
+      </button>
       <h2 id="projectFormTitle">New Project</h2>
       <form id="projectForm" class="project-form" autocomplete="off">
         <input id="projectFormId" name="id" type="hidden" />
@@ -318,6 +336,34 @@
     </div>
   </div>
 
+  <div id="projectShareModal" class="modal project-share-modal" aria-hidden="true">
+    <div class="modal-content project-share-content" role="dialog" aria-modal="true" aria-labelledby="projectShareTitle">
+      <button type="button" class="close" data-close-modal="share" aria-label="Close share options">
+        <svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6L18 18M18 6L6 18" />
+        </svg>
+      </button>
+      <p class="page-kicker">Share project</p>
+      <h2 id="projectShareTitle">Share project</h2>
+      <p class="project-share-lead">Choose how you want to share this project update.</p>
+
+      <div class="project-share-options">
+        <button id="shareToSocialBtn" type="button" class="auth-btn">Share to Social</button>
+        <button id="shareCopyLinkBtn" type="button" class="btn subtle">Copy Project Link</button>
+      </div>
+
+      <div class="project-share-collab">
+        <label for="shareCollaboratorInput">Share with collaborator</label>
+        <div class="project-share-collab-row">
+          <input id="shareCollaboratorInput" type="text" placeholder="Name or email" autocomplete="off" />
+          <button id="shareCollaboratorBtn" type="button" class="btn subtle">Send Share</button>
+        </div>
+      </div>
+
+      <p id="projectShareLinkPreview" class="project-share-link-preview" aria-live="polite"></p>
+    </div>
+  </div>
+
   <footer class="footer site-footer" aria-label="Website Footer">
     <p>© 2026 CollabConnect. All Rights Reserved. Created by Tyler Malovrh</p>
     <ul class="social-links">
@@ -328,6 +374,6 @@
   </footer>
 
   <script src="app.js"></script>
-  <script src="projects.js?v=1.9.2" defer></script>
+  <script src="projects.js?v=2.0.5" defer></script>
 </body>
 </html>

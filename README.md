@@ -1,9 +1,9 @@
-# CollabConnect (Static) - v1.9.0
+# CollabConnect (Static) - v2.0.0
 
 CollabConnect is a collaboration-first social platform concept built as a static multi-page web app. It is designed to help developers, teams, and creators share ideas, post progress, get feedback, and build projects together in a more positive, project-centered environment.
 
 ## Status
-- Current release: `v1.9.0`
+- Current release: `v2.0.0`
 - Platform focus (current phase): `Desktop-first`
 - Mobile: temporary splash screen shown on small screens (`desktop-only for now`, mobile redesign coming later)
 
@@ -26,10 +26,23 @@ The goal is to create a space where people can:
 - PWA/service worker support (static app shell caching)
 - Accessibility-minded UI patterns (keyboard/focus/readability improvements)
 
-## Recent Highlights (v1.9.0)
+## Recent Highlights (v2.0.0)
+- Final Projects stabilization pass for desktop demo readiness:
+  - clearer Projects workspace copy and header labeling
+  - refined metallic/glass contrast and button hierarchy for readability
+  - improved empty-state guidance and workspace helper text
+  - regression fixes and cache/version reliability updates
+- Projects archive management polish:
+  - explicit archive workspace mode (`Open Archive` / `Back to Workspace`)
+  - archived items separated from default workspace browsing
+  - clearer actions (`Unarchive`, `Delete`) for archived projects
+- Share flow polish on Projects:
+  - share action now opens options instead of instant-posting
+  - options include Share to Social, copy project link, and collaborator share
+  - modal close controls/icons and action alignment refined for consistency
 - Projects Hub overhaul with rich desktop demo interactions:
   - `My Projects`, `Community`, `Shared` views
-  - search, filters, sort, create/edit, archive/restore
+  - search, filters, sort, create/edit, archive/unarchive
   - project detail modal with milestones/activity
   - share-to-social demo integration via localStorage
 - Redesigned `About` page with clearer collaboration-first messaging and layered content structure
@@ -129,6 +142,14 @@ If you plan to publish this project publicly for reuse, add a license file (for 
 - Tyler Malovrh
 
 ## Version History (Recent)
+### v2.0.0
+- Projects-first stabilization and final UX fine tuning
+- Projects copy/label polish and clearer demo guidance
+- Metallic/glass consistency refinements across Projects controls/cards/actions
+- Archive workflow polish (`Open Archive`, `Unarchive`, `Delete archived`)
+- Share workflow polish (share options modal, collaborator/link/social paths)
+- Final bug/regression pass and release metadata updates
+
 ### v1.9.0
 - Projects Hub redesign and demo-state architecture
 - Local-persistent project workflows (create/edit/archive/share)

@@ -7,6 +7,7 @@
 
   const DEFAULT_UI = {
     view: "my",
+    archiveMode: false,
     sort: "recent",
     search: "",
     filters: {
@@ -43,6 +44,11 @@
     featured: "Featured",
     seeking: "Seeking Collaborators",
   };
+  const SORT_LABEL = {
+    recent: "Most recent",
+    active: "Most active",
+    alpha: "Alphabetical",
+  };
 
   const FILTER_KIND_LABEL = {
     discipline: "Discipline",
@@ -53,7 +59,7 @@
 
   const FILTER_OPTIONS = {
     discipline: ["all", "dev", "design", "marketing", "product", "ops"],
-    status: ["all", "planned", "active", "review", "completed", "archived"],
+    status: ["all", "planned", "active", "review", "completed"],
     type: ["all", "featured", "seeking", "standard"],
   };
 
@@ -61,6 +67,7 @@
   let state = { projects: [] };
   let ui = { ...DEFAULT_UI, filters: { ...DEFAULT_UI.filters } };
   let detailProjectId = null;
+  let shareProjectId = null;
   let toastTimer = null;
   let searchTimer = null;
 
@@ -908,12 +915,15 @@
     const candidate = nextUi || {};
     const view = ["my", "community", "shared"].includes(candidate.view) ? candidate.view : DEFAULT_UI.view;
     const sort = ["recent", "active", "alpha"].includes(candidate.sort) ? candidate.sort : DEFAULT_UI.sort;
+    const rawStatus =
+      candidate.filters && typeof candidate.filters.status === "string" ? candidate.filters.status : "all";
+    const archiveMode = Boolean(candidate.archiveMode) || rawStatus === "archived";
     const filters = {
       discipline: ["all", "dev", "design", "marketing", "product", "ops"].includes(candidate.filters && candidate.filters.discipline)
         ? candidate.filters.discipline
         : "all",
-      status: ["all", "planned", "active", "review", "completed", "archived"].includes(candidate.filters && candidate.filters.status)
-        ? candidate.filters.status
+      status: ["all", "planned", "active", "review", "completed"].includes(rawStatus)
+        ? rawStatus
         : "all",
       type: ["all", "featured", "seeking", "standard"].includes(candidate.filters && candidate.filters.type)
         ? candidate.filters.type
@@ -922,6 +932,7 @@
 
     return {
       view,
+      archiveMode,
       sort,
       search: normalizeStr(candidate.search || "", ""),
       filters,
@@ -968,7 +979,15 @@
 
     result = result.filter((project) => {
       if (ui.filters.discipline !== "all" && project.discipline !== ui.filters.discipline) return false;
-      if (ui.filters.status !== "all" && project.status !== ui.filters.status) return false;
+
+      if (ui.archiveMode) {
+        if (project.status !== "archived") return false;
+      } else if (ui.filters.status === "all") {
+        if (project.status === "archived") return false;
+      } else if (project.status !== ui.filters.status) {
+        return false;
+      }
+
       if (!matchesTypeFilter(project, ui.filters.type)) return false;
 
       if (!query) return true;
@@ -1097,14 +1116,63 @@
     `;
   }
 
+  function updateArchiveUi() {
+    if (els.projectsRoot) {
+      els.projectsRoot.classList.toggle("is-archive-mode", Boolean(ui.archiveMode));
+    }
+    if (els.viewArchivedBtn) {
+      els.viewArchivedBtn.classList.toggle("is-active", Boolean(ui.archiveMode));
+      els.viewArchivedBtn.setAttribute("aria-pressed", String(Boolean(ui.archiveMode)));
+      els.viewArchivedBtn.textContent = ui.archiveMode ? "Back to Workspace" : "Open Archive";
+    }
+  }
+
+  function setArchiveMode(enabled, options) {
+    const opts = options || {};
+    const shouldPersist = opts.persist !== false;
+    const shouldRender = opts.render !== false;
+
+    ui.archiveMode = Boolean(enabled);
+    ui.filters.status = "all";
+    setFilter("status", "all", { persist: false, render: false });
+    updateArchiveUi();
+
+    if (shouldPersist) saveUi();
+    if (shouldRender) renderProjects();
+  }
+
+  function renderWorkspaceHeader(filteredCount) {
+    const viewName = VIEW_LABEL[ui.view] || "Projects";
+    if (els.projectsMainHeading) {
+      els.projectsMainHeading.textContent = ui.archiveMode
+        ? `${viewName} archive (${filteredCount})`
+        : `${viewName} workspace (${filteredCount})`;
+    }
+
+    if (els.projectsBannerKicker) {
+      els.projectsBannerKicker.textContent = ui.archiveMode ? "Archived Projects" : "Projects Workspace";
+    }
+
+    if (els.projectsBannerLead) {
+      els.projectsBannerLead.textContent = ui.archiveMode
+        ? "Archived projects stay available for reference. Unarchive to move a project back into your active workspace."
+        : "Use this workspace to demo discovery, collaboration, and project updates across your own work, community initiatives, and shared efforts.";
+    }
+  }
+
   function statusClass(status) {
     return `status-${status}`;
   }
 
   function projectCardHtml(project) {
+    const isArchived = project.status === "archived";
     const tags = (project.tags || []).slice(0, 3).map((t) => `<span class="chip" role="note">${escapeHTML(t)}</span>`).join("");
     const stack = (project.stack || []).slice(0, 2).join(" • ");
     const activityCount = (project.activity || []).length;
+    const archiveActionLabel = isArchived ? "Unarchive" : "Archive";
+    const trailingAction = isArchived
+      ? `<button class="btn subtle action-delete" type="button" data-action="delete" data-id="${escapeHTML(project.id)}">Delete</button>`
+      : `<button class="auth-btn action-share" type="button" data-action="share" data-id="${escapeHTML(project.id)}">Share</button>`;
 
     return `
       <article class="project-item project-card-v2 ${statusClass(project.status)}" data-id="${escapeHTML(project.id)}">
@@ -1119,10 +1187,10 @@
           <p class="project-card-submeta">${escapeHTML(TYPE_LABEL[project.projectType] || "Standard")} • ${escapeHTML(stack || "No stack listed")} • ${activityCount} updates</p>
         </div>
         <div class="project-card-actions">
-          <button class="btn subtle" type="button" data-action="detail" data-id="${escapeHTML(project.id)}">Details</button>
-          <button class="btn subtle" type="button" data-action="edit" data-id="${escapeHTML(project.id)}">Edit</button>
-          <button class="btn subtle" type="button" data-action="archive" data-id="${escapeHTML(project.id)}">${project.status === "archived" ? "Restore" : "Archive"}</button>
-          <button class="auth-btn" type="button" data-action="share" data-id="${escapeHTML(project.id)}">Share</button>
+          <button class="btn subtle action-detail" type="button" data-action="detail" data-id="${escapeHTML(project.id)}">Details</button>
+          <button class="btn subtle action-edit" type="button" data-action="edit" data-id="${escapeHTML(project.id)}">Edit</button>
+          <button class="btn subtle action-archive" type="button" data-action="archive" data-id="${escapeHTML(project.id)}">${archiveActionLabel}</button>
+          ${trailingAction}
         </div>
       </article>
     `;
@@ -1130,6 +1198,7 @@
 
   function renderProjects() {
     const list = applyViewFilterSortSearch();
+    const active = getActiveFilters();
 
     if (!els.projectsList || !els.projectsEmpty) return;
 
@@ -1138,6 +1207,14 @@
     if (!list.length) {
       els.projectsList.innerHTML = "";
       els.projectsEmpty.hidden = false;
+      if (els.projectsEmptyText) {
+        if (ui.archiveMode && !ui.search.trim()) {
+          els.projectsEmptyText.textContent = `No archived projects in ${VIEW_LABEL[ui.view]} yet.`;
+        } else {
+          const filterHint = active.length ? " Try clearing filters or switching views." : " Try creating a project.";
+          els.projectsEmptyText.textContent = `No projects match your current view.${filterHint}`;
+        }
+      }
     } else {
       els.projectsList.innerHTML = list.map(projectCardHtml).join("");
       els.projectsEmpty.hidden = true;
@@ -1146,6 +1223,7 @@
     els.projectsList.setAttribute("aria-busy", "false");
     renderActiveFilters();
     renderInsights(list);
+    renderWorkspaceHeader(list.length);
   }
 
   function renderInsights(filteredList) {
@@ -1161,13 +1239,10 @@
 
     if (els.projectsSavedView) {
       const applied = getActiveFilters().map((item) => `${item.label}: ${item.valueLabel}`);
-
-      const text = `${VIEW_LABEL[ui.view]} • ${ui.sort} sort${applied.length ? ` • ${applied.join(", ")}` : ""}`;
+      const sortLabel = SORT_LABEL[ui.sort] || SORT_LABEL.recent;
+      const modeLabel = ui.archiveMode ? "archive mode" : "workspace mode";
+      const text = `${VIEW_LABEL[ui.view]} • ${modeLabel} • ${sortLabel}${applied.length ? ` • ${applied.join(", ")}` : ""}`;
       els.projectsSavedView.textContent = text;
-    }
-
-    if (els.projectsMainHeading) {
-      els.projectsMainHeading.textContent = `${VIEW_LABEL[ui.view]} workspace (${filteredList.length})`;
     }
   }
 
@@ -1211,6 +1286,10 @@
     const shouldRender = opts.render !== false;
 
     ui.filters[kind] = nextValue;
+    if (kind === "status" && ui.archiveMode && nextValue !== "all") {
+      ui.archiveMode = false;
+      updateArchiveUi();
+    }
 
     const chips = toArray(els.filterButtonsByKind && els.filterButtonsByKind[kind]);
     chips.forEach((chip) => {
@@ -1242,13 +1321,16 @@
   function resetUiState(options) {
     const opts = options || {};
     const preserveView = opts.preserveView !== false;
+    const preserveArchiveMode = opts.preserveArchiveMode !== false;
     const nextView = preserveView ? ui.view : DEFAULT_UI.view;
+    const nextArchiveMode = preserveArchiveMode ? ui.archiveMode : DEFAULT_UI.archiveMode;
 
     clearTimeout(searchTimer);
-    ui = { ...DEFAULT_UI, view: nextView, filters: { ...DEFAULT_UI.filters } };
+    ui = { ...DEFAULT_UI, view: nextView, archiveMode: nextArchiveMode, filters: { ...DEFAULT_UI.filters } };
     if (els.projectsSearch) els.projectsSearch.value = "";
     if (els.projectsSort) els.projectsSort.value = ui.sort;
     setView(ui.view, { persist: false, render: false, projectId: null });
+    updateArchiveUi();
     setFilter("discipline", "all", { persist: false, render: false });
     setFilter("status", "all", { persist: false, render: false });
     setFilter("type", "all", { persist: false, render: false });
@@ -1289,8 +1371,10 @@
     if (
       els.projectDetailModal &&
       els.projectFormModal &&
+      els.projectShareModal &&
       els.projectDetailModal.getAttribute("aria-hidden") === "true" &&
-      els.projectFormModal.getAttribute("aria-hidden") === "true"
+      els.projectFormModal.getAttribute("aria-hidden") === "true" &&
+      els.projectShareModal.getAttribute("aria-hidden") === "true"
     ) {
       document.body.classList.remove("cc-projects-modal-open");
     }
@@ -1429,6 +1513,95 @@
     closeModal(els.projectFormModal);
   }
 
+  function buildProjectSharePath(project) {
+    const params = new URLSearchParams();
+    params.set("view", project.ownerType);
+    params.set("project", project.id);
+    return `/projects.html?${params.toString()}`;
+  }
+
+  function updateProjectShareMeta(project) {
+    if (els.projectShareTitle) {
+      els.projectShareTitle.textContent = `Share ${project.title}`;
+    }
+    if (els.projectShareLinkPreview) {
+      els.projectShareLinkPreview.textContent = "Project link is ready to copy.";
+    }
+  }
+
+  function openProjectShare(id) {
+    const project = findProjectById(id);
+    if (!project || !els.projectShareModal) return;
+    shareProjectId = id;
+    updateProjectShareMeta(project);
+    if (els.shareCollaboratorInput) els.shareCollaboratorInput.value = "";
+    openModal(els.projectShareModal);
+    setTimeout(() => {
+      if (els.shareToSocialBtn) els.shareToSocialBtn.focus();
+    }, 0);
+  }
+
+  function closeProjectShare() {
+    shareProjectId = null;
+    if (els.shareCollaboratorInput) els.shareCollaboratorInput.value = "";
+    closeModal(els.projectShareModal);
+  }
+
+  async function copyProjectShareLink() {
+    if (!shareProjectId) return;
+    const project = findProjectById(shareProjectId);
+    if (!project) return;
+    const sharePath = buildProjectSharePath(project);
+
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(sharePath);
+      } else {
+        const input = document.createElement("textarea");
+        input.value = sharePath;
+        input.setAttribute("readonly", "");
+        input.style.position = "fixed";
+        input.style.opacity = "0";
+        document.body.appendChild(input);
+        input.focus();
+        input.select();
+        document.execCommand("copy");
+        document.body.removeChild(input);
+      }
+      if (els.projectShareLinkPreview) {
+        els.projectShareLinkPreview.textContent = `Copied: ${sharePath}`;
+      }
+      showToast("Project link copied.");
+    } catch (_) {
+      showToast("Unable to copy project link.");
+    }
+  }
+
+  function shareWithCollaborator(targetRaw) {
+    if (!shareProjectId) return;
+    const project = findProjectById(shareProjectId);
+    if (!project) return;
+
+    const target = normalizeStr(targetRaw, "");
+    if (!target) {
+      showToast("Enter a collaborator name or email.");
+      if (els.shareCollaboratorInput) els.shareCollaboratorInput.focus();
+      return;
+    }
+
+    const createdAt = nowIso();
+    project.updatedAt = createdAt;
+    project.activity = [
+      ...(project.activity || []),
+      { text: `Shared with ${target}`, createdAt },
+    ].slice(-15);
+    saveState();
+    renderProjects();
+    if (detailProjectId === project.id) openProjectDetail(project.id);
+    closeProjectShare();
+    showToast(`Shared with ${target}.`);
+  }
+
   function buildPayloadFromForm() {
     return {
       title: normalizeStr(els.projectTitle && els.projectTitle.value, "Untitled Project"),
@@ -1513,13 +1686,38 @@
     project.updatedAt = updatedAt;
     project.activity = [
       ...(project.activity || []),
-      { text: nextStatus === "archived" ? "Project archived" : "Project restored", createdAt: updatedAt },
+      { text: nextStatus === "archived" ? "Project archived" : "Project unarchived", createdAt: updatedAt },
     ].slice(-15);
 
     saveState();
     renderProjects();
     if (detailProjectId === id) openProjectDetail(id);
-    showToast(nextStatus === "archived" ? "Project archived." : "Project restored.");
+    showToast(
+      nextStatus === "archived"
+        ? "Project archived. Use Open Archive to manage archived projects."
+        : "Project moved back to active workspace."
+    );
+  }
+
+  function deleteProject(id) {
+    const project = findProjectById(id);
+    if (!project) return;
+    if (project.status !== "archived") {
+      showToast("Archive the project before deleting.");
+      return;
+    }
+
+    const confirmed = window.confirm(`Delete "${project.title}" permanently?`);
+    if (!confirmed) return;
+
+    state.projects = state.projects.filter((item) => item.id !== id);
+    saveState();
+
+    if (detailProjectId === id) closeProjectDetail();
+    if (shareProjectId === id) closeProjectShare();
+
+    renderProjects();
+    showToast("Archived project deleted.");
   }
 
   function shareProjectToSocial(id) {
@@ -1637,8 +1835,25 @@
       });
     }
 
-    if (els.newProjectBtn) {
-      els.newProjectBtn.addEventListener("click", () => openProjectForm("create"));
+    if (els.newProjectBtns && els.newProjectBtns.length) {
+      els.newProjectBtns.forEach((btn) => {
+        btn.addEventListener("click", () => openProjectForm("create"));
+      });
+    }
+
+    if (els.viewArchivedBtn) {
+      els.viewArchivedBtn.addEventListener("click", () => {
+        const nextArchiveMode = !ui.archiveMode;
+        if (nextArchiveMode) {
+          clearTimeout(searchTimer);
+          ui.search = "";
+          ui.sort = "recent";
+          if (els.projectsSearch) els.projectsSearch.value = "";
+          if (els.projectsSort) els.projectsSort.value = "recent";
+          setFilter("status", "all", { persist: false, render: false });
+        }
+        setArchiveMode(nextArchiveMode);
+      });
     }
 
     if (els.resetProjectsUiBtn) {
@@ -1674,7 +1889,8 @@
         if (action === "detail") openProjectDetail(id);
         if (action === "edit") openProjectForm("edit", id);
         if (action === "archive") toggleArchive(id);
-        if (action === "share") shareProjectToSocial(id);
+        if (action === "delete") deleteProject(id);
+        if (action === "share") openProjectShare(id);
       });
     }
 
@@ -1697,7 +1913,35 @@
       els.detailShareBtn.addEventListener("click", () => {
         const id = els.detailShareBtn.dataset.id || detailProjectId;
         if (!id) return;
+        openProjectShare(id);
+      });
+    }
+
+    if (els.shareToSocialBtn) {
+      els.shareToSocialBtn.addEventListener("click", () => {
+        if (!shareProjectId) return;
+        const id = shareProjectId;
+        closeProjectShare();
         shareProjectToSocial(id);
+      });
+    }
+
+    if (els.shareCopyLinkBtn) {
+      els.shareCopyLinkBtn.addEventListener("click", copyProjectShareLink);
+    }
+
+    if (els.shareCollaboratorBtn) {
+      els.shareCollaboratorBtn.addEventListener("click", () => {
+        const target = els.shareCollaboratorInput ? els.shareCollaboratorInput.value : "";
+        shareWithCollaborator(target);
+      });
+    }
+
+    if (els.shareCollaboratorInput) {
+      els.shareCollaboratorInput.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        shareWithCollaborator(els.shareCollaboratorInput.value);
       });
     }
 
@@ -1727,6 +1971,7 @@
       if (!closeBtn) return;
       if (closeBtn.dataset.closeModal === "detail") closeProjectDetail();
       if (closeBtn.dataset.closeModal === "form") closeProjectForm();
+      if (closeBtn.dataset.closeModal === "share") closeProjectShare();
     });
 
     if (els.projectDetailModal) {
@@ -1741,8 +1986,18 @@
       });
     }
 
+    if (els.projectShareModal) {
+      els.projectShareModal.addEventListener("click", (event) => {
+        if (event.target === els.projectShareModal) closeProjectShare();
+      });
+    }
+
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
+      if (els.projectShareModal && els.projectShareModal.getAttribute("aria-hidden") === "false") {
+        closeProjectShare();
+        return;
+      }
       if (els.projectFormModal && els.projectFormModal.getAttribute("aria-hidden") === "false") {
         closeProjectForm();
         return;
@@ -1754,16 +2009,21 @@
   }
 
   function primeElements() {
+    els.projectsRoot = document.querySelector(".projects-page-v2");
     els.projectsList = document.getElementById("projectsList");
     els.projectsEmpty = document.getElementById("projectsEmpty");
     els.projectsSearch = document.getElementById("projectsSearch");
     els.projectsSort = document.getElementById("projectsSort");
     els.projectsMainHeading = document.getElementById("projectsMainHeading");
+    els.projectsBannerKicker = document.getElementById("projectsBannerKicker");
+    els.projectsBannerLead = document.getElementById("projectsBannerLead");
     els.projectsActiveFilters = document.getElementById("projectsActiveFilters");
+    els.projectsEmptyText = document.getElementById("projectsEmptyText");
 
-    els.newProjectBtn = document.getElementById("newProjectBtn");
+    els.newProjectBtns = toArray(document.querySelectorAll('[data-action="new-project"]'));
     els.resetProjectsUiBtn = document.getElementById("resetProjectsUiBtn");
     els.projectsEmptyResetBtn = document.getElementById("projectsEmptyResetBtn");
+    els.viewArchivedBtn = document.getElementById("viewArchivedBtn");
 
     els.insightViewTotal = document.getElementById("insightViewTotal");
     els.insightActiveTotal = document.getElementById("insightActiveTotal");
@@ -1809,6 +2069,14 @@
     els.projectAdvancedFields = document.getElementById("projectAdvancedFields");
     els.projectFormCancel = document.getElementById("projectFormCancel");
 
+    els.projectShareModal = document.getElementById("projectShareModal");
+    els.projectShareTitle = document.getElementById("projectShareTitle");
+    els.projectShareLinkPreview = document.getElementById("projectShareLinkPreview");
+    els.shareToSocialBtn = document.getElementById("shareToSocialBtn");
+    els.shareCopyLinkBtn = document.getElementById("shareCopyLinkBtn");
+    els.shareCollaboratorBtn = document.getElementById("shareCollaboratorBtn");
+    els.shareCollaboratorInput = document.getElementById("shareCollaboratorInput");
+
     els.viewTabs = toArray(document.querySelectorAll("#projectsViewTabs [data-view]"));
     els.filterButtons = toArray(document.querySelectorAll("[data-filter-kind][data-filter-value]"));
     els.filterButtonsByKind = {};
@@ -1830,8 +2098,9 @@
     if (els.projectsSort) els.projectsSort.value = ui.sort;
 
     setView(ui.view, { persist: false, render: false });
+    updateArchiveUi();
     setFilter("discipline", ui.filters.discipline, { persist: false, render: false });
-    setFilter("status", ui.filters.status, { persist: false, render: false });
+    setFilter("status", ui.archiveMode ? "all" : ui.filters.status, { persist: false, render: false });
     setFilter("type", ui.filters.type, { persist: false, render: false });
   }
 

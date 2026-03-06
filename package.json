@@ -1,7 +1,7 @@
 {
   "name": "collabconnect-static",
   "private": true,
-  "version": "1.9.0",
+  "version": "2.0.0",
   "scripts": {
     "lint:css": "stylelint \"**/*.css\"",
     "build:css": "node scripts/minify-css.js style.css style.min.css"
